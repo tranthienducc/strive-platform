@@ -30,7 +30,7 @@ const Reviews = () => {
                   <div className="flex flex-row gap-x-[3px]">
                     {Array(5)
                       .fill(0)
-                      .map((item, index) => (
+                      .map((_item, _index) => (
                         <>
                           <Image
                             src="/assets/icons/star-fill.svg"

@@ -12,6 +12,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "useDefineForClassFields": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowImportingTsExtensions": true,
+    "target": "ES2022",
     "plugins": [
       {
         "name": "next"

@@ -1,0 +1,96 @@
+import { lemonSqueezyApiInstance } from "@/utils/axios";
+
+export const dynamic = "force-dynamic";
+
+export async function POST(req: Request) {
+  try {
+    const reqData = await req.json();
+
+    if (!reqData.productId)
+      return Response.json(
+        { message: "productId is required" },
+        { status: 400 }
+      );
+
+    const response = await lemonSqueezyApiInstance.post("/checkouts", {
+      data: {
+        type: "checkouts",
+        attributes: {
+          checkout_data: {
+            custom: {
+              user_id: "456",
+            },
+          },
+        },
+        relationships: {
+          store: {
+            data: {
+              type: "stores",
+              id: process.env.LEMON_SQUEEZY_STORE_ID?.toString(),
+            },
+          },
+          variant: {
+            data: {
+              type: "variants",
+              id: reqData.productId?.toString(),
+            },
+          },
+        },
+      },
+    });
+
+    const checkoutUrl = response?.data?.data?.attributes?.url;
+
+    return Response.json({ checkoutUrl });
+  } catch (error) {
+    console.log(error);
+    return Response.json({ message: "An error occured" }, { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    const ress = await lemonSqueezyApiInstance.get("/products", {
+      data: {
+        type: "products",
+        attributes: {
+          checkout_data: {
+            custom: {
+              user_id: "123",
+            },
+          },
+        },
+        relationships: {
+          store: {
+            data: {
+              type: "stores",
+              id: process.env.LEMON_SQUEEZY_STORE_ID?.toString(),
+            },
+          },
+        },
+      },
+    });
+    const variantData = await lemonSqueezyApiInstance.get("/variants", {
+      data: {
+        type: "variants",
+        attributes: {
+          variant_id: 402689,
+        },
+        relationships: {
+          product: {
+            data: {
+              type: "variants",
+              id: process.env.LEMON_SQUEEZY_STORE_ID?.toString(),
+            },
+          },
+        },
+      },
+    });
+    const data = ress.data.data;
+    const productVariant = variantData.data.data;
+    return Response.json({ data, productVariant });
+  } catch (error) {
+    console.log(error);
+    return Response.json({ message: "An error occured" }, { status: 500 });
+  }
+}

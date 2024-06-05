@@ -1,6 +1,5 @@
 "use client";
 import { Header } from "@/components/shared";
-import { Spinner } from "@/components/spinner";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { reducer } from "@/helper";

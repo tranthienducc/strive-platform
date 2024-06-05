@@ -1,6 +1,6 @@
 "use client";
 import { links } from "@/constants/data";
-import { ArrowRight, UserRound, UserRoundX } from "lucide-react";
+import { ArrowRight, UserRound } from "lucide-react";
 import { useConvexAuth } from "convex/react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,7 +1,5 @@
 "use client";
-import CategoriesFilter from "@/components/categories-filter";
 import { Header } from "@/components/shared";
-import { Spinner } from "@/components/spinner";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { ChevronDown, ListFilter } from "lucide-react";

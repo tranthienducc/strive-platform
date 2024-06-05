@@ -11,7 +11,7 @@ const Reviews = () => {
       <div className="mt-16 grid grid-cols-3 col-span-2 gap-6">
         {Array(6)
           .fill(0)
-          .map((item, index) => (
+          .map((_item, _index) => (
             <>
               <div className="max-w-[443px] w-full bg-gradient-conic border border-gray-800 rounded-xl p-6">
                 <div className="flex flex-col gap-y-3 mb-3">

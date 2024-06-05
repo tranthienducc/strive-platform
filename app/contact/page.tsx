@@ -9,7 +9,7 @@ const ContactPage = () => {
         <div className="grid grid-cols-3 gap-x-2">
           {Array(3)
             .fill(0)
-            .map((item, index) => (
+            .map((_item, index) => (
               <>
                 <div
                   className="max-w-[371px] w-full h-[484px] rounded-3xl shadow shadow-white/30 px-3 py-3 border border-white/15"

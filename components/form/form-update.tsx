@@ -1,7 +1,6 @@
 "use client";
 import { api } from "@/convex/_generated/api";
 import { useEdgeStore } from "@/lib/edgestore";
-import { FormUpdateType } from "@/utils/types/type";
 import { useMutation, useQuery } from "convex/react";
 import { ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -42,14 +41,14 @@ const FormUpdate = () => {
 
   const { handleSubmit, register } = useForm<FormValues>({
     defaultValues: {
-      title: defaultDocument?.title,
-      price: defaultDocument?.price,
-      categories: defaultDocument?.categories,
-      coverImage: defaultDocument?.coverImage,
-      desc1: defaultDocument?.desc1,
-      desc2: defaultDocument?.desc2,
-      desc3: defaultDocument?.desc3,
-      desc4: defaultDocument?.desc4,
+      title: "",
+      price: "",
+      categories: "",
+      coverImage: "",
+      desc1: "",
+      desc2: "",
+      desc3: "",
+      desc4: "",
     },
   });
 

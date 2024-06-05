@@ -1,5 +1,5 @@
 import { Header } from "@/components/shared";
-import { ArrowDown, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 
 const AboutPage = () => {
@@ -50,7 +50,7 @@ const AboutPage = () => {
         </div>
         {Array(4)
           .fill(0)
-          .map((item, index) => (
+          .map((_item, index) => (
             <>
               <div className="flex flex-row justify-between items-center border-t border-white/10 pt-4 mb-4">
                 <p className="text-sm font-medium text-white" key={index}>

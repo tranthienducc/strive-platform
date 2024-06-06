@@ -24,6 +24,17 @@ export type FormUpdateType = {
   };
 };
 export interface ProductProps {
+  id: string;
+  attributes: {
+    name: string;
+    slug: string;
+    large_thumb_url: string;
+    description: string;
+    price: number;
+  };
+}
+export interface ProductVariantProps {
+  id: string;
   attributes: {
     name: string;
     slug: string;
@@ -34,10 +45,7 @@ export interface ProductProps {
 }
 
 export interface DetailSidebarProps {
-  name: string | undefined;
-  price: number | undefined;
-  slug: string | undefined;
-  description: string | undefined;
+  data: ProductProps;
 }
 
 export type InspirationType = {
@@ -46,6 +54,7 @@ export type InspirationType = {
   title: string;
   description: string;
   coverImage: string;
+  name: string;
 };
 export interface FormValues {
   title: string;

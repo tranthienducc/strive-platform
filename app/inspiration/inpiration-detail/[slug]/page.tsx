@@ -1,7 +1,6 @@
 "use client";
 import { Header } from "@/components/shared";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { InspirationType } from "@/utils/types/type";
 import { useQuery } from "convex/react";
 import { ArrowLeft, Dot } from "lucide-react";
@@ -11,19 +10,19 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 const DetailInspiration = () => {
-  const inspiration = useQuery(api.documents.getById) as any as InspirationType;
-  const { inspirationParams } = useParams<{
-    inspirationParams: Id<"documents">;
-  }>();
+  const inspiration = useQuery(
+    api.documents.getById
+  ) as any as InspirationType[];
+  const { slug: inspirationParams } = useParams();
 
-  const selectedInspiration = inspiration?.find(
-    (data: { _id: Id<"documents"> }) => data._id !== inspirationParams
-  ) as InspirationType;
+  const trimInspirationParams = String(inspirationParams).trim();
 
-  console.log(selectedInspiration);
+  const inspirationList = inspiration?.find((item) => {
+    const productSlug = item._id;
+    return trimInspirationParams === productSlug;
+  });
 
-  const { coverImage, description, title } = selectedInspiration || {};
-  console.log(inspiration);
+  const { name, title, coverImage, description } = inspirationList || {};
 
   return (
     <>
@@ -49,7 +48,7 @@ const DetailInspiration = () => {
             />
             <div className="flex flex-col gap-y-[2px] items-baseline">
               <h5 className="text-sm font-semibold text-white pl-[14px]">
-                Josh Geist
+                {name}
               </h5>
               <span className="text-xs font-medium flex flex-row  text-green-400 items-center">
                 <Dot className="w-8 h-8 animate-pulse" />
@@ -75,7 +74,6 @@ const DetailInspiration = () => {
         />
 
         <p className="text-base font-normal text-gray9 mb-8">{description}</p>
-        <div className="">Categories</div>
         <h3 className="pt-10 text-sm font-medium text-white mb-4">
           You might also like
         </h3>

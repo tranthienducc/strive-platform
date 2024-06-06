@@ -1,19 +1,24 @@
 "use client";
+import { ProductVariantProps } from "@/utils/types/type";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PreviewPage = () => {
   const [viewMode, setViewMode] = useState("none");
-  const [productsVariant, setProductsVariant] = useState<[]>([]);
+  const [variantProduct, setVariantProduct] = useState<ProductVariantProps[]>(
+    []
+  );
+  const { slug: variantId } = useParams();
 
   useEffect(() => {
     const getProducts = async () => {
       try {
         const res = await axios.get("/api/purchaseProduct");
         if (Array.isArray(res.data.productVariant)) {
-          setProductsVariant(res.data.productVariant);
+          setVariantProduct(res.data.productVariant);
         } else {
           console.error("Dữ liệu trả về không phải là một mảng", res.data);
         }
@@ -25,6 +30,18 @@ const PreviewPage = () => {
     getProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const trimProductId = String(variantId).trim();
+
+  const productVariant = variantProduct.find((item) => {
+    const productSlug = item.attributes.slug;
+    const trimProductSlug = String(productSlug).trim();
+    return trimProductId !== trimProductSlug;
+  });
+
+  const { name, slug } = productVariant?.attributes || {};
+  console.log(name, slug);
+  console.log(variantProduct);
 
   return (
     <>
@@ -54,20 +71,14 @@ const PreviewPage = () => {
         </div>
       </div>
       <div className="max-w-full w-full  h-screen">
-        {viewMode === "iframe" &&
-          productsVariant.map((productVariant: any, index) => (
-            <div
-              style={{ width: "100%", height: "100vh", border: "none" }}
-              key={index}
-            >
-              <iframe
-                src={productVariant.attributes.name}
-                style={{ width: "100%", height: "100%", border: "none" }}
-                sandbox="allow-scripts allow-same-origin"
-                loading="lazy"
-              />
-            </div>
-          ))}
+        {viewMode === "iframe" && (
+          <iframe
+            src={name}
+            style={{ width: "100%", height: "100%", border: "none" }}
+            sandbox="allow-scripts"
+            loading="lazy"
+          />
+        )}
       </div>
     </>
   );

@@ -8,7 +8,6 @@ import Link from "next/link";
 const TemplateItem = () => {
   const [products, setProducts] = useState<[]>([]);
 
-  //
   useEffect(() => {
     const getProducts = async () => {
       try {

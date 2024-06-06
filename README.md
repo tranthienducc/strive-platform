@@ -1,25 +1,4 @@
-# Dự án Template Platform - Strive - tương tự Behance -SasS Platform - MAI THÊM THỦ CÔNG CATEGORIES VÀO KHI CÓ API TRẢ VỀ
-
-# MAI LÀM TRANG PREVIEW TEMPLATES
-
-[CHỈNH SỬA MENU THÊM Inspiration NHƯ CỦA DRIBBBLE ĐỂ HIỂN THỊ NHỮNG TÁC PHẨM ĐOẠI NHƯ VẬY
-
-LÚC ĐẦU LÀM FORM ĐỂ TẠO TEMPLATE NHƯNG HIỆN FLOW KHÔNG CÒN HỢP LÝ NỮA GIỜ SẼ CHUYỂN SANG TẠO CÁC `Inspiration` VÀ FORM UPDATE VÀ XOÁ CŨNG VẬY
-
-- FORM SẼ ĐƯỢC CHỈNH SỬA THÀNH `title, categories, description, link, image, slug`
-
-- NAVIGATION ĐẦU TIÊN SẼ QUẢN LÝ TEMPLATE ĐÃ TẠO ĐƯỢC QUẢN LÝ BÊN `LEMON SQUEEZY` và gọi API từ `LEMON SQUEEZY` về để hiển thị ra
-- Làm end point dể có thê download file về
-- NAVIGATION THỨ 2 SẼ QUẢN LÝ CÁC `Inspiration` đã được tạo có các chức năng như thếm sửa xoá.
-- Phần header khi chuyển hướng tới trang hiển thị `Inspiration`
-
-- Trang `Inspiration` sẽ có đầu tiên là filter theo tag và 1 filter nữa sẽ lọc theo tên của `Inspiration`, tiếp theo là hiển ra danh sách `Inspiration` tương ứng như Dribble sẽ có là `Image, avatar author, title , heart , watch`, bên dưới sẽ có button loadmore để thị thêm 10 cái nữa chẳng hạn
-  ]
-  chỉnh sửa sidebar dashboard navigation
-
-chỗ Creating và update sẽ chỉnh sửa thành Product bên trong sẽ có 1 button create dẫn tới trang create, trang product này sẽ là trang chính để quản lý product như mockup ,image ....
-
-# LAM THEM SKELETON
+# Dự án Template Platform - Strive - tương tự Behance -SasS Platform 
 
 # Ý TƯỞNG
 
@@ -55,13 +34,6 @@ chỗ Creating và update sẽ chỉnh sửa thành Product bên trong sẽ có 
 `edgestore - lưu ảnh lên cloud(free)` => [version@latest]
 `react-hook-form - thư viện xử lý form` => [version@latest]
 `clerk - chức năng đăng ký , đăng nhập` => [version@latest]
-`zustand - chức năng tương tự như redux` => [version@latest]
-`zod - chức năng tương tự như redux` => [version@latest]
-
-- Các thư viện nhỏ:
-- thư viện để hiển thị ảnh khi click vào ``
--
--
 
 # KINH PHÍ
 

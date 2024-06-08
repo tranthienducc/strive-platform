@@ -8,8 +8,18 @@ const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://strive-platform.vercel.app"),
   title: "Strive - Template Platform",
-  description: "SasS Platform",
+  description:
+    "The platform provides free and paid templates with beautiful designs, updated every day for everyone from beginners to experienced people. Developed and built by Tran Thien Duc.",
+  keywords: "tranthienduc, strive-platform, template-platform",
+  applicationName: "Strive",
+  openGraph: {
+    title: "Strive - Template Platform",
+    description:
+      "The platform provides free and paid templates with beautiful design",
+    images: ["/assets/images/bg-dashboard.png"],
+  },
 };
 
 export default function RootLayout({

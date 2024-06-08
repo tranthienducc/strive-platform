@@ -37,7 +37,12 @@ const InspirationMangePage = () => {
             </div>
             <p className="text-base font-medium text-white">New speedsheet</p>
           </div>
-          <Plus className="w-4 h-4 text-gray9" />
+          <div className="flex flex-col justify-between gap-y-5">
+            <Plus className="w-4 h-4 text-gray9" />
+            <span className="rounded-md p-1 bg-white text-black block text-sm font-medium">
+              WIP
+            </span>
+          </div>
         </div>
 
         <div className="max-w-[283px] w-full h-[110px] border border-white/10 rounded-xl px-4 py-4 flex flex-row justify-between items-start hover:bg-[#141414] bg-inherit cursor-pointer">
@@ -47,7 +52,12 @@ const InspirationMangePage = () => {
             </div>
             <p className="text-base font-medium text-white">New project</p>
           </div>
-          <Plus className="w-4 h-4 text-gray9" />
+          <div className="flex flex-col justify-between gap-y-5">
+            <Plus className="w-4 h-4 text-gray9" />
+            <span className="rounded-md p-1 bg-white text-black block text-sm font-medium">
+              WIP
+            </span>
+          </div>
         </div>
 
         <div className="max-w-[283px] w-full h-[110px] border border-white/10 rounded-xl px-4 py-4 flex flex-row justify-between items-start hover:bg-[#141414] bg-inherit cursor-pointer">
@@ -57,7 +67,12 @@ const InspirationMangePage = () => {
             </div>
             <p className="text-base font-medium text-white">New team</p>
           </div>
-          <Plus className="w-4 h-4 text-gray9" />
+          <div className="flex flex-col justify-between gap-y-5">
+            <Plus className="w-4 h-4 text-gray9" />
+            <span className="rounded-md p-1 bg-white text-black block text-sm font-medium">
+              WIP
+            </span>
+          </div>
         </div>
       </div>
 

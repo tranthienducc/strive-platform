@@ -27,7 +27,7 @@ const FormUpdate = () => {
     return trimInspirationsParam === productSlug;
   });
 
-  const { fullName, title, coverImage, description, categories, id } =
+  const { fullName, title, coverImage, description, categories } =
     inspirationsList || {};
 
   const { handleSubmit, register } = useForm<FormValues>({
@@ -47,9 +47,9 @@ const FormUpdate = () => {
       }
       const res = await edgestore.publicFiles.upload({ file });
 
-      if (id && id.length > 0) {
+      if (trimInspirationsParam && trimInspirationsParam.length > 0) {
         const promise = update({
-          id: id as Id<"documents">,
+          id: trimInspirationsParam as Id<"documents">,
           ...data,
           coverImage: res.url,
         });

@@ -92,7 +92,9 @@ const ManagePage = () => {
                     <p className="text-sm font-normal text-white">
                       {item.attributes.name}
                     </p>
-                    <span className="text-xs font-normal text-gray9">Onis</span>
+                    <span className="text-xs font-normal text-gray9">
+                      Tran Thien Duc
+                    </span>
                   </div>
                 </div>
               </div>

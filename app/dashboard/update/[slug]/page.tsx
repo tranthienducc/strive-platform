@@ -13,9 +13,7 @@ const UpdatePage = () => {
         Updating a current templates for ID, title, price, categories, images,
         desc.
       </p>
-      <div className="bg-gray28 border border-gray-800 max-w-[552px] rounded-xl w-full px-4 py-3 flex justify-center items-center flex-row">
-        <FormUpdate />
-      </div>
+      <FormUpdate />
     </div>
   );
 };

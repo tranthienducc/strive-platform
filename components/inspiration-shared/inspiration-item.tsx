@@ -71,7 +71,7 @@ const InspirationItem = () => {
                 </div>
                 <div className="flex flex-row items-center gap-x-2">
                   <Link
-                    href="/dashboard/update"
+                    href={`/dashboard/update/${item._id}`}
                     className="bg-blue-200 rounded-md px-1 py-1"
                   >
                     <Eraser className="text-black w-4 h-4" />

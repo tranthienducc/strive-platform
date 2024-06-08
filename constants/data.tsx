@@ -4,10 +4,10 @@ import {
   PanelLeft,
   Plus,
   Atom,
-  DraftingCompass,
   Blend,
   Send,
   Drill,
+  Boxes,
 } from "lucide-react";
 export const links = [
   {
@@ -45,11 +45,9 @@ export const sidebarLinks = [
     title: "New inspiration",
   },
   {
-    url: "/dashboard/update",
-    icon: (
-      <DraftingCompass className="w-[18px] h-[18px] active:text-[#cff110]" />
-    ),
-    title: "Updating inspiration",
+    url: "/dashboard/feature",
+    icon: <Boxes className="w-[18px] h-[18px] active:text-[#cff110]" />,
+    title: "Feature",
   },
   {
     url: "/dashboard/profile",

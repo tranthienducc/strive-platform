@@ -50,11 +50,12 @@ export interface DetailSidebarProps {
 
 export type InspirationType = {
   [x: string]: any;
-  _id: Id<"documents">;
+  id: Id<"documents">;
   title: string;
   description: string;
+  categories: string;
   coverImage: string;
-  name: string;
+  fullName: string;
 };
 export interface FormValues {
   title: string;

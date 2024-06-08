@@ -129,7 +129,7 @@ const InspirationPage = () => {
                         className="w-6 h-6 rounded-full"
                       />
                       <span className="text-sm font-medium text-white">
-                        Denoos
+                        {item.fullName}
                       </span>
                     </div>
                     <div className="flex flex-row gap-x-2">

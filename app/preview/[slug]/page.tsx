@@ -36,12 +36,10 @@ const PreviewPage = () => {
   const productVariant = variantProduct.find((item) => {
     const productSlug = item.attributes.slug;
     const trimProductSlug = String(productSlug).trim();
-    return trimProductId !== trimProductSlug;
+    return trimProductId === trimProductSlug;
   });
 
-  const { name, slug } = productVariant?.attributes || {};
-  console.log(name, slug);
-  console.log(variantProduct);
+  const { name } = productVariant?.attributes || {};
 
   return (
     <>
@@ -50,10 +48,6 @@ const PreviewPage = () => {
           <ArrowLeft className="text-black w-5 h-5" />
           <p className="text-base text-black font-medium">Home</p>
         </Link>
-
-        <button className="px-3 py-3 rounded-xl bg-black text-white">
-          Dowload / Buy Template
-        </button>
 
         <div className="flex flex-row gap-x-2 pt-3 pl-3">
           <button
@@ -74,8 +68,13 @@ const PreviewPage = () => {
         {viewMode === "iframe" && (
           <iframe
             src={name}
-            style={{ width: "100%", height: "100%", border: "none" }}
-            sandbox="allow-scripts"
+            style={{
+              width: "100%",
+              height: "100%",
+              border: "none",
+              backgroundColor: "white",
+            }}
+            sandbox="allow-scripts allow-same-origin"
             loading="lazy"
           />
         )}

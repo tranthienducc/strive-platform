@@ -26,11 +26,11 @@ const DetailTemplate = () => {
   const { htmlToText } = require("html-to-text");
 
   useEffect(() => {
-    const getProducts = async () => {
+    const getProductsVariant = async () => {
       try {
         const res = await axios.get("/api/purchaseProduct");
         if (Array.isArray(res.data.productVariant)) {
-          setProductsVariant(res.data.productVariant);
+          setProductsVariant(res.data.productVariant.slice(1));
         } else {
           console.error("Returns data that is not an array", res.data);
         }
@@ -39,12 +39,9 @@ const DetailTemplate = () => {
       }
     };
 
-    getProducts();
+    getProductsVariant();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const dataId = products.map((items) => items.id);
-  const variantSlug = productsVariant.map((items) => items.attributes.slug);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -68,6 +65,8 @@ const DetailTemplate = () => {
 
   const { name, large_thumb_url, description, price } =
     product?.attributes || {};
+
+  const dataId = productsVariant.map((variant) => variant.id);
 
   const handleBuyProduct = async () => {
     try {
@@ -168,15 +167,18 @@ const DetailTemplate = () => {
               Please note: Standard VAT rate may be charged in accordance with
               your country.
             </p>
-            <Link
-              href={`/preview/${variantSlug}`}
-              className="flex flex-row gap-x-2 items-center bg-gradient-conic rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5 border border-gray-800"
-            >
-              <span className="text-sm font-medium text-white block">
-                Preview
-              </span>
-              <ArrowUpRight className="w-4 h-4 text-white" />
-            </Link>
+            {productsVariant.map((variant) => (
+              <Link
+                href={`/preview/${variant.attributes.slug}`}
+                className="flex flex-row gap-x-2 items-center bg-gradient-conic rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5 border border-gray-800"
+                key={variant.id}
+              >
+                <span className="text-sm font-medium text-white block">
+                  Preview
+                </span>
+                <ArrowUpRight className="w-4 h-4 text-white" />
+              </Link>
+            ))}
             <Link
               href="/pricing"
               className="px-4 py-4 bg-gradient-conic rounded-xl mb-6 border border-gray-800 flex flex-col"

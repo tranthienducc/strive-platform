@@ -22,7 +22,7 @@ const DetailInspiration = () => {
     return trimInspirationParams === productSlug;
   });
 
-  const { name, title, coverImage, description } = inspirationList || {};
+  const { fullName, title, coverImage, description } = inspirationList || {};
 
   return (
     <>
@@ -48,7 +48,7 @@ const DetailInspiration = () => {
             />
             <div className="flex flex-col gap-y-[2px] items-baseline">
               <h5 className="text-sm font-semibold text-white pl-[14px]">
-                {name}
+                {fullName}
               </h5>
               <span className="text-xs font-medium flex flex-row  text-green-400 items-center">
                 <Dot className="w-8 h-8 animate-pulse" />

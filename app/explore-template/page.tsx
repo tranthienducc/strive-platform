@@ -5,7 +5,7 @@ import axios from "axios";
 import { ChevronDown, ListFilter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ExploreTemplate = () => {
   const [products, setProducts] = useState<[]>([]);
@@ -49,8 +49,6 @@ const ExploreTemplate = () => {
     }
   }, [filterWord, products]);
 
-  console.log("filterWord", filterWord);
-  console.log("filterInspiration", filterInspiration);
   return (
     <>
       <Header />
@@ -63,7 +61,7 @@ const ExploreTemplate = () => {
           <div className="flex flex-row gap-x-1">
             {products ? (
               products.map((product: any, index) => (
-                <>
+                <React.Fragment key={index}>
                   <button
                     key={index}
                     className={`${
@@ -75,7 +73,7 @@ const ExploreTemplate = () => {
                   >
                     {product.attributes.name}
                   </button>
-                </>
+                </React.Fragment>
               ))
             ) : (
               <Skeleton className="w-[106px] h-11" />
@@ -88,14 +86,14 @@ const ExploreTemplate = () => {
         </div>
 
         <div className="grid grid-cols-4 gap-9">
-          {products?.length ? (
-            products?.map((item: any, index) => (
+          {filterInspiration?.length ? (
+            filterInspiration?.map((item: any, index) => (
               <>
                 <div
                   className="max-w-[315px] w-full flex flex-col gap-y-3"
                   key={index}
                 >
-                  <Link href={`/inspiration/inpiration-detail/${item._id}`}>
+                  <Link href={`/detail-template/${item?.attributes.slug}`}>
                     <Image
                       src={
                         item?.attributes?.large_thumb_url ||

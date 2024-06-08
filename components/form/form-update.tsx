@@ -2,77 +2,65 @@
 import { api } from "@/convex/_generated/api";
 import { useEdgeStore } from "@/lib/edgestore";
 import { useMutation, useQuery } from "convex/react";
-import { ShieldCheck } from "lucide-react";
+import { Asterisk, ShieldCheck, UploadCloud } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Id } from "@/convex/_generated/dataModel";
-
-interface FormValues {
-  title: string;
-  userId: string;
-  price: string;
-  categories: string;
-  coverImage: string;
-  desc1: string;
-  desc2: string;
-  desc3: string;
-  desc4: string;
-}
+import { FormValues, InspirationType } from "@/utils/types/type";
 
 const FormUpdate = () => {
   const [file, setFile] = useState<File>();
-  const params = useParams();
+  const { slug: InspirationId } = useParams();
   const { edgestore } = useEdgeStore();
   const router = useRouter();
   const update = useMutation(api.documents.update);
-  const documents = useQuery(api.documents.getById);
+  const inspirations = useQuery(
+    api.documents.getById
+  ) as any as InspirationType[];
 
-  const idDocUpdate = (documents?.map((item) => item._id) ||
-    []) as unknown as Id<"documents">;
+  const trimInspirationsParam = String(InspirationId).trim();
 
-  console.log("rootId", idDocUpdate);
-  const paramsId = params.id as Id<"documents">;
-  const defaultDocument = documents?.find((doc) => doc._id === paramsId);
+  const inspirationsList = inspirations?.find((item) => {
+    const productSlug = item._id;
+    return trimInspirationsParam === productSlug;
+  });
 
-  console.log(defaultDocument);
-  console.log(params.id);
+  const { fullName, title, coverImage, description, categories, id } =
+    inspirationsList || {};
 
   const { handleSubmit, register } = useForm<FormValues>({
     defaultValues: {
-      title: "",
-      price: "",
-      categories: "",
-      coverImage: "",
-      desc1: "",
-      desc2: "",
-      desc3: "",
-      desc4: "",
+      title: title,
+      categories: categories,
+      coverImage: coverImage,
+      fullName: fullName,
+      description: description,
     },
   });
 
-  const handleUpdateTemplate: SubmitHandler<FormValues> = async (values) => {
+  const handleUpdateTemplate: SubmitHandler<FormValues> = async (data) => {
     try {
       if (!file) {
         return;
       }
       const res = await edgestore.publicFiles.upload({ file });
 
-      if (idDocUpdate && idDocUpdate.length > 0) {
+      if (id && id.length > 0) {
         const promise = update({
-          id: idDocUpdate as Id<"documents">,
-          ...values,
+          id: id as Id<"documents">,
+          ...data,
           coverImage: res.url,
         });
 
         toast.promise(promise, {
-          loading: "Updating a template...",
-          success: "Template has been updated!",
-          error: "Failed to update a template...",
+          loading: "Creating a new inspiration...",
+          success: "New inspiration created!",
+          error: "Failed to create a new inspiration...",
         });
       }
-      router.push("/dashboard/manage");
+      router.push("/dashboard/inspiration-manage");
     } catch (error) {
       console.error("Error:", error);
       toast.error("Failed to create a new template.");
@@ -86,96 +74,91 @@ const FormUpdate = () => {
 
   return (
     <>
-      <form className="shadow-md" onSubmit={handleSubmit(handleUpdateTemplate)}>
-        <div className="flex flex-row gap-x-6">
-          <div className="flex flex-col gap-y-2 mb-5">
-            <label htmlFor="title" className="text-white">
+      <form
+        className="shadow-md max-w-[552px] w-full"
+        onSubmit={handleSubmit(handleUpdateTemplate)}
+      >
+        <div className="flex flex-row gap-x-4 mb-2">
+          <div className="flex flex-col gap-y-2">
+            <label htmlFor="title" className="text-white font-medium">
               Title
             </label>
-            <input
-              type="text"
-              id="title"
-              required
-              className="rounded-xl outline-none bg-neutral-800 text-white placeholder:text-gray9 px-4 py-2"
-              placeholder="Solopreneur"
-              {...register("title")}
-            />
+            <div className="flex flex-row justify-between bg-[#1e1e22] rounded-lg px-4 py-4">
+              <input
+                type="text"
+                id="title"
+                required
+                className="outline-none text-white placeholder:text-gray9 bg-inherit"
+                placeholder="Solopreneur"
+                {...register("title")}
+              />
+              <Asterisk className="w-6 h-6" color="#cff110" />
+            </div>
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="price" className="text-white">
-              Price
+          <div className="flex flex-col gap-y-2 mb-7">
+            <label htmlFor="fullName" className="text-white font-medium">
+              Full Name
             </label>
-            <input
-              type="text"
-              required
-              id="price"
-              className="rounded-xl outline-none bg-neutral-800 text-white placeholder:text-gray9 px-4 py-2"
-              placeholder="39$"
-              {...register("price")}
-            />
+            <div className="flex flex-row justify-between bg-[#1e1e22] rounded-lg px-4 py-4">
+              <input
+                type="text"
+                required
+                id="fullName"
+                className="outline-none text-white placeholder:text-gray9 bg-inherit"
+                placeholder="Josh Geist"
+                {...register("fullName")}
+              />
+              <Asterisk className="w-6 h-6" color="#cff110" />
+            </div>
           </div>
         </div>
-        <div className="max-w-full w-full flex flex-col gap-y-2 mb-5">
-          <label htmlFor="categories" className="text-white">
+        <div className="max-w-full w-full flex flex-col gap-y-2 mb-7">
+          <label htmlFor="categories" className="text-white font-medium">
             Categories
           </label>
           <input
             type="text"
             id="categories"
             required
-            className="rounded-xl outline-none bg-neutral-800 text-white placeholder:text-gray9 px-4 py-2"
+            className="rounded-lg outline-none bg-[#1e1e22] text-white placeholder:text-gray9 px-4 pt-4 pb-20"
             placeholder="Web design"
             {...register("categories")}
           />
         </div>
+        <div className="flex flex-col gap-y-2 mb-7">
+          <label htmlFor="image" className="text-white font-medium">
+            Image
+          </label>
+          <div className="bg-[#1e1e22] max-w-full h-[200px] px-[13.5rem] py-[4.5rem] flex items-center justify-center flex-col gap-y-3">
+            <input
+              type="file"
+              id="image"
+              onChange={handleFileChange}
+              className="w-full h-[200px] px-[13.5rem] py-[4.5rem]"
+              hidden
+            />
 
-        <input
-          type="file"
-          accept="images/*"
-          onChange={handleFileChange}
-          className="max-w-full w-full h-[50px] bg-gray9 mb-5 rounded-xl text-center flex items-center justify-center"
-        />
-        <div className="grid grid-cols-2 col-span-2 gap-4 mb-5">
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="desc1" className="text-white ">
-              Description 1
-            </label>
-            <textarea
-              id="desc1"
-              className="rounded-xl bg-neutral-800 text-white px-2 text-sm py-2"
-              {...register("desc1")}
-            ></textarea>
+            <UploadCloud className="w-10 h-10 text-white" />
+            <p className="text-sm font-normal text-white">
+              Drop your file here or{" "}
+              <span className="text-sm font-medium text-[#cff110]">browse</span>{" "}
+            </p>
+            <p className="text-xs font-medium text-gray9">
+              Maximum upload file size: 120MB
+            </p>
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="desc2" className="text-white">
-              Description 2
-            </label>
-            <textarea
-              id="desc2"
-              className="rounded-xl bg-neutral-800 text-white px-2 text-sm py-2"
-              {...register("desc2")}
-            ></textarea>
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="desc3" className="text-white">
-              Description 3
-            </label>
-            <textarea
-              id="desc3"
-              className="rounded-xl bg-neutral-800 text-white px-2 text-sm py-2"
-              {...register("desc3")}
-            ></textarea>
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="desc4" className="text-white">
-              Description 4
-            </label>
-            <textarea
-              id="desc4"
-              className="rounded-xl bg-neutral-800 text-white px-2 text-sm py-2"
-              {...register("desc4")}
-            ></textarea>
-          </div>
+        </div>
+
+        <div className="flex flex-col gap-y-2 mb-7">
+          <label htmlFor="description" className="text-white font-medium">
+            Description
+          </label>
+          <textarea
+            id="description"
+            className="rounded-xl bg-[#1e1e22] text-white px-4 text-sm pt-4 pb-16 placeholder:text-gray9"
+            placeholder="that is a solopreneur"
+            {...register("description")}
+          ></textarea>
         </div>
         <button
           type="submit"

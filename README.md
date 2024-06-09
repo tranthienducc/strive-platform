@@ -1,6 +1,5 @@
 # Dự án Template Platform - Strive - tương tự Behance -SasS Platform
 
-# MAI CHỈNH SỬA LẠI FORM THÊM INPUT LÀ SLUG VÍ DỤ NHƯ(image-galastus) NỮA NÓ SẼ THAY THẾ CHO ID ĐỂ NÓ TRUYỀN VÀO SLUG TỨC LÀ DÙNG THẺ LINK href="/dashboard/eyuuwe123321323 => href="/dashboard/image-glatus tới" THAY VÌ SO SÁNH ID SẼ SO SÁNH BẰNG SLUG ĐỂ TỚI ƯU VỀ BẢO MẬT.
 
 # Ý TƯỞNG
 

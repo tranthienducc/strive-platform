@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://strive-platform.vercel.app"),
+  metadataBase: new URL("https://strive-platform.vercel.app/"),
   title: "Strive - Template Platform",
   description:
     "The platform provides free and paid templates with beautiful designs, updated every day for everyone from beginners to experienced people. Developed and built by Tran Thien Duc.",

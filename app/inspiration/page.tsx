@@ -108,7 +108,7 @@ const InspirationPage = () => {
                   key={index}
                 >
                   <Link
-                    href={`/inspiration/inpiration-detail/${item._id}`}
+                    href={`/inspiration/inpiration-detail/inspiration?slug=${item.slug}`}
                     onClick={() => handleWatchInspiration(item._id)}
                   >
                     <Image
@@ -129,7 +129,7 @@ const InspirationPage = () => {
                         className="w-6 h-6 rounded-full"
                       />
                       <span className="text-sm font-medium text-white">
-                        {item.fullName}
+                        Tran Thien Duc
                       </span>
                     </div>
                     <div className="flex flex-row gap-x-2">

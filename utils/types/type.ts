@@ -55,12 +55,12 @@ export type InspirationType = {
   description: string;
   categories: string;
   coverImage: string;
-  fullName: string;
+  slug: string;
 };
 export interface FormValues {
   title: string;
   categories: string;
   coverImage: string;
-  fullName: string;
+  slug: string;
   description: string;
 }

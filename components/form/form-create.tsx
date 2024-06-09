@@ -19,7 +19,7 @@ const FormCreate = () => {
       title: "",
       categories: "",
       coverImage: "",
-      fullName: "",
+      slug: "",
       description: "",
     },
   });
@@ -53,6 +53,7 @@ const FormCreate = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     setFile(selectedFile);
+    toast.success("Image has been uploaded!");
   };
 
   return (
@@ -79,17 +80,17 @@ const FormCreate = () => {
             </div>
           </div>
           <div className="flex flex-col gap-y-2 mb-7">
-            <label htmlFor="fullName" className="text-white font-medium">
-              Full Name
+            <label htmlFor="slug" className="text-white font-medium">
+              Slug
             </label>
             <div className="flex flex-row justify-between bg-[#1e1e22] rounded-lg px-4 py-4">
               <input
                 type="text"
                 required
-                id="fullName"
+                id="slug"
                 className="outline-none text-white placeholder:text-gray9 bg-inherit"
-                placeholder="Josh Geist"
-                {...register("fullName")}
+                placeholder="this-is-slug"
+                {...register("slug")}
               />
               <Asterisk className="w-6 h-6" color="#cff110" />
             </div>

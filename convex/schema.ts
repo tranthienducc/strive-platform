@@ -6,7 +6,7 @@ export default defineSchema({
     title: v.optional(v.string()),
     categories: v.optional(v.string()),
     coverImage: v.optional(v.string()),
-    fullName: v.optional(v.string()),
+    slug: v.optional(v.string()),
     description: v.optional(v.string()),
     heart: v.optional(v.float64()),
     watch: v.optional(v.float64()),

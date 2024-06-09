@@ -27,7 +27,7 @@ const FormUpdate = () => {
     return trimInspirationsParam === productSlug;
   });
 
-  const { fullName, title, coverImage, description, categories } =
+  const { slug, title, coverImage, description, categories } =
     inspirationsList || {};
 
   const { handleSubmit, register } = useForm<FormValues>({
@@ -35,7 +35,7 @@ const FormUpdate = () => {
       title: title,
       categories: categories,
       coverImage: coverImage,
-      fullName: fullName,
+      slug: slug,
       description: description,
     },
   });
@@ -96,17 +96,17 @@ const FormUpdate = () => {
             </div>
           </div>
           <div className="flex flex-col gap-y-2 mb-7">
-            <label htmlFor="fullName" className="text-white font-medium">
-              Full Name
+            <label htmlFor="slug" className="text-white font-medium">
+              Slug
             </label>
             <div className="flex flex-row justify-between bg-[#1e1e22] rounded-lg px-4 py-4">
               <input
                 type="text"
                 required
-                id="fullName"
+                id="slug"
                 className="outline-none text-white placeholder:text-gray9 bg-inherit"
-                placeholder="Josh Geist"
-                {...register("fullName")}
+                placeholder="this-is-slug"
+                {...register("slug")}
               />
               <Asterisk className="w-6 h-6" color="#cff110" />
             </div>

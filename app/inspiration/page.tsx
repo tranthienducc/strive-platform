@@ -13,12 +13,6 @@ import { toast } from "sonner";
 import CategoriesFilter from "@/components/categories-filter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserContext } from "@/context/UserContext";
-import { useLikeStore } from "@/lib/zustand/store";
-
-type LikedStoreType = {
-  liked: Object;
-  heartUpdated: (idInspiration: Id<"documents">[]) => void;
-};
 
 const InspirationPage = () => {
   const inspirations = useQuery(api.documents.getById);
@@ -56,9 +50,6 @@ const InspirationPage = () => {
     watch: 0,
   });
 
-  const { liked, heartUpdated }: LikedStoreType = useLikeStore();
-  const isLiked = liked[idInspiration];
-
   const userIdInspiration = inspirations?.map((item) => item.userId);
 
   const handleHeartInspiration = (id: Id<"documents">) => {
@@ -75,7 +66,7 @@ const InspirationPage = () => {
           : "Love the successful article",
         error: "Favorites update failed",
       });
-      heartUpdated(idInspiration);
+
       dispatch({ type: TYPE.TOGGLE_HEART });
     }
   };

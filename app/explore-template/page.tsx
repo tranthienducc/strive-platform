@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 const ExploreTemplate = () => {
   const [products, setProducts] = useState<[]>([]);
   const [filterWord, setFilterWord] = useState<string[]>([]);
-  const [filterInspiration, setFilterInspiration] = useState<any[]>([]);
+  const [filterTemplate, setFilterInspiration] = useState<any[]>([]);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -49,6 +49,19 @@ const ExploreTemplate = () => {
     }
   }, [filterWord, products]);
 
+  if (!filterTemplate) {
+    return (
+      <div className="max-w-[315px] w-full flex flex-col gap-y-3">
+        <Skeleton className="w-[315px] h-[236px] rounded-xl" />
+        <div className="flex flex-row justify-between items-center">
+          <Skeleton className="w-20 h-5" />
+          <Skeleton className="w-[59px] h-5" />
+          <Skeleton className="w-[77px] h-7" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -85,9 +98,9 @@ const ExploreTemplate = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-4 gap-9">
-          {filterInspiration?.length ? (
-            filterInspiration?.map((item: any, index) => (
+        <div className="grid grid-cols-4 gap-9 relative">
+          {filterTemplate?.length > 0 ? (
+            filterTemplate?.map((item: any, index) => (
               <>
                 <div
                   className="max-w-[315px] w-full flex flex-col gap-y-3"
@@ -123,14 +136,9 @@ const ExploreTemplate = () => {
               </>
             ))
           ) : (
-            <div className="max-w-[315px] w-full flex flex-col gap-y-3">
-              <Skeleton className="w-[315px] h-[236px] rounded-xl" />
-              <div className="flex flex-row justify-between items-center">
-                <Skeleton className="w-20 h-5" />
-                <Skeleton className="w-[59px] h-5" />
-                <Skeleton className="w-[77px] h-7" />
-              </div>
-            </div>
+            <p className="text-base font-normal text-gray9 absolute top-[50%] left-[30%]">
+              No template available. Please create a new one.
+            </p>
           )}
         </div>
       </div>

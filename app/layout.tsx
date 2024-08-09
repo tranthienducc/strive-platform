@@ -6,6 +6,7 @@ import { EdgeStoreProvider } from "@/lib/edgestore";
 import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 import "./globals.css";
+import { UserProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://strive-platform.vercel.app/"),
@@ -32,11 +33,13 @@ export default function RootLayout({
       <body className={inter.className}>
         <ConvexClientProvider>
           <EdgeStoreProvider>
-            <main className="relative">
-              <ModalProvider />
-              <Toaster position="bottom-right" />
-              {children}
-            </main>
+            <UserProvider>
+              <main className="relative">
+                <ModalProvider />
+                <Toaster position="bottom-right" />
+                {children}
+              </main>
+            </UserProvider>
           </EdgeStoreProvider>
         </ConvexClientProvider>
       </body>

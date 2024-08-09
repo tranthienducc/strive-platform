@@ -31,6 +31,18 @@ export const create = mutation({
       throw new Error("Not authenticated");
     }
 
+    const existingSlug = await ctx.db
+      .query("documents")
+      .filter((q) => q.eq(q.field("slug"), args.slug))
+      .first();
+
+    if (existingSlug) {
+      return {
+        type: "error",
+        message: "Slug Inspiration invalid!",
+      };
+    }
+
     const userId = indentity.subject;
     const document = await ctx.db.insert("documents", {
       userId,
@@ -45,6 +57,7 @@ export const create = mutation({
     return document;
   },
 });
+
 export const update = mutation({
   args: {
     id: v.id("documents"),
@@ -138,6 +151,7 @@ export const updateHeart = mutation({
     return document;
   },
 });
+
 export const watchInspiration = mutation({
   args: {
     id: v.id("documents"),

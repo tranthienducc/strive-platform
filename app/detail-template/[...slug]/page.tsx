@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DetailTemplate = () => {
   const [products, setProducts] = useState<ProductProps[]>([]);
@@ -121,84 +122,91 @@ const DetailTemplate = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex flex-row gap-x-9 mb-40">
-          <div className="max-w-[860px] w-full">
-            <Image
-              src={large_thumb_url || "/assets/images/404-page.png"}
-              alt="img2"
-              width={1500}
-              height={1500}
-              className="object-cover rounded-xl mb-3"
-            />
-          </div>
-
-          <aside className="sticky top-3 mb-10 max-w-[451px] w-full">
-            <div className="flex flex-col gap-y-2 mb-4">
-              <h3 className="text-4xl font-semibold text-white">{name}</h3>
-              <div className="flex flex-row gap-x-[10px]">
-                <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
-                  allow template
-                </h6>
-                <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
-                  personal
-                </h6>
-              </div>
+        {product?.attributes ? (
+          <div className="flex flex-row gap-x-9 mb-40">
+            <div className="max-w-[860px] w-full">
+              <Image
+                src={large_thumb_url || "/assets/images/404-page.png"}
+                alt="img2"
+                width={1500}
+                height={1500}
+                className="object-cover rounded-xl mb-3"
+              />
             </div>
-            {text.split("\n").map((line: any, i: Key) => (
-              <p className="text-base font-normal text-[#999]" key={i}>
-                {line}
-              </p>
-            ))}
 
-            <span className="text-base font-normal text-white mb-6 block">
-              Compatible with all devices
-            </span>
-            <button
-              onClick={handleBuyProduct}
-              className="flex flex-row gap-x-2 items-center bg-white rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5"
-            >
-              <p className="text-sm font-medium text-black bg-white block">
-                Buy Now - {price} VNĐ
-              </p>
-              <ArrowRight className="w-4 h-4 text-black bg-white" />
-            </button>
-
-            <p className="text-xs font-light text-[#808080] mb-4 text-center">
-              Please note: Standard VAT rate may be charged in accordance with
-              your country.
-            </p>
-            {productsVariant.map((variant) => (
-              <Link
-                href={`/preview/${variant.attributes.slug}`}
-                className="flex flex-row gap-x-2 items-center bg-gradient-conic rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5 border border-gray-800"
-                key={variant.id}
-              >
-                <span className="text-sm font-medium text-white block">
-                  Preview
-                </span>
-                <ArrowUpRight className="w-4 h-4 text-white" />
-              </Link>
-            ))}
-            <Link
-              href="/pricing"
-              className="px-4 py-4 bg-gradient-conic rounded-xl mb-6 border border-gray-800 flex flex-col"
-            >
-              <div className="flex flex-row justify-between items-center mb-3">
-                <div className="flex flex-row gap-x-2 items-center">
-                  <LockOpen className="w-5 h-5 text-white" />
-                  <h6 className="text-xl font-normal text-white">
-                    Unlock with All-Access
+            <aside className="sticky top-3 mb-10 max-w-[451px] w-full">
+              <div className="flex flex-col gap-y-2 mb-4">
+                <h3 className="text-4xl font-semibold text-white">{name}</h3>
+                <div className="flex flex-row gap-x-[10px]">
+                  <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
+                    allow template
+                  </h6>
+                  <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
+                    personal
                   </h6>
                 </div>
-                <ArrowRight className="w-5 h-5 text-white" />
               </div>
-              <p className="text-base font-normal text-[#999]">
-                Get unlimited access to our full collection of backgrounds and
-                more and take your workflow to the next level.
+              {text.split("\n").map((line: any, i: Key) => (
+                <p className="text-base font-normal text-[#999]" key={i}>
+                  {line}
+                </p>
+              ))}
+
+              <span className="text-base font-normal text-white mb-6 block">
+                Compatible with all devices
+              </span>
+              <button
+                onClick={handleBuyProduct}
+                className="flex flex-row gap-x-2 items-center bg-white rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5"
+              >
+                <p className="text-sm font-medium text-black bg-white block">
+                  Buy Now - {price} VNĐ
+                </p>
+                <ArrowRight className="w-4 h-4 text-black bg-white" />
+              </button>
+
+              <p className="text-xs font-light text-[#808080] mb-4 text-center">
+                Please note: Standard VAT rate may be charged in accordance with
+                your country.
               </p>
-            </Link>
-          </aside>
-        </div>
+              {productsVariant.map((variant) => (
+                <Link
+                  href={`/preview/${variant.attributes.slug}`}
+                  className="flex flex-row gap-x-2 items-center bg-gradient-conic rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5 border border-gray-800"
+                  key={variant.id}
+                >
+                  <span className="text-sm font-medium text-white block">
+                    Preview
+                  </span>
+                  <ArrowUpRight className="w-4 h-4 text-white" />
+                </Link>
+              ))}
+              <Link
+                href="/pricing"
+                className="px-4 py-4 bg-gradient-conic rounded-xl mb-6 border border-gray-800 flex flex-col"
+              >
+                <div className="flex flex-row justify-between items-center mb-3">
+                  <div className="flex flex-row gap-x-2 items-center">
+                    <LockOpen className="w-5 h-5 text-white" />
+                    <h6 className="text-xl font-normal text-white">
+                      Unlock with All-Access
+                    </h6>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-base font-normal text-[#999]">
+                  Get unlimited access to our full collection of backgrounds and
+                  more and take your workflow to the next level.
+                </p>
+              </Link>
+            </aside>
+          </div>
+        ) : (
+          <div className="flex  flex-row gap-x-6">
+            <Skeleton className="w-[860px] h-[1032px] rounded-xl" />
+            <Skeleton className="w-[451px] h-[1004px]" />
+          </div>
+        )}
       </div>
     </>
   );

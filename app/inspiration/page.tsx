@@ -2,7 +2,7 @@
 import { Header } from "@/components/shared";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { reducer } from "@/helper";
+import { reducer } from "@/helper/reducer";
 import { useEffect, useReducer, useState } from "react";
 import { ACTION, TYPE } from "@/utils/types/enum";
 import { useMutation, useQuery } from "convex/react";
@@ -12,12 +12,19 @@ import Link from "next/link";
 import { toast } from "sonner";
 import CategoriesFilter from "@/components/categories-filter";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserContext } from "@/context/UserContext";
+import { useLikeStore } from "@/lib/zustand/store";
+
+type LikedStoreType = {
+  liked: Object;
+  heartUpdated: (idInspiration: Id<"documents">[]) => void;
+};
 
 const InspirationPage = () => {
   const inspirations = useQuery(api.documents.getById);
   const heartUpdate = useMutation(api.documents.updateHeart);
   const watchInspiration = useMutation(api.documents.watchInspiration);
-
+  const { user } = useUserContext();
   const [filterWord, setFilterWord] = useState<string[]>([]);
   const [filterInspiration, setFilterInspiration] = useState<any[]>([]);
 
@@ -42,16 +49,15 @@ const InspirationPage = () => {
     }
   }, [filterWord, inspirations]);
 
-  console.log("filterWord", filterWord);
-  console.log("filterInspiration", filterInspiration);
-
   const idInspiration = inspirations?.map((item) => item._id);
 
   const [state, dispatch] = useReducer(reducer, {
     heart: 0,
     watch: 0,
-    isHeartActive: false,
   });
+
+  const { liked, heartUpdated }: LikedStoreType = useLikeStore();
+  const isLiked = liked[idInspiration];
 
   const userIdInspiration = inspirations?.map((item) => item.userId);
 
@@ -69,7 +75,7 @@ const InspirationPage = () => {
           : "Love the successful article",
         error: "Favorites update failed",
       });
-
+      heartUpdated(idInspiration);
       dispatch({ type: TYPE.TOGGLE_HEART });
     }
   };
@@ -116,20 +122,22 @@ const InspirationPage = () => {
                       alt="emty"
                       width={1300}
                       height={300}
+                      loading="lazy"
                       className="w-full h-[236px] object-cover rounded-xl"
                     />
                   </Link>
                   <div className="flex flex-row justify-between items-center">
                     <div className="flex flex-row gap-x-2 items-center">
                       <Image
-                        src="/assets/images/avatar.png"
+                        src={user?.imageUrl || "/assets/images/avatar.png"}
                         alt="avatar"
                         width={300}
                         height={300}
+                        loading="lazy"
                         className="w-6 h-6 rounded-full"
                       />
                       <span className="text-sm font-medium text-white">
-                        Tran Thien Duc
+                        {user?.fullName}
                       </span>
                     </div>
                     <div className="flex flex-row gap-x-2">
@@ -145,7 +153,7 @@ const InspirationPage = () => {
                       <div className="flex flex-row gap-x-1">
                         <Eye className="w-4 h-4  text-white" />
                         <span className="text-xs font-medium text-gray9">
-                          {item?.watch || "0k"}
+                          {item?.watch || "0"}
                         </span>
                       </div>
                     </div>

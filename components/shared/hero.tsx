@@ -49,6 +49,14 @@ const Hero = () => {
             <MousePointerClick className="w-5 h-5" />
             <span className="text-base font-normal">One-Click Download</span>
           </div>
+          <div className="flex flex-col gap-y-2">
+            <span className="text-base font-semibold text-white">
+              account: thienducdev@gmail.com
+            </span>
+            <span className="text-base font-semibold text-white">
+              password: thienducdev@123
+            </span>
+          </div>
         </div>
       </div>
       <div className="max-w-[1225px] w-full h-[600px] items-center rounded-lg">

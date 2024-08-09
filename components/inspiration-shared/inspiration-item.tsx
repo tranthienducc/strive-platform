@@ -1,17 +1,19 @@
 "use client";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { Eraser, Trash } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
+import { Key } from "react";
 
-const InspirationItem = () => {
-  const inspiration = useQuery(api.documents.getById);
+const InspirationItem = (props: any) => {
+  const { inspiration } = props;
+
   const deleted = useMutation(api.documents.deleted);
-  const idDoc = inspiration?.map((item) => item._id);
+  const idDoc = inspiration?.map((item: { _id: any }) => item._id);
 
   if (!inspiration) {
     return (
@@ -49,17 +51,21 @@ const InspirationItem = () => {
 
   return (
     <>
-      <div className="grid grid-cols-3 col-span-2 gap-8 pb-5">
-        {inspiration ? (
-          inspiration?.map((item, index) => (
+      <div className="grid grid-cols-3 col-span-2 gap-8 pb-5 relative">
+        {inspiration.length > 0 ? (
+          inspiration?.map((item: any, index: Key) => (
             <div className="max-w-[400px] w-full" key={index}>
-              <Image
-                src={item.coverImage || "/assets/images/404-page.png"}
-                alt="avatar"
-                width={1500}
-                height={1500}
-                className="max-w-[400px] w-full h-[180px] object-cover mb-3 rounded-md"
-              />
+              <Link
+                href={`/inspiration/inpiration-detail/inspiration?slug=${item.slug}`}
+              >
+                <Image
+                  src={item.coverImage || "/assets/images/404-page.png"}
+                  alt="avatar"
+                  width={1500}
+                  height={1500}
+                  className="max-w-[400px] w-full h-[180px] object-cover mb-3 rounded-md"
+                />
+              </Link>
               <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col gap-y-[2px]">
                   <h3 className="text-white font-medium text-base">
@@ -87,20 +93,9 @@ const InspirationItem = () => {
             </div>
           ))
         ) : (
-          <div className="max-w-[400px] w-full">
-            <Skeleton className="w-[400px] h-[180px] rounded-md mb-3" />
-
-            <div className="flex flex-row justify-between items-center">
-              <div className="flex flex-col gap-y-[2px]">
-                <Skeleton className="w-24 h-6" />
-                <Skeleton className="w-24 h-5" />
-              </div>
-              <div className="flex flex-row items-center gap-x-2">
-                <Skeleton className="w-6 h-6" />
-                <Skeleton className="w-6 h-6" />
-              </div>
-            </div>
-          </div>
+          <p className="text-base font-normal text-gray9 absolute top-[50%] left-[30%]">
+            No inspiration available. Please create a new one.
+          </p>
         )}
       </div>
     </>

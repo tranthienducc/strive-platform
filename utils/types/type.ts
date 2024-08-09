@@ -57,6 +57,19 @@ export type InspirationType = {
   coverImage: string;
   slug: string;
 };
+export type InspirationProps = {
+  id: Id<"documents">;
+  _creationTime: number;
+  title?: string | undefined;
+  categories?: string | undefined;
+  coverImage?: string | undefined;
+  slug?: string | undefined;
+  description?: string | undefined;
+  heart?: number | undefined;
+  watch?: number | undefined;
+  userId?: string | undefined;
+  parentDocument?: Id<"documents"> | undefined;
+}[];
 export interface FormValues {
   title: string;
   categories: string;
@@ -64,3 +77,7 @@ export interface FormValues {
   slug: string;
   description: string;
 }
+
+export type InspirationFilters = {
+  search?: string | undefined;
+};

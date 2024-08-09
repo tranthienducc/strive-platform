@@ -7,8 +7,9 @@ import {
   Blend,
   Send,
   Drill,
-  Boxes,
 } from "lucide-react";
+import { UserResource } from "@clerk/types";
+
 export const links = [
   {
     href: "/explore-template",
@@ -43,11 +44,6 @@ export const sidebarLinks = [
     url: "/dashboard/create",
     icon: <Plus className="w-[18px] h-[18px] active:text-[#cff110]" />,
     title: "New inspiration",
-  },
-  {
-    url: "/dashboard/feature",
-    icon: <Boxes className="w-[18px] h-[18px] active:text-[#cff110]" />,
-    title: "Feature",
   },
   {
     url: "/dashboard/profile",

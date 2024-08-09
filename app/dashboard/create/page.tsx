@@ -1,22 +1,23 @@
 import BreadcumsCustom from "@/components/breadcums-custom";
-import FormCreate from "@/components/form/form-create";
+import FormCreate from "@/components/form/InspirationForm";
 import { social } from "@/constants/data";
 import { MapPin, PhoneCall } from "lucide-react";
 import Image from "next/image";
 
 const CreatePage = () => {
   return (
-    <div className="">
+    <>
       <BreadcumsCustom title1="Creations" title2=" Create" />
 
       <h1 className="text-3xl font-semibold text-white mb-3">
-        Creating a new template
+        Creating a new inspiration
       </h1>
       <p className="text-sm font-medium text-gray9 mb-14">
-        Creating a new templates for user, information template, images, price.
+        Creating a new inspiration for user, information template, images,
+        price.
       </p>
       <div className="flex flex-row gap-x-36">
-        <FormCreate />
+        <FormCreate action="Create" />
         <div className="flex flex-col">
           <div className="flex flex-col gap-y-2 mb-12">
             <div className="flex gap-y-[3px] flex-col mb-5">
@@ -82,7 +83,7 @@ const CreatePage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

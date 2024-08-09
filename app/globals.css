@@ -76,13 +76,12 @@
   }
 }
 @layer components {
-  .bg-gradient-conic {
-    --token1: rgb(19, 20, 21);
-    --token2: rgb(5, 5, 5);
-    background: linear-gradient(
-      180deg,
-      var(--token1, rgb(19, 20, 21)) 0%,
-      var(--token2, rgb(5, 5, 5)) 100%
+  .bg-gradient-gray {
+    --gray1: rgb(245, 246, 256);
+    background: radial-gradient(
+      100% 75% at 0% 0%,
+      #cbd4e4 0%,
+      var(--gray1, rgb(245, 246, 250)) 100%
     );
   }
   .bg-gradient-text {
@@ -100,5 +99,11 @@
   .is-actived {
     --tw-bg-opacity: 1;
     background-color: rgb(43 43 43 / var(--tw-bg-opacity));
+  }
+  .shadow-gray {
+    box-shadow:
+      0 6.350044814858119px 6.350044814858119px -2.142857142857143px #dde3eeab,
+      0 11.051870570040771px 11.051870570040771px -2.678571428571429px #dde3ee9c,
+      0 40px 40px -3.75px #dde3ee40;
   }
 }

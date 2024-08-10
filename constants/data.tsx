@@ -8,7 +8,6 @@ import {
   Send,
   Drill,
 } from "lucide-react";
-import { UserResource } from "@clerk/types";
 
 export const links = [
   {

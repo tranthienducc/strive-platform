@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
 import { ConvexClientProvider } from "@/services/providers/convex-provider";
-import { ModalProvider } from "@/services/providers/modal-provider";
 import { Toaster } from "sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import type { Metadata } from "next";
@@ -35,7 +34,6 @@ export default function RootLayout({
           <EdgeStoreProvider>
             <UserProvider>
               <main className="relative">
-                <ModalProvider />
                 <Toaster position="bottom-right" />
                 {children}
               </main>

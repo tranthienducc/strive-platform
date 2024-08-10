@@ -1,48 +1,17 @@
 "use client";
-import { ElementRef, useEffect, useRef, useState } from "react";
 import { ChevronLeft, Zap } from "lucide-react";
 import NavigationList from "@/components/navigation/navigation-list";
 import Image from "next/image";
 import Link from "next/link";
-import { useMediaQuery } from "usehooks-ts";
-import { cn } from "@/lib/utils";
 
 const Sidebar = () => {
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const sidebarRef = useRef<ElementRef<"aside">>(null);
-  const navBarRef = useRef<ElementRef<"div">>(null);
-  const [isResetting, setIsResetting] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(isMobile);
-
-  const resetWidth = () => {};
-
-  const collapse = () => {
-    if (sidebarRef.current && navBarRef.current) {
-      setIsCollapsed(true);
-      setIsResetting(true);
-
-      sidebarRef.current.style.width = "0";
-      navBarRef.current.style.setProperty("width", "100%");
-      navBarRef.current.style.setProperty("left", "0"),
-        setTimeout(() => {
-          setIsResetting(false);
-        }, 300);
-    }
-  };
-
   return (
-    <aside
-      className="lg:fixed relative top-0 z-[999999] max-w-[270px] h-screen bg-[#111214] text-white pt-6 pb-6 border border-r-neutral-800 overflow-y-auto lg:overflow-hidden group/sidebar"
-      ref={sidebarRef}
-    >
+    <aside className="lg:fixed relative top-0 z-[999999] max-w-[270px] h-screen bg-[#111214] text-white pt-6 pb-6 border border-r-neutral-800 overflow-y-auto lg:overflow-hidden group/sidebar">
       <div
         role="button"
-        onClick={collapse}
         className="absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition"
       >
-        {isCollapsed && (
-          <ChevronLeft className="h-6 w-6 text-white rounded-sm hover:bg-neutral-400" />
-        )}
+        <ChevronLeft className="h-6 w-6 text-white rounded-sm hover:bg-neutral-400" />
       </div>
 
       <div className="flex flex-row gap-x-3 mb-12 px-6 items-center">

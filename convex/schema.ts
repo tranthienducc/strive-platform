@@ -15,4 +15,15 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_parent", ["userId", "parentDocument"]),
+
+  notifications: defineTable({
+    templateName: v.optional(v.string()),
+    userName: v.optional(v.string()),
+    content: v.optional(v.string()),
+    avatar: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    parentDocument: v.optional(v.id("notifications")),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_parent", ["userId", "parentDocument"]),
 });

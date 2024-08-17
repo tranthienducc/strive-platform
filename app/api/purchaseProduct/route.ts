@@ -57,6 +57,7 @@ export async function GET() {
           checkout_data: {
             custom: {
               user_id: "123",
+              user_email: "",
             },
           },
         },
@@ -86,9 +87,28 @@ export async function GET() {
         },
       },
     });
+    const ordersData = await lemonSqueezyApiInstance.get("/orders", {
+      data: {
+        type: "orders",
+        attributes: {
+          user_email: "demo123@pro",
+        },
+        relationships: {
+          store: {
+            data: {
+              type: "stores",
+              id: process.env.LEMON_SQUEEZY_STORE_ID?.toString(),
+            },
+          },
+        },
+      },
+    });
+
     const data = ress.data.data;
     const productVariant = variantData.data.data;
-    return Response.json({ data, productVariant });
+    const orders = ordersData.data.data;
+
+    return Response.json({ data, productVariant, orders });
   } catch (error) {
     console.log(error);
     return Response.json({ message: "An error occured" }, { status: 500 });

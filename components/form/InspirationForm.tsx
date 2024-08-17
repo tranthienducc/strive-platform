@@ -1,11 +1,15 @@
 "use client";
 import { api } from "@/convex/_generated/api";
 import { useEdgeStore } from "@/lib/edgestore";
-import { FormValues, InspirationType } from "@/utils/types/type";
+import {
+  FormValues,
+  InspirationFormProps,
+  InspirationType,
+} from "@/utils/types/type";
 import { useMutation, useQuery } from "convex/react";
 import { ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import slugify from "slugify";
@@ -17,10 +21,6 @@ import { Button } from "../ui/button";
 import { Spinner } from "../spinner";
 import { Id } from "@/convex/_generated/dataModel";
 
-type InspirationFormProps = {
-  action: "Create" | "Update";
-};
-
 const InspirationForm = ({ action }: InspirationFormProps) => {
   const router = useRouter();
   const create = useMutation(api.documents.create);
@@ -29,52 +29,59 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
   const inspirations = useQuery(
     api.documents.getById
   ) as any as InspirationType[];
-
-  const trimInspirationsParam = String(InspirationId).trim();
-
-  const inspirationsList = inspirations?.find((item) => {
-    const productSlug = item._id;
-    return trimInspirationsParam === productSlug;
-  });
-
-  const { slug, title, coverImage, description, categories } =
-    inspirationsList || {};
-
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const { edgestore } = useEdgeStore();
   const form = useForm<FormValues>({
     defaultValues: {
-      title: action === "Update" ? title : "",
-      categories: action === "Update" ? categories : "",
-      coverImage: action === "Update" ? coverImage : "",
-      slug: action === "Update" ? slug : "",
-      description: action === "Update" ? description : "",
+      title: "",
+      categories: "",
+      coverImage: "",
+      slug: "",
+      description: "",
     },
   });
+  // lấy ra params và bỏ khoảng trẳng đầu cuối
+  const inspirationsParamTrim = String(InspirationId).trim();
 
-  console.log("title", form);
+  // So sánh để param và id của inspiration để lây ra dữ liệu tương ứng
+  const inspirationsList = inspirations?.find((item) => {
+    const productSlug = item._id;
+    return inspirationsParamTrim === productSlug;
+  });
+
+  // destructuring inspirations data
+  const { slug, title, coverImage, description, categories } =
+    inspirationsList || {};
+
+  useEffect(() => {
+    if (action === "Update") {
+      form.reset({
+        title: title || "",
+        categories: categories || "",
+        coverImage: coverImage || "",
+        slug: slug || "",
+        description: description || "",
+      });
+    }
+  }, [action, categories, coverImage, description, form, slug, title]);
 
   const handleSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      if (action === "Create") {
-        if (!file) {
-          toast.error("File is not defined");
-          return;
-        }
-        const { title, slug } = data;
-        const res = await edgestore.publicFiles.upload({ file });
-        let newSlug = slug || "";
-        if (!slug) {
-          newSlug = slugify(title, { lower: true });
-        }
+      if (!file) {
+        toast.error("File is not defined");
+        return;
+      }
+      const res = await edgestore.publicFiles.upload({ file });
+      const newSlug = slugify(data.title || "", { lower: true });
 
+      // CREATE INSPIRATION
+      const createInspiration = async () => {
         const promise = create({
           ...data,
           slug: newSlug,
           coverImage: res.url,
         });
-
         toast.promise(promise, {
           loading: "Creating a new inspiration...",
           success: "New inspiration created!",
@@ -82,25 +89,28 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
         });
         setIsLoading(true);
         router.push("/dashboard/inspiration-manage");
-      } else if (inspirations && action === "Update") {
-        if (!file) {
-          toast.error("File is not defined");
-          return;
-        }
-        const res = await edgestore.publicFiles.upload({ file });
+      };
 
+      // UPDATE INSPIRATION
+      const updateInspiration = async () => {
         const promise = update({
-          id: trimInspirationsParam as Id<"documents">,
+          id: inspirationsParamTrim as Id<"documents">,
           ...data,
           coverImage: res.url,
         });
         toast.promise(promise, {
           loading: "Update a new inspiration...",
-          success: "Updating inspiration created!",
+          success: "Updating inspiration successfully!",
           error: "Failed to update a new inspiration...",
         });
         setIsLoading(true);
         router.push("/dashboard/inspiration-manage");
+      };
+
+      if (action === "Create") {
+        await createInspiration();
+      } else if (action === "Update") {
+        await updateInspiration();
       }
     } catch (error) {
       console.log(error);
@@ -118,13 +128,13 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
             control={form.control}
             name="title"
             render={({ field }) => (
-              <FormItem className="flex flex-col gap-y-2">
+              <FormItem className="flex flex-col gap-y-2 max-w-[276px] w-full">
                 <FormLabel className="text-white font-medium text-base">
                   Title
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="outline-none text-white placeholder:text-gray9 bg-inherit"
+                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-[#1e1e22] border border-white/45"
                     type="text"
                     required
                     placeholder="Solopreneur"
@@ -138,13 +148,13 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
             control={form.control}
             name="slug"
             render={({ field }) => (
-              <FormItem className="flex flex-col gap-y-2">
+              <FormItem className="flex flex-col gap-y-2 max-w-[276px] w-full">
                 <FormLabel className="text-white font-medium text-base">
                   Slug
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="outline-none text-white placeholder:text-gray9 bg-inherit"
+                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-[#1e1e22] border border-white/45"
                     type="text"
                     required
                     placeholder="this-is-slug"
@@ -166,7 +176,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
               </FormLabel>
               <FormControl>
                 <Input
-                  className="rounded-lg outline-none bg-[#1e1e22] text-white placeholder:text-gray9 px-4 pt-4 pb-20"
+                  className="rounded-lg outline-none bg-[#1e1e22] text-white placeholder:text-gray9 px-4 pt-4 pb-20 border border-white/45"
                   type="text"
                   required
                   placeholder="categories"
@@ -207,7 +217,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
               <FormControl>
                 <Textarea
                   required
-                  className="rounded-xl bg-[#1e1e22] text-white px-4 text-sm pt-4 pb-16 placeholder:text-gray9"
+                  className="rounded-xl bg-[#1e1e22] text-white px-4 text-sm pt-4 pb-16 placeholder:text-gray9 border border-white/45"
                   placeholder="that is a solopreneur"
                   {...field}
                 />
@@ -218,13 +228,13 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
 
         <Button
           type="submit"
-          className="flex flex-row gap-x-2 items-center bg-[#cff110] rounded-xl max-w-full w-full h-11 text-center justify-center duration-300 "
+          className="flex flex-row gap-x-2 items-center bg-[#bc4371] rounded-xl max-w-full w-full h-11 text-center justify-center duration-300 hover:bg-[#acb289]"
         >
           {isLoading ? (
             <Spinner />
           ) : (
             <>
-              <span className="text-base font-semibold text-black">
+              <span className="text-base font-semibold text-white">
                 {" "}
                 {action === "Create" ? "Create" : "Update"}
               </span>

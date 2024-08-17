@@ -11,7 +11,7 @@ export default function DashBoardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="h-screen relative items-start flex flex-row max-w-[1513px] w-full">
+    <main className="h-screen relative items-start flex flex-row max-w-full w-full">
       <Sidebar />
       <div className="pr-7 py-8 bg-[#141517]  max-w-full w-full pl-[19rem]">
         {children}

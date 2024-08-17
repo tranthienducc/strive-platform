@@ -67,9 +67,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
     background: #0a0a0a;
@@ -87,10 +84,10 @@
   .bg-gradient-text {
     color: transparent;
     background-image: linear-gradient(
-      135deg,
-      #926aff 20%,
-      #ff77b0 30%,
-      #ffb367 70%
+      90deg,
+      rgb(105, 102, 115) 0%,
+      rgb(255, 255, 255) 55%,
+      rgb(105, 102, 115) 100%
     );
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -105,5 +102,35 @@
       0 6.350044814858119px 6.350044814858119px -2.142857142857143px #dde3eeab,
       0 11.051870570040771px 11.051870570040771px -2.678571428571429px #dde3ee9c,
       0 40px 40px -3.75px #dde3ee40;
+  }
+  .shadow-dark {
+    box-shadow: inset 0 -20px 80px -20px #ffffff1f;
+  }
+  .border-dark {
+    border: 1px solid hsla(0, 0%, 100%, 0.1);
+  }
+  .mask-overlay {
+    position: relative;
+  }
+  .mask-overlay::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%; /* Adjust the height of the mask */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    pointer-events: none; /* Ensure the mask does not interfere with content interaction */
+  }
+  .border-grid {
+    --tw-shadow: 0 0 0 1px #212121;
+    --tw-shadow-colored: 0 0 0 1px;
+
+    box-shadow:
+      0 0 #0000,
+      0 0 #0000,
+      0 0 #0000,
+      0 0 #0000,
+      var(--tw-shadow);
   }
 }

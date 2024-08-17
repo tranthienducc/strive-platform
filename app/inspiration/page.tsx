@@ -84,7 +84,7 @@ const InspirationPage = () => {
     <>
       <Header />
       <div className="max-w-full w-full mt-16 px-[72px]">
-        <div className="flex flex-row justify-between items-center mb-8">
+        <div className="flex flex-row justify-between items-center mb-8 mt-24">
           <button className="rounded-md border border-white/15 max-w-[115px] w-full h-[40px] px-4 py-3 flex flex-row items-center gap-x-4 bg-white">
             <span className="text-sm font-medium text-black">Popular</span>
             <ChevronDown className="text-black w-4 h-4" />

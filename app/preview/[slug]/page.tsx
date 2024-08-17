@@ -7,7 +7,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PreviewPage = () => {
-  const [viewMode, setViewMode] = useState("none");
   const [variantProduct, setVariantProduct] = useState<ProductVariantProps[]>(
     []
   );
@@ -43,41 +42,34 @@ const PreviewPage = () => {
 
   return (
     <>
-      <div className="bg-blue-300 max-w-full h-[80px] w-full flex flex-row justify-between items-center py-3 px-6 ">
-        <Link href="/" className="flex flex-row items-center gap-x-2">
-          <ArrowLeft className="text-black w-5 h-5" />
-          <p className="text-base text-black font-medium">Home</p>
+      <div className="bg-[#111111] max-w-full h-[80px] w-full flex flex-row justify-between items-center py-3 px-6 ">
+        <div className="flex flex-row items-center gap-x-3">
+          <Link href="/" className="flex flex-row items-center gap-x-2">
+            <ArrowLeft className="text-white size-5" />
+            <p className="text-base text-white font-medium">Home</p>
+          </Link>
+          <p className="text-sm font-medium text-gray9">Preview</p>
+        </div>
+
+        <Link
+          href="/"
+          className="text-sm font-medium text-white"
+          target="_blank"
+        >
+          {name}
         </Link>
 
-        <div className="flex flex-row gap-x-2 pt-3 pl-3">
-          <button
-            onClick={() => setViewMode("iframe")}
-            className="px-3 py-3 rounded-xl bg-stone-400 text-black"
-          >
-            View in Page
-          </button>
-          <button
-            onClick={() => setViewMode("link")}
-            className="px-3 py-3 rounded-xl bg-stone-400 text-black "
-          >
-            Open in New Tab
-          </button>
-        </div>
+        <button className="text-sm font-medium text-black bg-white rounded-xl px-4 py-2">
+          Buy now
+        </button>
       </div>
-      <div className="max-w-full w-full  h-screen">
-        {viewMode === "iframe" && (
-          <iframe
-            src={name}
-            style={{
-              width: "100%",
-              height: "100%",
-              border: "none",
-              backgroundColor: "white",
-            }}
-            sandbox="allow-scripts allow-same-origin"
-            loading="lazy"
-          />
-        )}
+      <div className="max-w-full w-full p-6 h-[690px]">
+        <iframe
+          src={name}
+          className="w-full h-full rounded-xl bg-white"
+          sandbox="allow-scripts allow-same-origin"
+          loading="lazy"
+        />
       </div>
     </>
   );

@@ -24,7 +24,6 @@ const DetailInspiration = () => {
   });
 
   const { title, coverImage, description } = inspirationList || {};
-  console.log(inspiration);
 
   const filterInspiration = inspiration?.filter(
     (data) => data.slug !== trimInspirationParams

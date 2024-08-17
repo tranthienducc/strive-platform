@@ -1,73 +1,64 @@
 "use client";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Key, useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, LockOpen } from "lucide-react";
-import { Header } from "@/components/shared";
-import { useParams } from "next/navigation";
-import { ProductProps, ProductVariantProps } from "@/utils/types/type";
-import { toast } from "sonner";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
+import BreadcrumbCategory from "@/app/explore-template/_component/BreadcrumbCategory";
+import DialogPeekTemplate from "@/components/DialogPeekTemplate";
+import React, { useMemo } from "react";
+import { Earth } from "lucide-react";
+import { Header } from "@/components/shared";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useUserContext } from "@/context/UserContext";
+import {
+  useGetProducts,
+  useGetProductsVariant,
+} from "@/lib/react-query/queries";
+import {
+  filterCategoryNames,
+  filterProductNames,
+  findProductUrlMatch,
+  parseMarkDown,
+} from "@/helper";
+import { pages, supports } from "@/constants/data";
+import { ChildrenType } from "@/utils/types/type";
+import { multiFormatDateString, multiPrice } from "@/utils";
 
 const DetailTemplate = () => {
-  const [products, setProducts] = useState<ProductProps[]>([]);
-  const [productsVariant, setProductsVariant] = useState<ProductVariantProps[]>(
-    []
-  );
+  const { products } = useGetProducts();
+  const { productsVariant } = useGetProductsVariant();
   const { slug: productId } = useParams();
-  const { htmlToText } = require("html-to-text");
-
-  useEffect(() => {
-    const getProductsVariant = async () => {
-      try {
-        const res = await axios.get("/api/purchaseProduct");
-        if (Array.isArray(res.data.productVariant)) {
-          setProductsVariant(res.data.productVariant.slice(1));
-        } else {
-          console.error("Returns data that is not an array", res.data);
-        }
-      } catch (error) {
-        console.error("Error getting data from API", error);
-      }
-    };
-
-    getProductsVariant();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const res = await axios.get("/api/purchaseProduct");
-        setProducts(res.data.data);
-      } catch (error) {
-        console.error("Error getting data from API", error);
-      }
-    };
-
-    getProducts();
-  }, []);
-
+  const { user } = useUserContext();
+  const createdNotifi = useMutation(api.documents.createNotifi);
   const trimProductId = String(productId).trim();
 
-  const product = products.find((item) => {
-    const productSlug = item.attributes.slug;
-    return trimProductId === productSlug;
-  });
+  const product = useMemo(
+    () =>
+      products?.find((item) => {
+        const productSlug = item.attributes.slug;
 
-  const { name, large_thumb_url, description, price } =
+        return trimProductId.includes(productSlug);
+      }),
+    [products, trimProductId]
+  );
+
+  const { name, large_thumb_url, description, price, created_at } =
     product?.attributes || {};
 
-  const dataId = productsVariant.map((variant) => variant.id);
+  const renderProductVariant = productsVariant?.filter((data) => {
+    const productName = data.attributes.name;
+
+    return name === productName;
+  });
+
+  const listCategoryName = filterCategoryNames(renderProductVariant);
+
+  const slugVariants = productsVariant?.map((data) => data.attributes.slug);
+  const slugProducts = products?.map((item) => item.attributes.slug) ?? [];
+
+  const dataId = productsVariant?.map((variant) => variant.id);
 
   const handleBuyProduct = async () => {
     try {
@@ -75,141 +66,190 @@ const DetailTemplate = () => {
         productId: dataId,
       });
       window.open(response.data.checkoutUrl, "_blank");
+
+      createdNotifi({
+        templateName: name,
+        avatar: user?.imageUrl,
+        userName: `${user?.firstName} ${user?.lastName}`,
+      });
     } catch (error) {
       console.log(error);
       toast.error("Failed to buy product #1");
     }
   };
-  const htmlContent = description?.concat("\n");
 
-  const text = htmlToText(htmlContent, {
-    wordwrap: 130,
-    preserveNewlines: true,
-    uppercaseHeadings: false,
-    singleNewLineParagraphs: true,
-    unorderedListItemPrefix: "• ",
-  });
+  const namesProducts = filterProductNames(productsVariant);
+
+  const productsUrlMatch = findProductUrlMatch(namesProducts, slugProducts);
+  console.log("namesProducts", namesProducts);
+  console.log("slugProducts", slugProducts);
+  console.log("productsUrlMatch", productsUrlMatch);
 
   return (
     <>
       <Header />
-      <div className="py-6 px-[68px] max-w-[1513px] w-full mb-40">
-        <Breadcrumb className="mb-5">
-          <BreadcrumbList>
-            <BreadcrumbItem className="font-normal text-[#999]">
-              <BreadcrumbLink
-                href="/"
-                className="hover:text-white duration-300"
-              >
-                Home
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem className="font-normal text-[#999]">
-              <BreadcrumbLink
-                href="/allow-template"
-                className="hover:text-white duration-300"
-              >
-                Allow Template{" "}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem className="font-normal">
-              <BreadcrumbPage className="hover:text-white duration-300 text-[#999]">
-                {name}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <div className="py-6 px-[68px] max-w-[1513px] w-full mb-40 mt-14">
+        <BreadcrumbCategory page={name} className="mb-6" />
 
-        {product?.attributes ? (
-          <div className="flex flex-row gap-x-9 mb-40">
-            <div className="max-w-[860px] w-full">
+        <div className="flex flex-row space-x-[60px] items-center space-y-0 mb-20">
+          <div className="w-full max-w-[720px] text-white">
+            <h1 className="text-5xl font-medium mb-5">
+              {name} — Creative Professional Website
+            </h1>
+            <Link
+              href="/creator"
+              className="flex flex-row items-center gap-x-2"
+            >
               <Image
-                src={large_thumb_url || "/assets/images/404-page.png"}
-                alt="img2"
-                width={1500}
-                height={1500}
-                className="object-cover rounded-xl mb-3"
+                src="/assets/images/emty-img-product.png"
+                alt="avatar"
+                width={300}
+                height={300}
+                loading="lazy"
+                className="size-[30px] rounded-full object-cover"
               />
-            </div>
+              <p className="text-base font-medium text-gray9">Tran Thien Duc</p>
+            </Link>
+          </div>
+          <div className="w-full max-w-[720px] space-y-[30px]">
+            <p className="text-lg text-balance font-normal text-[#ccc]">
+              {name} boosts productivity with seamless task management and
+              real-time collaboration. This scalable, user-friendly Framer
+              template offers comprehensive features for efficient workflow
+              integration.
+            </p>
 
-            <aside className="sticky top-3 mb-10 max-w-[451px] w-full">
-              <div className="flex flex-col gap-y-2 mb-4">
-                <h3 className="text-4xl font-semibold text-white">{name}</h3>
-                <div className="flex flex-row gap-x-[10px]">
-                  <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
-                    allow template
-                  </h6>
-                  <h6 className="uppercase text-white font-normal text-[10px] rounded-full border border-gray-800 px-2 py-1">
-                    personal
-                  </h6>
-                </div>
-              </div>
-              {text.split("\n").map((line: any, i: Key) => (
-                <p className="text-base font-normal text-[#999]" key={i}>
-                  {line}
-                </p>
-              ))}
+            <div className="flex flex-row gap-x-2">
+              <Link
+                href={`/preview/${slugVariants}`}
+                className="py-[10px] px-3 rounded-[8px] bg-[#222] hover:bg-white/15 duration-300"
+              >
+                <span className="text-sm font-medium text-white block">
+                  Preview
+                </span>
+              </Link>
 
-              <span className="text-base font-normal text-white mb-6 block">
-                Compatible with all devices
-              </span>
               <button
                 onClick={handleBuyProduct}
-                className="flex flex-row gap-x-2 items-center bg-white rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5"
+                className="bg-red-400 rounded-[8px] py-[10px] px-3"
               >
-                <p className="text-sm font-medium text-black bg-white block">
-                  Buy Now - {price} VNĐ
+                <p className="text-sm font-semibold text-white">
+                  Purchase for {price} VNĐ
                 </p>
-                <ArrowRight className="w-4 h-4 text-black bg-white" />
               </button>
+            </div>
+          </div>
+        </div>
 
-              <p className="text-xs font-light text-[#808080] mb-4 text-center">
-                Please note: Standard VAT rate may be charged in accordance with
-                your country.
-              </p>
-              {productsVariant.map((variant) => (
-                <Link
-                  href={`/preview/${variant.attributes.slug}`}
-                  className="flex flex-row gap-x-2 items-center bg-gradient-conic rounded-xl max-w-[490px] w-full h-11 text-center justify-center mb-5 border border-gray-800"
-                  key={variant.id}
-                >
-                  <span className="text-sm font-medium text-white block">
-                    Preview
-                  </span>
-                  <ArrowUpRight className="w-4 h-4 text-white" />
-                </Link>
-              ))}
-              <Link
-                href="/pricing"
-                className="px-4 py-4 bg-gradient-conic rounded-xl mb-6 border border-gray-800 flex flex-col"
-              >
-                <div className="flex flex-row justify-between items-center mb-3">
-                  <div className="flex flex-row gap-x-2 items-center">
-                    <LockOpen className="w-5 h-5 text-white" />
-                    <h6 className="text-xl font-normal text-white">
-                      Unlock with All-Access
-                    </h6>
+        <Image
+          src={large_thumb_url || "/assets/images/404-page.png"}
+          alt="img2"
+          width={1500}
+          height={1500}
+          priority={true}
+          className="object-cover rounded-xl max-w-[800px] w-full h-[542px] mb-20"
+        />
+
+        <div className="flex flex-row items-start space-x-20 mb-20">
+          <div className="flex flex-col-reverse w-full space-y-20 max-w-[800px]">
+            <div className="text-lg text-[#ccc] font-normal">
+              {parseMarkDown(description ?? "")}
+            </div>
+          </div>
+          <div className="max-w-[300px] w-full space-y-10">
+            <div className="space-y-5">
+              <HeadingTemplate>Pages</HeadingTemplate>
+
+              <div className="flex flex-wrap gap-[.625rem]">
+                {pages.map((data, index) => (
+                  <div
+                    key={index}
+                    className="py-1 px-2 bg-[#222] rounded-md flex flex-row items-center gap-x-2"
+                  >
+                    <Earth className="size-3 text-gray9" />
+                    <p className="text-sm whitespace-nowrap font-semibold text-gray9">
+                      {data.name}
+                    </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-white" />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-5">
+              <HeadingTemplate>Categories</HeadingTemplate>
+              <div className="flex flex-wrap gap-[.625rem]">
+                <div className="py-1 px-2 bg-[#222] rounded-md">
+                  <p className="text-sm whitespace-nowrap font-semibold text-gray9">
+                    {listCategoryName}
+                  </p>
                 </div>
-                <p className="text-base font-normal text-[#999]">
-                  Get unlimited access to our full collection of backgrounds and
-                  more and take your workflow to the next level.
-                </p>
-              </Link>
-            </aside>
+              </div>
+            </div>
+            <div className="space-y-5">
+              <HeadingTemplate>Support</HeadingTemplate>
+
+              <div className="flex flex-col gap-y-3">
+                {supports.map((data, index) => (
+                  <div
+                    className="flex flex-row items-center gap-x-2"
+                    key={index}
+                  >
+                    {data.icon}
+                    <p className="text-sm font-medium text-white">
+                      {data.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-sm font-normal text-gray9">
+              Published {multiFormatDateString(created_at)}
+            </p>
           </div>
-        ) : (
-          <div className="flex  flex-row gap-x-6">
-            <Skeleton className="w-[860px] h-[1032px] rounded-xl" />
-            <Skeleton className="w-[451px] h-[1004px]" />
-          </div>
-        )}
+        </div>
+
+        <HeadingTemplate>Related templates</HeadingTemplate>
+
+        <div className="grid-cols-5 grid gap-2 mt-5">
+          {products?.map((item) => (
+            <RelatedTemplate
+              key={item.id}
+              url={productsUrlMatch}
+              imageUrl={item.attributes.large_thumb_url}
+              name={item.attributes.name}
+              price={item.attributes.price}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
 };
 
 export default DetailTemplate;
+
+const HeadingTemplate = ({ children }: ChildrenType) => {
+  return <h6 className="text-[22px] font-semibold text-white">{children}</h6>;
+};
+
+const RelatedTemplate = ({ url, imageUrl, name, price }: any) => (
+  <div className="flex flex-col max-w-[253px] w-full relative">
+    <Link href={`/detail-template/${url}`}>
+      <Image
+        src={imageUrl || "/assets/images/bento-img1.png"}
+        alt={name}
+        width={1300}
+        height={1300}
+        priority={true}
+        className="object-cover rounded-xl max-w-[253px] w-full h-[302.8px] mb-5"
+      />
+    </Link>
+    <DialogPeekTemplate />
+    <div className="flex flex-row items-center justify-between">
+      <h5 className="text-base font-semibold text-white">{name}</h5>
+      <span className="text-gray9 font-normal text-sm">
+        {multiPrice(price)}
+      </span>
+    </div>
+    <span className="text-sm text-gray9 font-normal">Tran Thien Duc</span>
+  </div>
+);

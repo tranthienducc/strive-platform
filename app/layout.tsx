@@ -4,8 +4,9 @@ import { Toaster } from "sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
-import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
+import "./globals.css";
+import { QueryProvider } from "@/lib/react-query/QueryProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://strive-platform.vercel.app/"),
@@ -31,14 +32,16 @@ export default function RootLayout({
     <html lang="en" className="h-full scroll-smooth">
       <body className={inter.className}>
         <ConvexClientProvider>
-          <EdgeStoreProvider>
-            <UserProvider>
-              <main className="relative">
-                <Toaster position="bottom-right" />
-                {children}
-              </main>
-            </UserProvider>
-          </EdgeStoreProvider>
+          <QueryProvider>
+            <EdgeStoreProvider>
+              <UserProvider>
+                <main className="relative">
+                  <Toaster position="bottom-right" />
+                  {children}
+                </main>
+              </UserProvider>
+            </EdgeStoreProvider>
+          </QueryProvider>
         </ConvexClientProvider>
       </body>
     </html>

@@ -17,9 +17,9 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
     (acceptedFiles: FileWithPath[]) => {
       const file = acceptedFiles[0];
       const url = convertFileToUrl(file);
-      setFile(file); // Truyền đối tượng File thay vì URL
+      setFile(file);
       setFileUrl(url);
-      fieldChange(url); // Vẫn có th
+      fieldChange(url);
     },
     [fieldChange, setFile]
   );
@@ -29,11 +29,12 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
       "image/*": [".png", ".jpeg", ".jpg"],
     },
   });
+  console.log("fileUrl", fileUrl);
 
   return (
     <div
       {...getRootProps()}
-      className="bg-inherit max-w-full h-[300px] px-[13.5rem] py-[4.5rem] flex items-center justify-center flex-col gap-y-3 cursor-pointer border-dotted border-white border rounded-2xl"
+      className="bg-inherit max-w-full   cursor-pointer border-dotted border-white border rounded-2xl"
     >
       <input {...getInputProps()} className="cursor-pointer" />
 
@@ -42,14 +43,14 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
           <Image
             src={fileUrl}
             alt="image"
-            className="max-w-full w-full  max-h-[200px] h-full object-cover rounded-2xl flex-1"
+            className="max-w-full w-full max-h-[200px] h-full object-cover rounded-2xl flex-1"
             loading="lazy"
             width={1300}
             height={1300}
           />
         </>
       ) : (
-        <div className="flex flex-col items-center gap-y-3 text-center justify-center">
+        <div className="flex flex-col items-center gap-y-3 text-center py-4 justify-center">
           <Image
             src="/assets/icons/upload.svg"
             alt="upload"

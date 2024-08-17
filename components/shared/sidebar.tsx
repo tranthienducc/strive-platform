@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Sidebar = () => {
   return (
-    <aside className="lg:fixed relative top-0 z-[999999] max-w-[270px] h-screen bg-[#111214] text-white pt-6 pb-6 border border-r-neutral-800 overflow-y-auto lg:overflow-hidden group/sidebar">
+    <aside className="lg:fixed relative top-0 z-[999999] max-w-[270px] h-screen bg-[#111214] text-white pt-6 pb-6 overflow-y-auto lg:overflow-hidden group/sidebar">
       <div
         role="button"
         className="absolute top-3 right-2 opacity-0 group-hover/sidebar:opacity-100 transition"
@@ -16,7 +16,7 @@ const Sidebar = () => {
 
       <div className="flex flex-row gap-x-3 mb-12 px-6 items-center">
         <Image
-          src="/assets/icons/logos.svg"
+          src="/assets/icons/t-icon.webp"
           alt="avatar"
           width={400}
           height={400}
@@ -29,16 +29,16 @@ const Sidebar = () => {
       </div>
 
       <NavigationList />
-      <div className="px-6 pt-48">
+      <div className="px-6 pt-36">
         <div className="max-w-[220px] w-full h-[1px] bg-neutral-800 mb-8"></div>
         <Link
           href="/pricing"
-          className="rounded-2xl px-3 flex flex-row gap-x-2 bg-[#cff110] items-center h-[55px] break-all mb-3"
+          className="rounded-2xl px-3 flex flex-row gap-x-2 bg-[#bc4371] items-center h-[55px] break-all mb-3"
         >
-          <Zap className="w-6 h-6 text-black" />
+          <Zap className="w-6 h-6 text-white" />
           <div className="flex flex-col gap-y-[2px]">
-            <span className="font-medium text-black text-sm">Active Super</span>
-            <p className="text-xs font-normal text-black max-w-[170px] w-full">
+            <span className="font-medium text-white text-sm">Active Super</span>
+            <p className="text-xs font-normal text-white max-w-[170px] w-full">
               Unlock all features Strive
             </p>
           </div>

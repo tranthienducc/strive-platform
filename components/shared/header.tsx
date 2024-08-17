@@ -1,6 +1,6 @@
 "use client";
-import { links } from "@/constants/data";
-import { ArrowRight, UserRound } from "lucide-react";
+import { links } from "@/constants/routerConstants";
+import { UserRound } from "lucide-react";
 import { useConvexAuth } from "convex/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,24 +16,24 @@ const Header = () => {
   );
 
   return (
-    <header className="px-[70px] py-[18px] border-b-gray-800 border z-[99999]">
+    <header className="py-3 rounded-3xl mt-3 px-6 border-white/15 fixed top-0 border z-20 backdrop-blur-[10px] bg-[##0d0d0d80] flex items-center justify-center left-[30%]">
       <div className="flex flex-row justify-between items-center">
-        <Link className="flex flex-row items-center gap-x-2" href="/">
+        <Link className="flex flex-row items-center gap-x-2 pr-[33px]" href="/">
           <Image
-            src="/assets/icons/logo.svg"
+            src="/assets/icons/t-icon.webp"
             alt="logo"
             width={300}
             height={300}
             className="w-8 h-8"
           />
-          <h1 className="text-lg font-semibold text-white">strive</h1>
+          <h1 className="text-lg font-semibold text-white">Strive</h1>
         </Link>
-        <nav className="flex flex-row items-center gap-x-2 text-white">
+        <nav className="flex flex-row items-center gap-x-3 text-white">
           {links.map((link, i) => (
             <div key={i}>
               <Link
                 href={link.href}
-                className="text-sm font-medium hover:bg-white/5  duration-300 px-4 py-2 rounded-lg"
+                className="text-sm font-medium hover:bg-white/5 duration-300 py-2 rounded-lg"
               >
                 {link.title}
               </Link>
@@ -42,7 +42,7 @@ const Header = () => {
           {isAdmin && (
             <Link
               href="/dashboard/manage"
-              className="text-sm font-medium hover:bg-white/5 duration-300 px-4 py-2 rounded-lg"
+              className="text-sm font-medium hover:bg-white/5 duration-300 pl-3 py-2 rounded-lg"
             >
               Dashboard
             </Link>
@@ -63,13 +63,13 @@ const Header = () => {
               </SignInButton>
             )}
 
-            <Link
+            {/* <Link
               href="/access-pack"
               className="px-6 py-3  rounded-xl flex flex-row gap-x-2 items-center bg-white text-black"
             >
               <span className="text-sm font-medium">All-Access Pass</span>
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </Link> */}
             {isAuthenticated}
           </div>
         </nav>

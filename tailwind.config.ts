@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config = {
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -17,6 +18,12 @@ const config = {
       },
     },
     extend: {
+      flex: {
+        custom: "1 0 0px",
+      },
+      boxShadow: {
+        dark: "rgba(255, 255, 255, 0.08) 0px 1px 4px 1px inset, rgba(255, 255, 255, 0.2) 0px 1px 0px 0px inset",
+      },
       backgroundImage: {
         "gradient-1": "linear-gradient(239deg,#ebaa6a 0%, #8ec5fc 100%)",
       },
@@ -67,6 +74,24 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        shimmer: {
+          "0%, 90%, 100%": {
+            "background-position": "calc(-100% - var(--shimmer-width)) 0",
+          },
+          "30%, 60%": {
+            "background-position": "calc(100% + var(--shimmer-width)) 0",
+          },
+        },
+        spotlight: {
+          "0%": {
+            opacity: "0",
+            transform: "translate(-72%, -62%) scale(0.5)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translate(-50%,-40%) scale(1)",
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -77,6 +102,8 @@ const config = {
         },
       },
       animation: {
+        shimmer: "shimmer 8s infinite",
+        spotlight: "spotlight 2s ease .75s 1 forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

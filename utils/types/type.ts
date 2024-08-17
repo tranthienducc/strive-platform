@@ -1,6 +1,8 @@
 import { Id } from "@/convex/_generated/dataModel";
 import { ReactNode } from "react";
 
+// nữa thay đổi từ export => declear
+
 export type ChildrenType = {
   children: ReactNode;
 };
@@ -31,16 +33,23 @@ export interface ProductProps {
     large_thumb_url: string;
     description: string;
     price: number;
+    store_id: string;
+    created_at: string;
   };
 }
 export interface ProductVariantProps {
   id: string;
   attributes: {
     name: string;
-    slug: string;
-    large_thumb_url: string;
+    slug?: string;
+    large_thumb_url?: string;
     description: string;
     price: number;
+    links: {
+      map(arg0: (link: { title: string; url: string }) => string): any;
+      title: string;
+      url: string;
+    };
   };
 }
 
@@ -80,4 +89,52 @@ export interface FormValues {
 
 export type InspirationFilters = {
   search?: string | undefined;
+};
+
+export type InspirationFormProps = {
+  action: "Create" | "Update";
+};
+
+export interface SearchParams {
+  [key: string]: string | string[] | undefined;
+}
+
+export interface Option {
+  label: string;
+  value: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  withCount?: boolean;
+}
+
+export interface DataTableFilterField<TData> {
+  label: string;
+  value: keyof TData;
+  placeholder?: string;
+  options?: Option[];
+}
+
+export interface DataTableFilterOption<TData> {
+  id: string;
+  label: string;
+  value: keyof TData;
+  options: Option[];
+  filterValues?: string[];
+  filterOperator?: string;
+  isMulti?: boolean;
+}
+
+export type HeadingType = {
+  heading: string;
+  description: string;
+};
+export type ReviewsCardType = {
+  logo: string;
+  message: string;
+  avatar: string;
+  name: string;
+  position: string;
+  info_company: {
+    icon: JSX.Element;
+    text: string;
+  }[];
 };

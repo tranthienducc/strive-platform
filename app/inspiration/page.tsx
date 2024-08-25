@@ -106,15 +106,14 @@ const InspirationPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-9 relative">
-          {filterInspiration?.length ? (
-            filterInspiration?.map((item, index) => (
-              <InspirationCard item={item} key={index} />
-            ))
-          ) : (
+          {filterInspiration.length === 0 ? (
             <p className="text-sm text-gray9 font-normal absolute left-[40%] top-[50%]">
               No inspirations available heare.
             </p>
-          )}
+          ) : null}
+          {filterInspiration?.map((item, index) => (
+            <InspirationCard item={item} key={index} />
+          ))}
         </div>
       </div>
     </div>

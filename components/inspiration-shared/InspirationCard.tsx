@@ -122,7 +122,7 @@ const InspirationCard = memo(({ item }: InspirationCardType) => {
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-row gap-x-2 items-center">
           <Image
-            src={"/assets/images/avatar.png"}
+            src="/assets/images/clients-avatar-1.webp"
             alt="avatar"
             width={300}
             height={300}

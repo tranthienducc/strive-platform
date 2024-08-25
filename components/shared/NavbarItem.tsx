@@ -1,54 +1,40 @@
-"use client";
 import { links } from "@/config/routes/router";
-import { SignInButton, UserButton } from "@clerk/clerk-react";
-
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Spinner } from "./spinner";
+import { Spinner } from "../spinner";
+import { SignInButton, UserButton } from "@clerk/clerk-react";
 import { UserRound } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "./ui/dropdown-menu";
 import { UserResource } from "@clerk/types";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import Image from "next/image";
 
-type NavbarItemMobileType = {
+type NavbarItemType = {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: UserResource | null | undefined;
   isAdmin: boolean | undefined;
 };
-const NavbarItemMobile = ({
+const NavbarItem = ({
   isAdmin,
+  isAuthenticated,
   isLoading,
   user,
-  isAuthenticated,
-}: NavbarItemMobileType) => {
+}: NavbarItemType) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center justify-between flex-row max-w-full w-full">
-        <Link className="flex flex-row items-center gap-x-2 pr-[33px]" href="/">
-          <Image
-            src="/assets/icons/logo.webp"
-            alt="logo"
-            width={300}
-            height={300}
-            loading="lazy"
-            className="lg:size-8 size-5"
-          />
-          <h1 className="text-sm lg:text-lg font-semibold text-white">
-            Strive
-          </h1>
-        </Link>
+    <>
+      <Link className="flex flex-row items-center gap-x-2 pr-[33px]" href="/">
+        <Image
+          src="/assets/icons/logo.webp"
+          alt="logo"
+          width={300}
+          height={300}
+          loading="lazy"
+          className="lg:size-8 size-5"
+        />
+        <h1 className="text-sm lg:text-lg font-semibold text-white">Strive</h1>
+      </Link>
 
-        <HamburgerMenuIcon className="lg:hidden block cursor-pointer text-white size-5" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="flex flex-col items-start gap-3 text-black max-w-[320px] w-full bg-white">
-        <DropdownMenuItem className="flex flex-col gap-5">
+      <div className="hidden lg:flex">
+        <nav className="flex flex-col lg:flex-row items-center gap-3 text-black lg:text-white">
           {links.map((link, i) => (
             <div key={i}>
               <Link
@@ -69,8 +55,6 @@ const NavbarItemMobile = ({
             </Link>
           )}
           {isLoading && <Spinner />}
-        </DropdownMenuItem>
-        <DropdownMenuItem>
           <div className="flex flex-row gap-x-4">
             {isAuthenticated && !isLoading && (
               <>
@@ -95,10 +79,10 @@ const NavbarItemMobile = ({
             )}
             {isAuthenticated}
           </div>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </nav>
+      </div>
+    </>
   );
 };
 
-export default NavbarItemMobile;
+export default NavbarItem;

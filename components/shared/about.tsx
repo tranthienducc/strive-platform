@@ -55,7 +55,7 @@ const About = () => {
 
       <div className="flex flex-col items-center gap-5">
         <Image
-          src="/assets/images/clients-avatar-1.png"
+          src="/assets/images/clients-avatar-1.webp"
           loading="lazy"
           alt="avatar"
           width={400}

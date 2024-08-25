@@ -66,48 +66,47 @@ const ManagePage = () => {
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 relative">
-        {products && products?.length > 0 ? (
-          products?.map((item, i) => (
-            <div
-              className="max-w-[384px] w-full rounded-[10px] bg-black border border-gray-800 p-3"
-              key={i}
-            >
-              <Image
-                src={
-                  item?.attributes?.large_thumb_url ||
-                  "/assets/images/404-page.webp"
-                }
-                alt="card-img"
-                className="max-w-[374px] w-full h-[170px] object-cover rounded-lg mb-3"
-                width={1500}
-                height={1500}
-              />
-              <div className="flex flex-row justify-between">
-                <div className="flex flex-row gap-x-3 items-center">
-                  <Image
-                    src="/assets/images/avatar.png"
-                    alt="card-avatar"
-                    width={400}
-                    height={400}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div className="flex flex-col gap-y-[6px]">
-                    <p className="text-sm font-normal text-white">
-                      {item.attributes.name}
-                    </p>
-                    <span className="text-xs font-normal text-gray9">
-                      Tran Thien Duc
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
+        {products?.length === 0 ? (
           <p className="text-base font-normal text-gray9 absolute top-[50%] left-[30%]">
             No template available. Please create a new one.
           </p>
-        )}
+        ) : null}
+        {products?.map((item, i) => (
+          <div
+            className="max-w-[384px] w-full rounded-[10px] bg-black border border-gray-800 p-3"
+            key={i}
+          >
+            <Image
+              src={
+                item?.attributes?.large_thumb_url ||
+                "/assets/images/404-page.webp"
+              }
+              alt="card-img"
+              className="max-w-[374px] w-full h-[170px] object-cover rounded-lg mb-3"
+              width={1500}
+              height={1500}
+            />
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-row gap-x-3 items-center">
+                <Image
+                  src="/assets/images/avatar.png"
+                  alt="card-avatar"
+                  width={400}
+                  height={400}
+                  className="w-8 h-8 rounded-full"
+                />
+                <div className="flex flex-col gap-y-[6px]">
+                  <p className="text-sm font-normal text-white">
+                    {item.attributes.name}
+                  </p>
+                  <span className="text-xs font-normal text-gray9">
+                    Tran Thien Duc
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

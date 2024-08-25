@@ -99,41 +99,41 @@ const TemplateGallery = memo(() => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-[43px] relative">
-        {dataVariantProducts?.length ? (
-          dataVariantProducts?.map((item) => (
-            <div
-              className="flex flex-col max-w-[253px] w-full relative group/sidebar"
-              key={item.id}
-            >
-              <Link href={`/detail-template/${productsUrlMatch}`}>
-                <Image
-                  src={listImageUrl || "/assets/images/bento-img1.png"}
-                  alt="imageUrl"
-                  width={1300}
-                  height={1300}
-                  className="object-cover rounded-xl max-w-[253px] w-full h-[219px]  lg:h-[302.8px] mb-5"
-                />
-              </Link>
-
-              <DialogPeekTemplate url={urlTemplates} />
-              <div className="flex flex-row items-center justify-between">
-                <h5 className="text-sm lg:text-base font-semibold text-white">
-                  {item.attributes.name}
-                </h5>
-                <span className="text-gray9 font-normal text-xs lg:text-sm">
-                  {multiPrice(item.attributes.price)}
-                </span>
-              </div>
-              <span className="text-xs lg:text-sm text-gray9 font-normal">
-                Tran Thien Duc
-              </span>
-            </div>
-          ))
-        ) : (
+        {dataVariantProducts?.length === 0 ? (
           <p className="absolute left-[39%] top-[8.25rem] text-sm text-gray9 font-medium">
             No templates available here.
           </p>
-        )}
+        ) : null}
+
+        {dataVariantProducts?.map((item) => (
+          <div
+            className="flex flex-col max-w-[253px] w-full relative group/sidebar"
+            key={item.id}
+          >
+            <Link href={`/detail-template/${productsUrlMatch}`}>
+              <Image
+                src={listImageUrl || "/assets/images/bento-img1.png"}
+                alt="imageUrl"
+                width={1300}
+                height={1300}
+                className="object-cover rounded-xl max-w-[253px] w-full h-[219px]  lg:h-[302.8px] mb-5"
+              />
+            </Link>
+
+            <DialogPeekTemplate url={urlTemplates} />
+            <div className="flex flex-row items-center justify-between">
+              <h5 className="text-sm lg:text-base font-semibold text-white">
+                {item.attributes.name}
+              </h5>
+              <span className="text-gray9 font-normal text-xs lg:text-sm">
+                {multiPrice(item.attributes.price)}
+              </span>
+            </div>
+            <span className="text-xs lg:text-sm text-gray9 font-normal">
+              Tran Thien Duc
+            </span>
+          </div>
+        ))}
       </div>
 
       {dataVariantProducts?.length === 20 && (

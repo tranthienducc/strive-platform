@@ -51,19 +51,23 @@ const InspirationItem = (props: any) => {
 
   return (
     <>
-      <div className="grid grid-cols-3 col-span-2 gap-8 pb-5 relative">
+      <div className="grid grid-cols-1  lg:grid-cols-3 lg:col-span-2 gap-8 pb-5 relative col-span-1">
         {inspiration.length > 0 ? (
           inspiration?.map((item: any, index: Key) => (
-            <div className="max-w-[400px] w-full" key={index}>
+            <div
+              className="max-w-[500px] border border-white/10 w-full rounded-2xl p-[15px] h-[400px]"
+              key={index}
+            >
               <Link
                 href={`/inspiration/inpiration-detail/inspiration?slug=${item.slug}`}
               >
                 <Image
-                  src={item.coverImage || "/assets/images/404-page.png"}
+                  src={item.coverImage || "/assets/images/404-page.webp"}
                   alt="avatar"
                   width={1500}
                   height={1500}
-                  className="max-w-[400px] w-full h-[180px] object-cover mb-3 rounded-md"
+                  loading="lazy"
+                  className="max-w-[400px] w-full h-[316px] object-cover mb-3 rounded-[12px]"
                 />
               </Link>
               <div className="flex flex-row justify-between items-center">
@@ -78,15 +82,15 @@ const InspirationItem = (props: any) => {
                 <div className="flex flex-row items-center gap-x-2">
                   <Link
                     href={`/dashboard/update/${item._id}`}
-                    className="bg-blue-200 rounded-md px-1 py-1"
+                    className="bg-blue-500 hover:bg-blue-600 rounded-md px-1 py-1"
                   >
-                    <Eraser className="text-black w-4 h-4" />
+                    <Eraser className="text-white w-4 h-4" />
                   </Link>
                   <button
-                    className="bg-red-300 rounded-md px-1 py-1"
+                    className="bg-red-500 hover:bg-red-600 rounded-md px-1 py-1"
                     onClick={() => handleDelete(item._id)}
                   >
-                    <Trash className="text-black w-4 h-4" />
+                    <Trash className="text-white w-4 h-4" />
                   </button>
                 </div>
               </div>

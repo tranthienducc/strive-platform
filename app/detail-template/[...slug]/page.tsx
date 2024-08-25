@@ -3,11 +3,10 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import BreadcrumbCategory from "@/app/explore-template/_component/BreadcrumbCategory";
-import DialogPeekTemplate from "@/components/DialogPeekTemplate";
+import RelatedTemplate from "@/components/RelatedTemplate";
 import React, { useMemo } from "react";
 import { Earth } from "lucide-react";
-import { Header } from "@/components/shared";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -20,21 +19,23 @@ import {
   filterCategoryNames,
   filterProductNames,
   findProductUrlMatch,
-  parseMarkDown,
-} from "@/helper";
+} from "@/utils/index";
 import { pages, supports } from "@/constants/data";
 import { ChildrenType } from "@/utils/types/type";
-import { multiFormatDateString, multiPrice } from "@/utils";
+import { multiFormatDateString } from "@/utils";
+import { parseMarkDown } from "@/helper";
 
 const DetailTemplate = () => {
   const { products } = useGetProducts();
   const { productsVariant } = useGetProductsVariant();
   const { slug: productId } = useParams();
-  const { user } = useUserContext();
+  const { users } = useUserContext();
+  const router = useRouter();
   const createdNotifi = useMutation(api.documents.createNotifi);
   const trimProductId = String(productId).trim();
+  const slugProducts = products?.map((item) => item.attributes.slug) ?? [];
 
-  const product = useMemo(
+  const filterProduct = useMemo(
     () =>
       products?.find((item) => {
         const productSlug = item.attributes.slug;
@@ -45,22 +46,22 @@ const DetailTemplate = () => {
   );
 
   const { name, large_thumb_url, description, price, created_at } =
-    product?.attributes || {};
+    filterProduct?.attributes || {};
 
-  const renderProductVariant = productsVariant?.filter((data) => {
+  const filterProductVariant = productsVariant?.filter((data) => {
     const productName = data.attributes.name;
 
     return name === productName;
   });
 
-  const listCategoryName = filterCategoryNames(renderProductVariant);
-
-  const slugVariants = productsVariant?.map((data) => data.attributes.slug);
-  const slugProducts = products?.map((item) => item.attributes.slug) ?? [];
-
-  const dataId = productsVariant?.map((variant) => variant.id);
+  const dataId = filterProductVariant?.map((data) => data.id);
+  const listCategoryName = filterCategoryNames(filterProductVariant);
 
   const handleBuyProduct = async () => {
+    if (!users?.id) {
+      router.push("/sign-in");
+      return;
+    }
     try {
       const response = await axios.post("/api/purchaseProduct", {
         productId: dataId,
@@ -69,31 +70,38 @@ const DetailTemplate = () => {
 
       createdNotifi({
         templateName: name,
-        avatar: user?.imageUrl,
-        userName: `${user?.firstName} ${user?.lastName}`,
+        avatar: users?.imageUrl,
+        userName: `${users?.firstName} ${users?.lastName}`,
       });
     } catch (error) {
       console.log(error);
-      toast.error("Failed to buy product #1");
+      toast.error("Failed to buy product");
     }
   };
 
   const namesProducts = filterProductNames(productsVariant);
 
   const productsUrlMatch = findProductUrlMatch(namesProducts, slugProducts);
-  console.log("namesProducts", namesProducts);
-  console.log("slugProducts", slugProducts);
-  console.log("productsUrlMatch", productsUrlMatch);
+
+  const urlTemplates = filterProductVariant
+    ?.map((item) => item.attributes.links)
+    .flatMap((data) => data)
+    .map((d, index) => (index === 0 ? d.url : null))
+    .filter((url) => url !== null)
+    .join("");
+
+  const releatedTemplates = productsVariant
+    ?.slice(3)
+    .filter((item) => item.attributes.name !== productId);
 
   return (
     <>
-      <Header />
-      <div className="py-6 px-[68px] max-w-[1513px] w-full mb-40 mt-14">
-        <BreadcrumbCategory page={name} className="mb-6" />
+      <div className="py-6 px-5 lg:px-[68px] max-w-full w-full mb-40 mt-14">
+        <BreadcrumbCategory page={name} className="mb-6 lg:mt-0 mt-4" />
 
-        <div className="flex flex-row space-x-[60px] items-center space-y-0 mb-20">
+        <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-[60px] items-center  mb-20 lg:space-y-0 space-y-10">
           <div className="w-full max-w-[720px] text-white">
-            <h1 className="text-5xl font-medium mb-5">
+            <h1 className="text-[28px] lg:text-5xl font-medium mb-5 leading-[1.2] leading-">
               {name} — Creative Professional Website
             </h1>
             <Link
@@ -101,7 +109,7 @@ const DetailTemplate = () => {
               className="flex flex-row items-center gap-x-2"
             >
               <Image
-                src="/assets/images/emty-img-product.png"
+                src="/assets/images/clients-avatar-1.png"
                 alt="avatar"
                 width={300}
                 height={300}
@@ -112,17 +120,17 @@ const DetailTemplate = () => {
             </Link>
           </div>
           <div className="w-full max-w-[720px] space-y-[30px]">
-            <p className="text-lg text-balance font-normal text-[#ccc]">
+            <p className="text-lg text-balance font-normal text-grayc">
               {name} boosts productivity with seamless task management and
               real-time collaboration. This scalable, user-friendly Framer
               template offers comprehensive features for efficient workflow
               integration.
             </p>
 
-            <div className="flex flex-row gap-x-2">
+            <div className="flex flex-col lg:flex-row gap-2">
               <Link
-                href={`/preview/${slugVariants}`}
-                className="py-[10px] px-3 rounded-[8px] bg-[#222] hover:bg-white/15 duration-300"
+                href={`/preview/${productsUrlMatch}`}
+                className="py-[10px] px-3 rounded-[8px] bg-black22 hover:bg-white/15 duration-300 text-center"
               >
                 <span className="text-sm font-medium text-white block">
                   Preview
@@ -142,17 +150,17 @@ const DetailTemplate = () => {
         </div>
 
         <Image
-          src={large_thumb_url || "/assets/images/404-page.png"}
+          src={large_thumb_url || "/assets/images/404-page.webp"}
           alt="img2"
           width={1500}
           height={1500}
           priority={true}
-          className="object-cover rounded-xl max-w-[800px] w-full h-[542px] mb-20"
+          className="object-cover rounded-xl max-w-[385px] h-[261px] lg:max-w-[800px] w-full lg:h-[542px] mb-20"
         />
 
-        <div className="flex flex-row items-start space-x-20 mb-20">
+        <div className="flex flex-col lg:flex-row items-start space-y-[60px] lg:space-x-20 mb-20">
           <div className="flex flex-col-reverse w-full space-y-20 max-w-[800px]">
-            <div className="text-lg text-[#ccc] font-normal">
+            <div className="text-lg text-grayc font-normal">
               {parseMarkDown(description ?? "")}
             </div>
           </div>
@@ -164,10 +172,10 @@ const DetailTemplate = () => {
                 {pages.map((data, index) => (
                   <div
                     key={index}
-                    className="py-1 px-2 bg-[#222] rounded-md flex flex-row items-center gap-x-2"
+                    className="py-1 px-2 bg-black22 rounded-md flex flex-row items-center gap-x-2"
                   >
                     <Earth className="size-3 text-gray9" />
-                    <p className="text-sm whitespace-nowrap font-semibold text-gray9">
+                    <p className="text-xs lg:text-sm whitespace-nowrap font-semibold text-gray9">
                       {data.name}
                     </p>
                   </div>
@@ -177,8 +185,8 @@ const DetailTemplate = () => {
             <div className="space-y-5">
               <HeadingTemplate>Categories</HeadingTemplate>
               <div className="flex flex-wrap gap-[.625rem]">
-                <div className="py-1 px-2 bg-[#222] rounded-md">
-                  <p className="text-sm whitespace-nowrap font-semibold text-gray9">
+                <div className="py-1 px-2 bg-black22 rounded-md">
+                  <p className="text-xs lg:text-sm whitespace-nowrap font-semibold text-gray9">
                     {listCategoryName}
                   </p>
                 </div>
@@ -194,7 +202,7 @@ const DetailTemplate = () => {
                     key={index}
                   >
                     {data.icon}
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-xs lg:text-sm font-medium text-white">
                       {data.description}
                     </p>
                   </div>
@@ -209,14 +217,13 @@ const DetailTemplate = () => {
 
         <HeadingTemplate>Related templates</HeadingTemplate>
 
-        <div className="grid-cols-5 grid gap-2 mt-5">
-          {products?.map((item) => (
+        <div className="grid-cols-2 lg:grid-cols-5 grid gap-2 mt-5">
+          {releatedTemplates?.map((item) => (
             <RelatedTemplate
               key={item.id}
-              url={productsUrlMatch}
-              imageUrl={item.attributes.large_thumb_url}
               name={item.attributes.name}
               price={item.attributes.price}
+              preview={urlTemplates}
             />
           ))}
         </div>
@@ -230,26 +237,3 @@ export default DetailTemplate;
 const HeadingTemplate = ({ children }: ChildrenType) => {
   return <h6 className="text-[22px] font-semibold text-white">{children}</h6>;
 };
-
-const RelatedTemplate = ({ url, imageUrl, name, price }: any) => (
-  <div className="flex flex-col max-w-[253px] w-full relative">
-    <Link href={`/detail-template/${url}`}>
-      <Image
-        src={imageUrl || "/assets/images/bento-img1.png"}
-        alt={name}
-        width={1300}
-        height={1300}
-        priority={true}
-        className="object-cover rounded-xl max-w-[253px] w-full h-[302.8px] mb-5"
-      />
-    </Link>
-    <DialogPeekTemplate />
-    <div className="flex flex-row items-center justify-between">
-      <h5 className="text-base font-semibold text-white">{name}</h5>
-      <span className="text-gray9 font-normal text-sm">
-        {multiPrice(price)}
-      </span>
-    </div>
-    <span className="text-sm text-gray9 font-normal">Tran Thien Duc</span>
-  </div>
-);

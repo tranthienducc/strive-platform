@@ -1,5 +1,4 @@
-import { DataTableColumnHeader } from "@/app/dashboard/order-template-management/component/data-table/data-table-column-header";
-
+import { DataTableColumnHeader } from "@/app/dashboard/order-template-management/component/data-table/index";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -139,7 +138,7 @@ export function getColumns({ data }: any) {
     },
     {
       id: "actions",
-      cell: function Cell({ row }: any) {
+      cell: function Cell({}) {
         return (
           <>
             <DropdownMenu>

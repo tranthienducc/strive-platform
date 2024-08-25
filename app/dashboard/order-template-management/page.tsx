@@ -1,13 +1,13 @@
-import BreadcumsCustom from "@/components/breadcums-custom";
+import { BreadcumsCustom } from "@/components/common/index";
 import { Shell } from "@/components/Shell";
 import React from "react";
 import { UsersTable } from "./component/user-table/user-table";
-import { DataTableSkeleton } from "./component/data-table/data-table-skeleton";
+import { DataTableSkeleton } from "./component/data-table/index";
 
 const OrderManagePage = () => {
   return (
-    <div className="h-screen">
-      <BreadcumsCustom title1="Order Management" title2=" Order Infomation" />
+    <div className="h-full">
+      <BreadcumsCustom link="Order Management" page=" Order Infomation" />
 
       <div className="flex flex-col items-start mt-3 mb-7">
         <h4 className="text-xl font-semibold text-white">

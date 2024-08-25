@@ -3,12 +3,6 @@ import { mutation, query } from "./_generated/server";
 
 export const getById = query({
   handler: async (ctx) => {
-    const indentity = await ctx.auth.getUserIdentity();
-
-    if (!indentity) {
-      throw new Error("Not authenticated");
-    }
-
     const documents = await ctx.db.query("documents").collect();
     return documents;
   },
@@ -22,15 +16,10 @@ export const create = mutation({
     slug: v.optional(v.string()),
     description: v.optional(v.string()),
     parentDocument: v.optional(v.id("documents")),
+    userId: v.optional(v.string()),
   },
 
   handler: async (ctx, args) => {
-    const indentity = await ctx.auth.getUserIdentity();
-
-    if (!indentity) {
-      throw new Error("Not authenticated");
-    }
-
     const existingSlug = await ctx.db
       .query("documents")
       .filter((q) => q.eq(q.field("slug"), args.slug))
@@ -43,9 +32,8 @@ export const create = mutation({
       };
     }
 
-    const userId = indentity.subject;
     const document = await ctx.db.insert("documents", {
-      userId,
+      userId: args.userId,
       title: args.title,
       categories: args.categories,
       coverImage: args.coverImage,
@@ -66,15 +54,9 @@ export const update = mutation({
     coverImage: v.optional(v.string()),
     slug: v.optional(v.string()),
     description: v.optional(v.string()),
+    userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-    const userId = identity.subject;
-
     const { id, ...rest } = args;
 
     const existingDocument = await ctx.db.get(args.id);
@@ -83,7 +65,7 @@ export const update = mutation({
       throw new Error("Not found");
     }
 
-    if (existingDocument.userId !== userId) {
+    if (existingDocument.userId !== args.userId) {
       throw new Error("Unauthorized");
     }
 
@@ -97,21 +79,14 @@ export const update = mutation({
 });
 
 export const deleted = mutation({
-  args: { id: v.id("documents") },
+  args: { id: v.id("documents"), userId: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const indentity = await ctx.auth.getUserIdentity();
-
-    if (!indentity) {
-      throw new Error("Not authenticated");
-    }
-
-    const userId = indentity.subject;
     const existingDocument = await ctx.db.get(args.id);
 
     if (!existingDocument) {
       throw new Error("Not found");
     }
-    if (existingDocument.userId !== userId) {
+    if (existingDocument.userId !== args.userId) {
       throw new Error("UUnauthorized");
     }
 
@@ -121,34 +96,63 @@ export const deleted = mutation({
   },
 });
 
-export const updateHeart = mutation({
+export const likeInspiration = mutation({
   args: {
     id: v.id("documents"),
-    heart: v.optional(v.number()),
+    userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-    const userId = identity.subject;
-
     const existingDocument = await ctx.db.get(args.id);
 
     if (!existingDocument) {
       throw new Error("Not found");
     }
 
-    if (existingDocument.userId !== userId) {
-      throw new Error("Unauthorized");
-    }
+    const likedBy = existingDocument.likedBy || [];
 
+    if (!likedBy.includes(args.userId as string)) {
+      likedBy.push(args.userId as string);
+    }
     const document = await ctx.db.patch(args.id, {
-      heart: args.heart,
+      likedBy,
     });
 
     return document;
+  },
+});
+
+export const unikeInspiration = mutation({
+  args: {
+    id: v.id("documents"),
+    userId: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existingDocument = await ctx.db.get(args.id);
+
+    if (!existingDocument) {
+      throw new Error("Not found");
+    }
+
+    let likedBy = existingDocument.likedBy || [];
+    likedBy = likedBy.filter((user) => user !== args.userId);
+    const document = await ctx.db.patch(args.id, {
+      likedBy,
+    });
+
+    return document;
+  },
+});
+
+export const getLikeInspirationById = query({
+  handler: async (ctx) => {
+    const indentity = await ctx.auth.getUserIdentity();
+
+    if (!indentity) {
+      throw new Error("Not authenticated");
+    }
+
+    const notifications = await ctx.db.query("documents").collect();
+    return notifications;
   },
 });
 
@@ -215,12 +219,6 @@ export const createNotifi = mutation({
 
 export const getNotifiById = query({
   handler: async (ctx) => {
-    const indentity = await ctx.auth.getUserIdentity();
-
-    if (!indentity) {
-      throw new Error("Not authenticated");
-    }
-
     const notifications = await ctx.db.query("notifications").collect();
     return notifications;
   },

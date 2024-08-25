@@ -1,15 +1,21 @@
-import { Footer, Header, Hero, Pricing, Reviews } from "@/components/shared";
-import Product from "@/components/shared/product";
+import {
+  Hero,
+  Pricing,
+  Reviews,
+  Footer,
+  About,
+  Product,
+} from "@/components/shared";
 
 export default function Home() {
   return (
-    <main className="max-w-[1513px] w-full h-screen mx-auto">
-      <div className="px-[68px] pt-[52px] pb-5 flex-col flex items-center justify-center">
-        <Header />
+    <main className="max-w-full w-full h-screen mx-auto">
+      <div className="lg:px-[68px] px-5 pt-[52px] pb-5 flex-col flex items-center justify-center">
         <Hero />
         <Product />
         <Pricing />
         <Reviews />
+        <About />
         <Footer />
       </div>
     </main>

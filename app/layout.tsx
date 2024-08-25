@@ -1,12 +1,13 @@
 import { Inter } from "next/font/google";
 import { ConvexClientProvider } from "@/services/providers/convex-provider";
-import { Toaster } from "sonner";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 import { UserProvider } from "@/context/UserContext";
 import "./globals.css";
 import { QueryProvider } from "@/lib/react-query/QueryProvider";
+import { ClerkProvider } from "@clerk/nextjs";
+import Wrapper from "@/components/Wrapper";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://strive-platform.vercel.app/"),
@@ -29,21 +30,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full scroll-smooth">
-      <body className={inter.className}>
-        <ConvexClientProvider>
-          <QueryProvider>
-            <EdgeStoreProvider>
-              <UserProvider>
-                <main className="relative">
-                  <Toaster position="bottom-right" />
-                  {children}
-                </main>
-              </UserProvider>
-            </EdgeStoreProvider>
-          </QueryProvider>
-        </ConvexClientProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className="h-full scroll-smooth">
+        <body className={inter.className}>
+          <ConvexClientProvider>
+            <QueryProvider>
+              <EdgeStoreProvider>
+                <UserProvider>
+                  <Wrapper>{children}</Wrapper>
+                </UserProvider>
+              </EdgeStoreProvider>
+            </QueryProvider>
+          </ConvexClientProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

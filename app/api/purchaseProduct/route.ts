@@ -1,7 +1,5 @@
 import { lemonSqueezyApiInstance } from "@/helper/axios";
 
-export const dynamic = "force-dynamic";
-
 export async function POST(req: Request) {
   try {
     const reqData = await req.json();
@@ -18,7 +16,7 @@ export async function POST(req: Request) {
         attributes: {
           checkout_data: {
             custom: {
-              user_id: "456",
+              user_id: "test",
             },
           },
         },
@@ -40,6 +38,7 @@ export async function POST(req: Request) {
     });
 
     const checkoutUrl = response?.data?.data?.attributes?.url;
+    console.log(response.data);
 
     return Response.json({ checkoutUrl });
   } catch (error) {

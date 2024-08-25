@@ -49,7 +49,7 @@ export const features = [
     className: "col-span-1",
     background: (
       <Image
-        src="/assets/images/bento-img1.png"
+        src="/assets/images/bento-img1.webp"
         className="absolute -right-20 -top-20 opacity-60 h-full object-cover w-full"
         alt="bg"
         width={1300}
@@ -68,7 +68,7 @@ export const features = [
     className: "col-span-2",
     background: (
       <Image
-        src="/assets/images/bento-img2.png"
+        src="/assets/images/bento-img2.webp"
         className="absolute -right-20 -top-20 opacity-60"
         alt="bg"
         width={1300}
@@ -86,7 +86,7 @@ export const features = [
     className: "col-span-2",
     background: (
       <Image
-        src="/assets/images/bento-img3.png"
+        src="/assets/images/bento-img3.webp"
         className="absolute -right-20 -top-20 opacity-60"
         alt="bg"
         width={1300}
@@ -105,7 +105,7 @@ export const features = [
 
     background: (
       <Image
-        src="/assets/images/bento-img4.png"
+        src="/assets/images/bento-img4.webp"
         className="absolute -right-20 -top-20 opacity-60 h-full"
         alt="bg"
         width={1300}

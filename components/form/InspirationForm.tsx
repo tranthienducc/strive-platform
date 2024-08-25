@@ -7,7 +7,6 @@ import {
   InspirationType,
 } from "@/utils/types/type";
 import { useMutation, useQuery } from "convex/react";
-import { ShieldCheck } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -16,11 +15,17 @@ import slugify from "slugify";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import FileUpload from "../FileUpload";
-import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Spinner } from "../spinner";
 import { Id } from "@/convex/_generated/dataModel";
+import { FORM } from "@/utils/types/enum";
+import { DropdownCategories } from "@/components/common/index";
+import dynamic from "next/dynamic";
 
+const PlateEditor = dynamic(() => import("@/components/editor/PlateEditor"), {
+  ssr: false,
+  loading: () => <p>Loading editor..</p>,
+});
 const InspirationForm = ({ action }: InspirationFormProps) => {
   const router = useRouter();
   const create = useMutation(api.documents.create);
@@ -55,7 +60,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
     inspirationsList || {};
 
   useEffect(() => {
-    if (action === "Update") {
+    if (action === FORM.UPDATE) {
       form.reset({
         title: title || "",
         categories: categories || "",
@@ -90,6 +95,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
         setIsLoading(true);
         router.push("/dashboard/inspiration-manage");
       };
+      console.log("data", data);
 
       // UPDATE INSPIRATION
       const updateInspiration = async () => {
@@ -107,9 +113,9 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
         router.push("/dashboard/inspiration-manage");
       };
 
-      if (action === "Create") {
+      if (action === FORM.CREATE) {
         await createInspiration();
-      } else if (action === "Update") {
+      } else if (action === FORM.UPDATE) {
         await updateInspiration();
       }
     } catch (error) {
@@ -134,7 +140,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-[#1e1e22] border border-white/45"
+                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-black border border-white/25"
                     type="text"
                     required
                     placeholder="Solopreneur"
@@ -154,7 +160,7 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-[#1e1e22] border border-white/45"
+                    className="outline-none text-white placeholder:text-gray9 bg-inherit h-12 bg-black border border-white/25"
                     type="text"
                     required
                     placeholder="this-is-slug"
@@ -175,12 +181,9 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
                 Categories
               </FormLabel>
               <FormControl>
-                <Input
-                  className="rounded-lg outline-none bg-[#1e1e22] text-white placeholder:text-gray9 px-4 pt-4 pb-20 border border-white/45"
-                  type="text"
-                  required
-                  placeholder="categories"
-                  {...field}
+                <DropdownCategories
+                  onValuesChange={field.onChange}
+                  values={field.value}
                 />
               </FormControl>
             </FormItem>
@@ -215,11 +218,9 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
                 Description
               </FormLabel>
               <FormControl>
-                <Textarea
-                  required
-                  className="rounded-xl bg-[#1e1e22] text-white px-4 text-sm pt-4 pb-16 placeholder:text-gray9 border border-white/45"
-                  placeholder="that is a solopreneur"
-                  {...field}
+                <PlateEditor
+                  values={field.value}
+                  fieldChange={field.onChange}
                 />
               </FormControl>
             </FormItem>
@@ -228,18 +229,15 @@ const InspirationForm = ({ action }: InspirationFormProps) => {
 
         <Button
           type="submit"
-          className="flex flex-row gap-x-2 items-center bg-[#bc4371] rounded-xl max-w-full w-full h-11 text-center justify-center duration-300 hover:bg-[#acb289]"
+          disabled={isLoading}
+          className="px-5 py-2 items-end bg-white rounded-xl duration-300 hover:bg-white/30 text-base font-semibold text-black"
         >
           {isLoading ? (
             <Spinner />
+          ) : action === FORM.CREATE ? (
+            "Create"
           ) : (
-            <>
-              <span className="text-base font-semibold text-white">
-                {" "}
-                {action === "Create" ? "Create" : "Update"}
-              </span>
-              <ShieldCheck className="w-4 h-4" />
-            </>
+            "Update"
           )}
         </Button>
       </form>

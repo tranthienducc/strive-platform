@@ -1,16 +1,17 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { getColumns } from "./user-table-column";
 import { useDataTable } from "../state/hooks/use-data-table";
-import { DataTable } from "@/app/dashboard/order-template-management/component/data-table/data-table";
-
-import { DataTableToolbar } from "@/app/dashboard/order-template-management/component/data-table/data-table-toolbar";
+import {
+  DataTable,
+  DataTableToolbar,
+} from "@/app/dashboard/order-template-management/component/data-table/index";
 import axios from "axios";
-import { useFetchProductData } from "@/state/hooks/useFetchProducts";
+import { useGetProducts } from "@/lib/react-query/queries";
 
-export function UsersTable() {
-  const { products } = useFetchProductData("/api/purchaseProduct");
-  const dataId = products.map((product) => product.attributes.store_id);
+export const UsersTable = memo(() => {
+  const { products } = useGetProducts();
+  const dataId = products?.map((product) => product.attributes.store_id);
   const [orderProducts, setOrderProducts] = useState([]);
   const data: any[] = orderProducts?.map((order) => order);
   const pageCount = data?.length;
@@ -59,4 +60,6 @@ export function UsersTable() {
       ></DataTableToolbar>
     </DataTable>
   );
-}
+});
+
+UsersTable.displayName = "UsersTable";

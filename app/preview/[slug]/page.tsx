@@ -1,71 +1,47 @@
 "use client";
-import { ProductVariantProps } from "@/utils/types/type";
-import axios from "axios";
+import { filterProductNames, findUrlTemplate } from "@/utils/index";
+import { useGetProductsVariant } from "@/lib/react-query/queries";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const PreviewPage = () => {
-  const [variantProduct, setVariantProduct] = useState<ProductVariantProps[]>(
-    []
-  );
-  const { slug: variantId } = useParams();
+  const { productsVariant } = useGetProductsVariant();
+  const { slug: categoryParams } = useParams();
 
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const res = await axios.get("/api/purchaseProduct");
-        if (Array.isArray(res.data.productVariant)) {
-          setVariantProduct(res.data.productVariant);
-        } else {
-          console.error("Dữ liệu trả về không phải là một mảng", res.data);
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu từ API", error);
-      }
-    };
+  const dataProductsVariant = productsVariant?.slice(1).filter((data) => {
+    const item = data.attributes.name.toLowerCase();
 
-    getProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const trimProductId = String(variantId).trim();
-
-  const productVariant = variantProduct.find((item) => {
-    const productSlug = item.attributes.slug;
-    const trimProductSlug = String(productSlug).trim();
-    return trimProductId === trimProductSlug;
+    return item.includes(categoryParams as string);
   });
-
-  const { name } = productVariant?.attributes || {};
+  const urlTemplates = findUrlTemplate(dataProductsVariant);
+  const categoriesName = filterProductNames(dataProductsVariant);
 
   return (
     <>
-      <div className="bg-[#111111] max-w-full h-[80px] w-full flex flex-row justify-between items-center py-3 px-6 ">
-        <div className="flex flex-row items-center gap-x-3">
-          <Link href="/" className="flex flex-row items-center gap-x-2">
-            <ArrowLeft className="text-white size-5" />
-            <p className="text-base text-white font-medium">Home</p>
+      <div className="bg-black11 max-w-full h-[80px] w-full flex flex-row justify-between items-center py-3 px-6 ">
+        <div className="flex flex-row  items-center gap-x-3">
+          <Link
+            href={`/detail-template/${categoriesName}`}
+            className="flex flex-row items-center gap-x-2"
+          >
+            <ArrowLeft className="text-white size-4 lg:size-5" />
+            <p className="text-sm lg:text-base text-white font-medium">Home</p>
           </Link>
           <p className="text-sm font-medium text-gray9">Preview</p>
         </div>
 
         <Link
           href="/"
-          className="text-sm font-medium text-white"
+          className="text-sm font-medium text-white cursor-pointer"
           target="_blank"
         >
-          {name}
+          {urlTemplates}
         </Link>
-
-        <button className="text-sm font-medium text-black bg-white rounded-xl px-4 py-2">
-          Buy now
-        </button>
       </div>
       <div className="max-w-full w-full p-6 h-[690px]">
         <iframe
-          src={name}
+          src={urlTemplates}
           className="w-full h-full rounded-xl bg-white"
           sandbox="allow-scripts allow-same-origin"
           loading="lazy"

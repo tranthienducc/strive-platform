@@ -3,6 +3,7 @@ import React, { useCallback, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { convertFileToUrl } from "@/utils";
+import IconsUpload from "./icons/IconsUpload";
 
 type FileUploadProps = {
   setFile: (files: File) => void;
@@ -29,12 +30,11 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
       "image/*": [".png", ".jpeg", ".jpg"],
     },
   });
-  console.log("fileUrl", fileUrl);
 
   return (
     <div
       {...getRootProps()}
-      className="bg-inherit max-w-full   cursor-pointer border-dotted border-white border rounded-2xl"
+      className="bg-black max-w-full  cursor-pointer   border-white/20 border rounded-2xl py-4"
     >
       <input {...getInputProps()} className="cursor-pointer" />
 
@@ -51,15 +51,7 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
         </>
       ) : (
         <div className="flex flex-col items-center gap-y-3 text-center py-4 justify-center">
-          <Image
-            src="/assets/icons/upload.svg"
-            alt="upload"
-            loading="lazy"
-            width={500}
-            height={500}
-            className="size-[46px]"
-          />
-
+          <IconsUpload />
           <div className="flex flex-col gap-y-2">
             <p className="text-base font-medium text-white">
               Choose a file or drag & drop it here

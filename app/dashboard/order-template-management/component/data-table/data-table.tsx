@@ -1,6 +1,5 @@
 import * as React from "react";
 import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
-
 import { getCommonPinningStyles } from "@/lib/data-table/data-table";
 import { cn } from "@/lib/utils";
 import {
@@ -11,14 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "@/app/dashboard/order-template-management/component/data-table/data-table-pagination";
+import { DataTablePagination } from "@/app/dashboard/order-template-management/component/data-table/index";
 
 interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   table: TanstackTable<TData>;
   floatingBar?: React.ReactNode | null;
 }
 
-export function DataTable<TData>({
+export default function DataTable<TData>({
   table,
   floatingBar = null,
   children,

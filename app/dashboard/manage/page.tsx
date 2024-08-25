@@ -1,33 +1,15 @@
 "use client";
 import { Bell, CircleHelp } from "lucide-react";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserContext } from "@/context/UserContext";
+import { useGetProducts } from "@/lib/react-query/queries";
 
 const ManagePage = () => {
-  const [products, setProducts] = useState<[]>([]);
-  const { user } = useUserContext();
-  useEffect(() => {
-    const getProducts = async () => {
-      try {
-        const res = await axios.get("/api/purchaseProduct");
-        if (Array.isArray(res.data.data)) {
-          setProducts(res.data.data);
-        } else {
-          console.error("Dữ liệu trả về không phải là một mảng", res.data);
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu từ API", error);
-      }
-    };
+  const { products } = useGetProducts();
+  const { users } = useUserContext();
 
-    getProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (products.length < 0) {
+  if (products?.length === 0) {
     return (
       <div className="max-w-[394px] w-full rounded-[10px] p-3">
         <Skeleton className="w-[374px] h-[170px] rounded-lg mb-3" />
@@ -45,11 +27,15 @@ const ManagePage = () => {
   }
 
   return (
-    <>
+    <div className="h-full pb-10">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col gap-y-[1px]">
-          <span className="text-sm font-normal text-gray9">Welcome,</span>
-          <p className="text-base font-medium text-white">{user?.fullName}</p>
+          <span className="text-xs lg:text-sm font-normal text-gray9">
+            Welcome,
+          </span>
+          <p className="text-sm lg:text-base font-medium text-white">
+            {users?.fullName}
+          </p>
         </div>
 
         <div className="flex flex-row gap-x-6 items-center">
@@ -61,35 +47,35 @@ const ManagePage = () => {
 
       <div className="flex items-center justify-center pt-5">
         <Image
-          src="/assets/images/bg-dashboard.png"
+          src="/assets/images/dashboard-img.webp"
           alt="bg-dashboard"
           width={1300}
-          loading="lazy"
+          priority={true}
           height={1300}
-          className="max-w-[864px] w-full h-[282px] object-cover rounded-xl mb-10"
+          className="max-w-[390px] lg:max-w-[864px] w-full h-[282px] object-cover rounded-xl mb-10"
         />
       </div>
 
-      <h3 className="text-2xl font-semibold text-white mb-3">
+      <h3 className="text-lg lg:text-2xl font-semibold text-white mb-3">
         All created templates
       </h3>
-      <p className="text-sm font-normal text-gray9 max-w-[700px] w-full mb-[46px]">
+      <p className="text-sm font-normal text-gray9  max-w-[350px] lg:max-w-[700px] w-full mb-[46px]">
         Simplify user authentication and memberships without coding
         complexities. Discover tools that make managing user access and
         memberships a breeze.
       </p>
 
-      <div className="grid grid-cols-3 col-span-2 gap-5 relative">
-        {products.length > 0 ? (
-          products.map((item: any, i) => (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 relative">
+        {products && products?.length > 0 ? (
+          products?.map((item, i) => (
             <div
-              className="max-w-[394px] w-full rounded-[10px] bg-black border border-gray-800 p-3"
+              className="max-w-[384px] w-full rounded-[10px] bg-black border border-gray-800 p-3"
               key={i}
             >
               <Image
                 src={
                   item?.attributes?.large_thumb_url ||
-                  "/assets/images/404-page.png"
+                  "/assets/images/404-page.webp"
                 }
                 alt="card-img"
                 className="max-w-[374px] w-full h-[170px] object-cover rounded-lg mb-3"
@@ -123,7 +109,7 @@ const ManagePage = () => {
           </p>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

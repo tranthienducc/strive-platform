@@ -4,12 +4,11 @@ import * as React from "react";
 import type { DataTableFilterField } from "@/utils/types/type";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableFacetedFilter } from "@/app/dashboard/order-template-management/component/data-table/data-table-faceted-filter";
-import { DataTableViewOptions } from "@/app/dashboard/order-template-management/component/data-table/data-table-view-options";
+import { DataTableFacetedFilter } from "@/app/dashboard/order-template-management/component/data-table/index";
+import { DataTableViewOptions } from "@/app/dashboard/order-template-management/component/data-table/index";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,7 +16,7 @@ interface DataTableToolbarProps<TData>
   filterFields?: DataTableFilterField<TData>[];
 }
 
-export function DataTableToolbar<TData>({
+export default function DataTableToolbar<TData>({
   table,
   filterFields = [],
   children,

@@ -5,7 +5,6 @@ import {
   EyeNoneIcon,
 } from "@radix-ui/react-icons";
 import { type Column } from "@tanstack/react-table";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +21,7 @@ interface DataTableColumnHeaderProps<TData, TValue>
   title: string;
 }
 
-export function DataTableColumnHeader<TData, TValue>({
+export default function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,

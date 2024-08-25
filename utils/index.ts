@@ -1,4 +1,6 @@
 import { useEdgeStore } from "@/lib/edgestore";
+import { FILTERS_CATEGORIES } from "./types/enum";
+import { ProductVariantProps } from "./types/type";
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
@@ -60,5 +62,76 @@ export const multiPrice = (value: number) => {
   });
 };
 
-export const BASE_URL = "/api/purchaseProduct";
-export const URL_CATEGORY = "/explore-template/category";
+// Kiểm tra để chắc chắn value là một trong các giá trị của enum FILTERS_CATEGORIES
+export const isFilterCategory = (value: any): value is FILTERS_CATEGORIES => {
+  return Object.values(FILTERS_CATEGORIES).includes(value);
+};
+
+export const filterVariantProducts = (
+  productsVariant: ProductVariantProps[] | undefined,
+  categoiesParams: string[] | string | undefined
+) => {
+  const filterVariantProducts = productsVariant?.slice(1).filter((data) => {
+    const item = data.attributes.links.map((t) => t.title);
+
+    return item.includes(categoiesParams);
+  });
+
+  return filterVariantProducts;
+};
+
+export const filterProductNames = (
+  productsVariant: ProductVariantProps[] | undefined
+) => {
+  const productNames = productsVariant?.map((item) =>
+    item.attributes.name.toLowerCase()
+  );
+
+  return productNames;
+};
+export const findProductUrlMatch = (
+  namesProduct: string[] | undefined,
+  slugProducts: string[]
+) => {
+  const productsUrlMatch = namesProduct?.find((data) =>
+    slugProducts.includes(data)
+  );
+
+  return productsUrlMatch;
+};
+
+export const findUrlTemplate = (
+  productsVariant: ProductVariantProps[] | undefined
+) => {
+  const urlsTemplate = productsVariant
+    ?.map((item) => item.attributes.links)
+    .flatMap((data) => data)
+    .map((d, index) => (index === 0 ? d.url : null))
+    .filter((url) => url !== null)
+    .join("");
+
+  return urlsTemplate;
+};
+
+export const filterCategoryNames = (
+  data: ProductVariantProps[] | undefined
+) => {
+  const categoryName = data
+    ?.map((item) => item.attributes.links)
+    .flatMap((data) => data)
+    .map((d, index) => (index === 0 ? d.title : null))
+    .filter((title) => title !== null)
+    .join("");
+
+  return categoryName;
+};
+export const filterImageUrl = (data: ProductVariantProps[] | undefined) => {
+  const imageUrl = data
+    ?.map((item) => item.attributes.links)
+    .flatMap((data) => data)
+    .map((d, index) => (index === 2 ? d.url : null))
+    .filter((url) => url !== null)
+    .join("");
+
+  return imageUrl;
+};

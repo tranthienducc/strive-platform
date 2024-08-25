@@ -1,20 +1,20 @@
 "use client";
 import { ChildrenType } from "@/utils/types/type";
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/nextjs";
 import { UserResource } from "@clerk/types";
 import { createContext, useContext } from "react";
 
 type UserContextType = {
-  user: UserResource | null;
+  users: UserResource | null;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 export function UserProvider({ children }: ChildrenType) {
   const { user } = useUser();
-
   const value = {
-    user: user || null,
+    users: user || null,
   };
+
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 

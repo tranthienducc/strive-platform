@@ -5,7 +5,6 @@ import {
   DoubleArrowRightIcon,
 } from "@radix-ui/react-icons";
 import { type Table } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -20,7 +19,7 @@ interface DataTablePaginationProps<TData> {
   pageSizeOptions?: number[];
 }
 
-export function DataTablePagination<TData>({
+export default function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],
 }: DataTablePaginationProps<TData>) {

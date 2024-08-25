@@ -1,6 +1,5 @@
-import { reviewsInfo } from "@/constants/data";
 import Heading from "../Heading";
-import React from "react";
+import React, { Key } from "react";
 import Image from "next/image";
 import { ReviewsCardType } from "@/utils/types/type";
 import {
@@ -10,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
+import { reviewsInfo } from "@/constants/infoSectionConstants";
 
 const Reviews = () => {
   return (
@@ -18,12 +18,12 @@ const Reviews = () => {
         heading="Clients say about our"
         description="Here's what my clients say about our when they visit and buy templates"
       />
-      <Carousel className="max-w-[793px] w-full">
+      <Carousel className="max-w-[386px] lg:max-w-[793px] w-full">
         <CarouselContent className="ml-0">
-          {reviewsInfo.map((review, index) => (
+          {reviewsInfo.map((review: any, index: Key) => (
             <CarouselItem
               key={index}
-              className="max-w-[793px] w-full h-[446px] rounded-xl p-7 border border-[#1D2021] flex-col flex items-start justify-between bg-[#0C0C0F]"
+              className="max-w-[386px] lg:max-w-[793px] w-full h-full min-h-[446px] rounded-xl p-7 border border-[#1D2021] flex-col flex items-start justify-between bg-[#0C0C0F]"
             >
               <ReviewsCard
                 logo={review.logo}
@@ -36,8 +36,8 @@ const Reviews = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="left-[17rem] lg:left-[43rem] top-[12%]" />
+        <CarouselNext className="right-8 top-[12%]" />
       </Carousel>
     </section>
   );
@@ -56,14 +56,13 @@ const ReviewsCard = ({
   <React.Fragment>
     <h3 className="text-4xl font-bold text-white">{logo}</h3>
 
-    {/* Custom cái previou và next của carosel ở đây  */}
     <div className="flex flex-col gap-8  max-w-full w-full">
-      <p className="font-medium text-[22px] leading-[30.25px] max-w-[672px] w-full text-[#8e8d91] text-balance">
+      <p className="font-medium text-sm lg:text-[22px] leading-[1.375] lg:leading-[30.25px] max-w-sm lg:max-w-[672px] w-full text-[#8e8d91] text-balance">
         “{message}”
       </p>
 
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-x-4">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between">
+        <div className="flex flex-row items-center gap-x-4 lg:mb-0 mb-5">
           <Image
             loading="lazy"
             alt="avatar"

@@ -3,4 +3,7 @@ export { default as Hero } from "./hero";
 export { default as Footer } from "./footer";
 export { default as Pricing } from "./pricing";
 export { default as Reviews } from "./reviews";
-export { default as Sidebar } from "./sidebar";
+export { default as Product } from "./product";
+export { default as About } from "./about";
+export { default as SidebarAdmin } from "./SidebarAdmin";
+export { default as SidebarAdminMobile } from "./SidebarAdminMobile";

@@ -1,11 +1,12 @@
 "use client";
-import BreadcumsCustom from "@/components/breadcums-custom";
+import { BreadcumsCustom } from "@/components/common/index";
 import InspirationForm from "@/components/form/InspirationForm";
+import { FORM } from "@/utils/types/enum";
 
 const UpdatePage = () => {
   return (
-    <div>
-      <BreadcumsCustom title1="Updating" title2=" Update" />
+    <div className="h-full">
+      <BreadcumsCustom link="Updating" page=" Update" />
 
       <h1 className="text-3xl font-semibold text-white mb-3">
         Update a current inspiration
@@ -14,7 +15,7 @@ const UpdatePage = () => {
         Updating a current inspiration for ID, title, price, categories, images,
         desc.
       </p>
-      <InspirationForm action="Update" />
+      <InspirationForm action={FORM.UPDATE} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Checkbox from "../checkbox";
-import { PRICING_DATA } from "@/constants/data";
+import { pricingData } from "@/constants/infoSectionConstants";
 import { cn } from "@/lib/utils";
 import Heading from "../Heading";
 
@@ -14,11 +14,11 @@ const Pricing = () => {
           to the next level."
       />
 
-      <div className="flex flex-row gap-x-4 justify-center items-center">
-        {PRICING_DATA.map((data, index) => (
+      <div className="flex lg:flex-row  flex-col gap-4 justify-center items-center">
+        {pricingData.map((data, index) => (
           <div
             className={cn(
-              "max-w-[412px] w-full min-h-[760px] h-full rounded-3xl bg-[#0C0C0F] border border-[#1D2021] flex flex-custom flex-col flex-wrap gap-8 p-10",
+              "lg:max-w-[412px] max-w-[370px] w-full max-h-[780px] lg:min-h-[760px] h-full rounded-3xl bg-[#0C0C0F] border border-[#1D2021] flex flex-custom flex-col lg:flex-wrap gap-8 p-10",
 
               index === 1 ? "border-white/30" : "border-[#1D2021]"
             )}

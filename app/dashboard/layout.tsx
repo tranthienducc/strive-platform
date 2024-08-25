@@ -1,4 +1,4 @@
-import { Sidebar } from "@/components/shared";
+import WrapperAdminDashboard from "@/components/WrapperAdminDashboard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,11 +11,10 @@ export default function DashBoardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="h-screen relative items-start flex flex-row max-w-full w-full">
-      <Sidebar />
-      <div className="pr-7 py-8 bg-[#141517]  max-w-full w-full pl-[19rem]">
+    <WrapperAdminDashboard>
+      <div className="lg:pr-7 lg:py-8 py-4 px-4  max-w-full w-full lg:pl-[19rem] h-full lg:h-screen">
         {children}
       </div>
-    </main>
+    </WrapperAdminDashboard>
   );
 }

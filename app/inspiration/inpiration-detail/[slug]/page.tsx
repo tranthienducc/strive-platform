@@ -1,9 +1,10 @@
 "use client";
-import { Header } from "@/components/shared";
+import { DialogFeedback, DialogShare } from "@/components/common/index";
 import { api } from "@/convex/_generated/api";
+import parse from "html-react-parser";
 import { InspirationType } from "@/utils/types/type";
 import { useQuery } from "convex/react";
-import { ArrowLeft, Dot } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -31,8 +32,7 @@ const DetailInspiration = () => {
 
   return (
     <>
-      <Header></Header>
-      <div className="mt-12 px-[244px] pb-10">
+      <div className="mt-20 px-5 lg:px-[244px] pb-10">
         <Link
           href="/inspiration"
           className="flex flex-row gap-x-2 mb-5 items-center"
@@ -40,9 +40,9 @@ const DetailInspiration = () => {
           <ArrowLeft className="w-5 h-5 text-white" />
           <p className="text-sm font-medium text-gray9">Back to inspiration</p>
         </Link>
-        <h1 className="text-2xl font-semibold text-white mb-6">{title}</h1>
+        <h1 className="heading-1">{title}</h1>
         <div className="flex flex-row justify-between items-center mb-6">
-          <div className="flex flex-row gap-x-1 items-center">
+          <div className="flex flex-row gap-x-3 items-center">
             <Image
               src="/assets/images/avatar.png"
               alt="avatar"
@@ -50,14 +50,11 @@ const DetailInspiration = () => {
               height={300}
               className="w-12 h-12 rounded-full"
             />
-            <div className="flex flex-col gap-y-[2px] items-baseline">
-              <h5 className="text-sm font-semibold text-white pl-[14px]">
+            <div className="flex flex-col gap-1 text-start">
+              <h5 className="text-sm font-semibold text-white">
                 Tran Thien Duc
               </h5>
-              <span className="text-xs font-medium flex flex-row  text-green-400 items-center">
-                <Dot className="w-8 h-8 animate-pulse" />
-                Available for work
-              </span>
+              <p className="text-xs font-medium text-white">Admin</p>
             </div>
           </div>
 
@@ -70,27 +67,32 @@ const DetailInspiration = () => {
         </div>
 
         <Image
-          src={coverImage || "/assets/images/404-page.png"}
+          src={coverImage || "/assets/images/404-page.webp"}
           alt="bg-dashboard"
           width={1500}
           height={1500}
           className="w-full h-[500px] rounded-lg object-cover mb-14"
         />
 
-        <p className="text-base font-normal text-gray9 mb-8">{description}</p>
+        <p className="descripion-1">{parse(description ?? "")} </p>
+
+        <div className="flex items-center justify-center gap-x-3">
+          <DialogFeedback />
+          <DialogShare />
+        </div>
         <h3 className="pt-10 text-sm font-medium text-white mb-4">
           You might also like
         </h3>
-        <div className="grid grid-cols-3 col-span-2 gap-9">
+        <div className="grid grid-cols-1 lg:grid-cols-3 col-span-2 gap-9">
           {filterInspiration &&
             filterInspiration?.map((item: InspirationType, index: Key) => (
               <React.Fragment key={index}>
-                <div className="max-w-[315px] w-full flex flex-col gap-y-3">
+                <div className="max-w-full lg:max-w-[315px] w-full flex flex-col gap-y-3">
                   <Link
                     href={`/inspiration/inpiration-detail/inspiration?slug=${item.slug}`}
                   >
                     <Image
-                      src={item.coverImage || "/assets/images/404-page.png"}
+                      src={item.coverImage || "/assets/images/404-page.webp"}
                       alt="emty"
                       width={1300}
                       height={300}

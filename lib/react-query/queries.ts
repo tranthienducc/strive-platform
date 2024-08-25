@@ -1,8 +1,8 @@
 import { ProductProps, ProductVariantProps } from "@/utils/types/type";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "./QueryKeys";
+import { BASE_URL } from "@/config";
 import axios from "axios";
-import { BASE_URL } from "@/utils";
 
 export const useGetProducts = () => {
   const { data: products } = useQuery({

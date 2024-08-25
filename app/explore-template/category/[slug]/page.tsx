@@ -3,15 +3,7 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import BreadcrumbCategory from "../../_component/BreadcrumbCategory";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { multiPrice } from "@/utils";
-import DialogPeekTemplate from "@/components/DialogPeekTemplate";
+import { isFilterCategory, multiPrice } from "@/utils";
 import Link from "next/link";
 import {
   useGetProducts,
@@ -23,12 +15,23 @@ import {
   filterImageUrl,
   filterProductNames,
   findProductUrlMatch,
-} from "@/helper";
+} from "@/utils/index";
+import { memo, useEffect, useState } from "react";
 
-const TemplateGallery = () => {
+import { FILTERS_CATEGORIES } from "@/utils/types/enum";
+import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
+import { PRICING_OPTIONS } from "@/constants/data";
+import { DropdownFilters } from "@/components/common/index";
+import { DialogPeekTemplate } from "@/components/common/index";
+
+const TemplateGallery = memo(() => {
   const { productsVariant } = useGetProductsVariant();
   const { products } = useGetProducts();
   const { slug: categoryParams } = useParams();
+  const { category, setFilters } = useFilterQueryManager();
+  const [filterType, setFilterType] = useState<FILTERS_CATEGORIES>(
+    FILTERS_CATEGORIES.PAID
+  );
   const slugProducts = products?.map((item) => item.attributes.slug) ?? [];
 
   const dataVariantProducts = filterVariantProducts(
@@ -41,42 +44,65 @@ const TemplateGallery = () => {
 
   const productsUrlMatch = findProductUrlMatch(namesProduct, slugProducts);
 
+  const urlTemplates = dataVariantProducts
+    ?.map((item) => item.attributes.links)
+    .flatMap((data) => data)
+    .map((d, index) => (index === 0 ? d.url : null))
+    .filter((url) => url !== null)
+    .join("");
+
+  // Đồng bộ hóa filterType với trạng thái bộ lọc
+  useEffect(() => {
+    if (category !== filterType) {
+      setFilters({ category: filterType });
+    }
+
+    if (filterType === FILTERS_CATEGORIES.PAID) {
+      dataVariantProducts?.filter((data) => data.attributes.price > 0);
+    } else if (filterType === FILTERS_CATEGORIES.FREE) {
+      dataVariantProducts?.filter((item) => item.attributes.price === 0);
+    }
+  }, [category, dataVariantProducts, filterType, setFilters]);
+
   return (
     <div className="flex flex-col">
-      <BreadcrumbCategory page={listCategoryName} className="capitalize" />
+      <BreadcrumbCategory
+        page={listCategoryName}
+        className="capitalize lg:mt-0 mt-5"
+      />
 
-      <h1 className="text-4xl font-medium text-white capitalize mb-5">
+      <h1 className="text-4xl font-medium text-white capitalize mb-5 text-balance">
         Responsive {listCategoryName} Website Templates
       </h1>
 
-      <p className="text-lg text-gray9 font-normal max-w-[800px] w-full text-balance mb-10">
+      <p className="text-base lg:text-lg text-gray9 font-normal max-w-[800px] w-full text-balance mb-10">
         Display your design agency&apos;s work effectively. Optimize templates
         to showcase capabilities. Responsive, editable, varying layouts
         available for custom selection.
       </p>
 
-      <div className="flex flex-row items-center justify-between mb-10">
-        <Select>
-          <SelectTrigger className="w-[100px] h-[34px] bg-[#222] rounded-[8px] border-none text-white">
-            <SelectValue placeholder="Popular" />
-          </SelectTrigger>
-          <SelectContent className="bg-[#222] text-white border-none w-[180px]">
-            <SelectItem value="Popular">Popular</SelectItem>
-            <SelectItem value="Recent">Recent</SelectItem>
-            <SelectItem value="Free">Free</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-col lg:flex-row items-start lg:gap-0 gap-3 lg:items-center justify-between mb-10">
+        <DropdownFilters
+          value={filterType}
+          placeholder={FILTERS_CATEGORIES.PAID_FREE}
+          onValueChange={(value) => {
+            if (isFilterCategory(value)) {
+              setFilterType(value);
+            }
+          }}
+          options={PRICING_OPTIONS}
+        />
 
         <p className="text-base text-gray9 font-normal">
           {dataVariantProducts?.length} Templates
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-5 mb-[43px] relative">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-[43px] relative">
         {dataVariantProducts?.length ? (
           dataVariantProducts?.map((item) => (
             <div
-              className="flex flex-col max-w-[253px] w-full relative"
+              className="flex flex-col max-w-[253px] w-full relative group/sidebar"
               key={item.id}
             >
               <Link href={`/detail-template/${productsUrlMatch}`}>
@@ -85,20 +111,20 @@ const TemplateGallery = () => {
                   alt="imageUrl"
                   width={1300}
                   height={1300}
-                  className="object-cover rounded-xl max-w-[253px] w-full h-[302.8px] mb-5"
+                  className="object-cover rounded-xl max-w-[253px] w-full h-[219px]  lg:h-[302.8px] mb-5"
                 />
               </Link>
 
-              <DialogPeekTemplate />
+              <DialogPeekTemplate url={urlTemplates} />
               <div className="flex flex-row items-center justify-between">
-                <h5 className="text-base font-semibold text-white">
+                <h5 className="text-sm lg:text-base font-semibold text-white">
                   {item.attributes.name}
                 </h5>
-                <span className="text-gray9 font-normal text-sm">
+                <span className="text-gray9 font-normal text-xs lg:text-sm">
                   {multiPrice(item.attributes.price)}
                 </span>
               </div>
-              <span className="text-sm text-gray9 font-normal">
+              <span className="text-xs lg:text-sm text-gray9 font-normal">
                 Tran Thien Duc
               </span>
             </div>
@@ -119,6 +145,8 @@ const TemplateGallery = () => {
       )}
     </div>
   );
-};
+});
+
+TemplateGallery.displayName = "TemplateGallery";
 
 export default TemplateGallery;

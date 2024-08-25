@@ -1,179 +1,123 @@
 "use client";
-import { Header } from "@/components/shared";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { reducer } from "@/helper/reducer";
-import { useEffect, useReducer, useState } from "react";
-import { ACTION, TYPE } from "@/utils/types/enum";
-import { useMutation, useQuery } from "convex/react";
-import { ChevronDown, Eye, Heart, ListFilter } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { toast } from "sonner";
-import CategoriesFilter from "@/components/categories-filter";
+import { useEffect, useState } from "react";
+import { useQuery } from "convex/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useUserContext } from "@/context/UserContext";
+import {
+  categoriesInspiration,
+  POPULAR_RECENT_OPTIONS,
+} from "@/constants/data";
+import InspirationCard from "@/components/inspiration-shared/InspirationCard";
+import { FILTERS_CATEGORIES } from "@/utils/types/enum";
+import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
+import { isFilterCategory } from "@/utils";
+import { DropdownFilters } from "@/components/common/index";
+import { CategoriesFilter } from "@/components/common/index";
 
 const InspirationPage = () => {
+  const { category, setFilters } = useFilterQueryManager();
   const inspirations = useQuery(api.documents.getById);
-  const heartUpdate = useMutation(api.documents.updateHeart);
-  const watchInspiration = useMutation(api.documents.watchInspiration);
-  const { user } = useUserContext();
   const [filterWord, setFilterWord] = useState<string[]>([]);
   const [filterInspiration, setFilterInspiration] = useState<any[]>([]);
+  const [filterType, setFilterType] = useState<FILTERS_CATEGORIES>(
+    FILTERS_CATEGORIES.POPULAR
+  );
 
+  // Filter Categories
   const filterLabel = (categories: string) => {
-    if (filterWord.includes(categories)) {
-      setFilterWord(filterWord?.filter((filter) => filter !== categories));
-    } else {
-      setFilterWord([...filterWord, categories]);
-    }
+    setFilterWord([categories]);
   };
 
   useEffect(() => {
-    if (filterWord.length > 0) {
-      const filtered = inspirations?.filter((inspiration) => {
-        return filterWord.every((fillters) =>
-          inspiration.categories?.includes(fillters)
+    if (categoriesInspiration.length > 0 && filterInspiration.length === 0) {
+      setFilterWord([categoriesInspiration[0]]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (category !== filterType) {
+      setFilters({ category: filterType });
+    }
+
+    if (inspirations) {
+      let filtered = inspirations;
+      if (filterWord.length > 0) {
+        filtered = inspirations?.filter((inspiration: any) => {
+          return filterWord.every((fillters) =>
+            inspiration.categories?.includes(fillters)
+          );
+        });
+      }
+
+      if (filterType === FILTERS_CATEGORIES.POPULAR) {
+        filtered = filtered.sort((a, b) => (b?.watch ?? 0) - (a?.watch ?? 0));
+      } else if (filterType === FILTERS_CATEGORIES.RECENT) {
+        filtered = filtered.sort(
+          (a, b) =>
+            new Date(b._creationTime).getTime() -
+            new Date(a._creationTime).getTime()
         );
-      });
-      setFilterInspiration(filtered || []);
-    } else {
-      setFilterInspiration(inspirations || []);
+      }
+
+      setFilterInspiration(filtered);
     }
-  }, [filterWord, inspirations]);
+  }, [category, filterType, filterWord, inspirations, setFilters]);
 
-  const idInspiration = inspirations?.map((item) => item._id);
+  console.log("render");
 
-  const [state, dispatch] = useReducer(reducer, {
-    heart: 0,
-    watch: 0,
-  });
-
-  const userIdInspiration = inspirations?.map((item) => item.userId);
-
-  const handleHeartInspiration = (id: Id<"documents">) => {
-    if (idInspiration && idInspiration.length > 0 && userIdInspiration) {
-      const promise = heartUpdate({
-        id: id,
-        heart: state.isHeartActive ? state.heart - 1 : state.heart + 1,
-      });
-
-      toast.promise(promise, {
-        loading: "Updating favorites...",
-        success: state.isHeartActive
-          ? "Unfavorited!"
-          : "Love the successful article",
-        error: "Favorites update failed",
-      });
-
-      dispatch({ type: TYPE.TOGGLE_HEART });
-    }
-  };
-
-  const handleWatchInspiration = (id: Id<"documents">) => {
-    watchInspiration({
-      id: id,
-      watch: state.watch + 1,
-    });
-
-    dispatch({ type: ACTION.WATCH });
-  };
+  if (!inspirations) {
+    return (
+      <div className="max-w-[315px] w-full flex flex-col gap-y-3">
+        <Skeleton className="w-[315px] h-[236px] rounded-xl" />
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row gap-x-2 items-center">
+            <Skeleton className="w-6 h-6 rounded-full" />
+            <Skeleton className="w-[51px] h-5" />
+          </div>
+          <div className="flex flex-row gap-x-2">
+            <div className="flex flex-row gap-x-1">
+              <Skeleton className="w-6 h-4" />
+            </div>
+            <div className="flex flex-row gap-x-1">
+              <Skeleton className="w-6 h-4" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <Header />
-      <div className="max-w-full w-full mt-16 px-[72px]">
-        <div className="flex flex-row justify-between items-center mb-8 mt-24">
-          <button className="rounded-md border border-white/15 max-w-[115px] w-full h-[40px] px-4 py-3 flex flex-row items-center gap-x-4 bg-white">
-            <span className="text-sm font-medium text-black">Popular</span>
-            <ChevronDown className="text-black w-4 h-4" />
-          </button>
+    <div className="h-full">
+      <div className="max-w-full w-full mt-16 px-5 lg:px-[72px]">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-44 items-start  lg:items-center mb-8 mt-24">
+          <DropdownFilters
+            value={filterType}
+            onValueChange={(value) => {
+              if (isFilterCategory(value)) {
+                setFilterType(value);
+              }
+            }}
+            placeholder={FILTERS_CATEGORIES.POPULAR}
+            options={POPULAR_RECENT_OPTIONS}
+          />
           <CategoriesFilter filterLabel={filterLabel} filterWord={filterWord} />
-          <button className="rounded-md border border-white/15 max-w-[115px] w-full h-[40px] px-4 py-3 flex flex-row items-center gap-x-2 bg-white">
-            <ListFilter className="text-black w-4 h-4" />
-            <span className="text-sm font-medium text-black">Filters</span>
-          </button>
         </div>
 
-        <div className="grid grid-cols-4 gap-9">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-9 relative">
           {filterInspiration?.length ? (
             filterInspiration?.map((item, index) => (
-              <>
-                <div
-                  className="max-w-[315px] w-full flex flex-col gap-y-3"
-                  key={index}
-                >
-                  <Link
-                    href={`/inspiration/inpiration-detail/inspiration?slug=${item.slug}`}
-                    onClick={() => handleWatchInspiration(item._id)}
-                  >
-                    <Image
-                      src={item.coverImage || "/assets/images/404-page.png"}
-                      alt="emty"
-                      width={1300}
-                      height={300}
-                      loading="lazy"
-                      className="w-full h-[236px] object-cover rounded-xl"
-                    />
-                  </Link>
-                  <div className="flex flex-row justify-between items-center">
-                    <div className="flex flex-row gap-x-2 items-center">
-                      <Image
-                        src={user?.imageUrl || "/assets/images/avatar.png"}
-                        alt="avatar"
-                        width={300}
-                        height={300}
-                        loading="lazy"
-                        className="w-6 h-6 rounded-full"
-                      />
-                      <span className="text-sm font-medium text-white">
-                        {user?.fullName}
-                      </span>
-                    </div>
-                    <div className="flex flex-row gap-x-2">
-                      <div className="flex flex-row gap-x-1">
-                        <Heart
-                          className={`w-4 h-4 ${state.isHeartActive ? "fill-red-400" : "fill-black"} text-white`}
-                          onClick={() => handleHeartInspiration(item._id)}
-                        />
-                        <span className="text-xs font-medium text-gray9">
-                          {item?.heart || 0}
-                        </span>
-                      </div>
-                      <div className="flex flex-row gap-x-1">
-                        <Eye className="w-4 h-4  text-white" />
-                        <span className="text-xs font-medium text-gray9">
-                          {item?.watch || "0"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </>
+              <InspirationCard item={item} key={index} />
             ))
           ) : (
-            <div className="max-w-[315px] w-full flex flex-col gap-y-3">
-              <Skeleton className="w-[315px] h-[236px] rounded-xl" />
-              <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-row gap-x-2 items-center">
-                  <Skeleton className="w-6 h-6 rounded-full" />
-                  <Skeleton className="w-[51px] h-5" />
-                </div>
-                <div className="flex flex-row gap-x-2">
-                  <div className="flex flex-row gap-x-1">
-                    <Skeleton className="w-6 h-4" />
-                  </div>
-                  <div className="flex flex-row gap-x-1">
-                    <Skeleton className="w-6 h-4" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="text-sm text-gray9 font-normal absolute left-[40%] top-[50%]">
+              No inspirations available heare.
+            </p>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

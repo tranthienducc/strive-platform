@@ -15,7 +15,7 @@ const Hero = () => {
       <div className="z-10 flex mb-5 items-center justify-center">
         <div
           className={cn(
-            "group rounded-full border border-white/10 bg-[#FCFCFC14] text-sm text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-600 "
+            "group rounded-full border border-white/10 bg-blackFC text-sm text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-600 "
           )}
         >
           <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
@@ -24,12 +24,12 @@ const Hero = () => {
           </AnimatedShinyText>
         </div>
       </div>
-      <div className="text-center flex flex-col items-center max-w-[950px] w-full mb-[62px]">
-        <h1 className="text-6xl font-semibold mb-6 bg-gradient-text">
+      <div className="text-center flex flex-col items-center max-w-[368px] lg:max-w-[950px] w-full mb-[62px]">
+        <h1 className="lg:text-6xl font-semibold text-4xl mb-6 bg-gradient-text">
           Unlock project potential for greater productivity
         </h1>
         <div className="mb-6 max-w-3xl w-full">
-          <p className="text-base font-normal text-gray9">
+          <p className="lg:text-base text-sm text-center font-normal text-gray9">
             Deliver quality {"  "}
             <Link
               href="/templates"
@@ -48,7 +48,7 @@ const Hero = () => {
             developers, fostering creativity and accelerating growth. Final.
           </p>
         </div>
-        <div className="flex flex-row gap-x-6">
+        <div className="flex flex-col lg:flex-row gap-y-4 lg:gap-x-6">
           <Link
             href="/explore-template"
             className="bg-white px-4 py-2 rounded-3xl text-black text-base font-medium"
@@ -60,7 +60,7 @@ const Hero = () => {
           </button>
         </div>
       </div>
-      <BentoGrid className="lg:grid-cols-3 grid gap-2">
+      <BentoGrid className="lg:grid-cols-3 grid gap-2 grid-cols-1">
         {features.map((feature) => (
           <BentoCard {...feature} key={feature.name} />
         ))}

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import CategoryLists from "../_component/CategoryLists";
-import { Header } from "@/components/shared";
 
 export const metadata: Metadata = {
   title: "Premium Website Templates - Strive",
@@ -12,10 +11,9 @@ export default function CategoryLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="relative flex flex-row max-w-full w-full px-10 pb-8 pt-28  bg-black">
+    <main className="relative flex flex-col lg:flex-row max-w-full w-full px-10 pb-8 pt-28  bg-black">
       <CategoryLists />
-      <Header />
-      <div className="max-w-full w-full pl-20 h-screen bg-inherit">
+      <div className="max-w-full w-full pl-0 lg:pl-20 h-screen bg-inherit">
         {children}
       </div>
     </main>

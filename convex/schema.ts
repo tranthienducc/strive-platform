@@ -8,7 +8,7 @@ export default defineSchema({
     coverImage: v.optional(v.string()),
     slug: v.optional(v.string()),
     description: v.optional(v.string()),
-    heart: v.optional(v.float64()),
+    likedBy: v.optional(v.array(v.string())),
     watch: v.optional(v.float64()),
     userId: v.optional(v.string()),
     parentDocument: v.optional(v.id("documents")),

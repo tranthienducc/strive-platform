@@ -117,7 +117,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <LinkOpenButton
         className={buttonVariants({
-          size: "sms",
+          size: "sm",
           variant: "ghost",
         })}
       >
@@ -128,7 +128,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
       <button
         className={buttonVariants({
-          size: "sms",
+          size: "sm",
           variant: "ghost",
         })}
         type="button"

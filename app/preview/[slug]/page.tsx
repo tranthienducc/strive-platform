@@ -1,6 +1,6 @@
 "use client";
-import { filterProductNames, findUrlTemplate } from "@/utils/index";
 import { useGetProductsVariant } from "@/lib/react-query/queries";
+import { filterProductNames, findUrlTemplate } from "@/utils";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";

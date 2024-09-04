@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -8,7 +8,6 @@ const config = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -21,11 +20,15 @@ const config = {
       flex: {
         custom: "1 0 0px",
       },
+      gridTemplateColumns: {
+        mansory: "repeat(2, minmax(0, 1fr))",
+      },
+
       boxShadow: {
         dark: "rgba(255, 255, 255, 0.08) 0px 1px 4px 1px inset, rgba(255, 255, 255, 0.2) 0px 1px 0px 0px inset",
       },
       backgroundImage: {
-        "gradient-1": "linear-gradient(239deg,#ebaa6a 0%, #8ec5fc 100%)",
+        "gradient-1": "linear-gradient(142deg, #6973db, #fe9ca1)",
       },
       fontFamily: {
         Labora: "Labora",
@@ -104,12 +107,20 @@ const config = {
           },
         },
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
       },
       animation: {

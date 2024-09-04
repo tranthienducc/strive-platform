@@ -31,9 +31,9 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className="h-full scroll-smooth">
-        <body className={inter.className}>
-          <ConvexClientProvider>
+      <ConvexClientProvider>
+        <html lang="en" className="h-full scroll-smooth">
+          <body className={inter.className}>
             <QueryProvider>
               <EdgeStoreProvider>
                 <UserProvider>
@@ -41,9 +41,9 @@ export default function RootLayout({
                 </UserProvider>
               </EdgeStoreProvider>
             </QueryProvider>
-          </ConvexClientProvider>
-        </body>
-      </html>
+          </body>
+        </html>
+      </ConvexClientProvider>
     </ClerkProvider>
   );
 }

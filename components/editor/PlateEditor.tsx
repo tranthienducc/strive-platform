@@ -67,8 +67,6 @@ import { HeadingElement } from "@/components/plate-ui/heading-element";
 import { MediaEmbedElement } from "@/components/plate-ui/media-embed-element";
 import { ParagraphElement } from "@/components/plate-ui/paragraph-element";
 import { Editor } from "@/components/plate-ui/editor";
-import { FixedToolbar } from "@/components/plate-ui/fixed-toolbar";
-import { FixedToolbarButtons } from "@/components/plate-ui/fixed-toolbar-buttons";
 import { FloatingToolbar } from "@/components/plate-ui/floating-toolbar";
 import { FloatingToolbarButtons } from "@/components/plate-ui/floating-toolbar-buttons";
 import { withPlaceholders } from "@/components/plate-ui/placeholder";
@@ -320,7 +318,6 @@ export default function PlateEditor({
 
     return <span {...attributes}>{children}</span>;
   };
-  console.log("fiedl change", fieldChange);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderElement = useCallback((props: any) => <Element {...props} />, []);
@@ -337,21 +334,17 @@ export default function PlateEditor({
           fieldChange(text);
         }}
       >
-        <FixedToolbar>
-          <FixedToolbarButtons />
-        </FixedToolbar>
+        <FloatingToolbar>
+          <FloatingToolbarButtons />
+        </FloatingToolbar>
 
         <Editor
           autoFocus
           spellCheck={false}
-          className="bg-black rounded-2xl border border-white/15 text-white h-[320px]"
+          className="bg-black rounded-2xl border border-white/15 text-white max-w-full w-full h-[200px]"
           renderElement={renderElement}
           renderLeaf={renderLeaf}
         />
-
-        <FloatingToolbar>
-          <FloatingToolbarButtons />
-        </FloatingToolbar>
       </Plate>
     </DndProvider>
   );

@@ -9,10 +9,10 @@ import {
 } from "@/constants/data";
 import InspirationCard from "@/components/inspiration-shared/InspirationCard";
 import { FILTERS_CATEGORIES } from "@/utils/types/enum";
-import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 import { isFilterCategory } from "@/utils";
 import { DropdownFilters } from "@/components/common/index";
 import { CategoriesFilter } from "@/components/common/index";
+import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 
 const InspirationPage = () => {
   const { category, setFilters } = useFilterQueryManager();
@@ -64,8 +64,6 @@ const InspirationPage = () => {
     }
   }, [category, filterType, filterWord, inspirations, setFilters]);
 
-  console.log("render");
-
   if (!inspirations) {
     return (
       <div className="max-w-[315px] w-full flex flex-col gap-y-3">
@@ -105,12 +103,13 @@ const InspirationPage = () => {
           <CategoriesFilter filterLabel={filterLabel} filterWord={filterWord} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-9 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-9 relative">
           {filterInspiration.length === 0 ? (
             <p className="text-sm text-gray9 font-normal absolute left-[40%] top-[50%]">
               No inspirations available heare.
             </p>
           ) : null}
+
           {filterInspiration?.map((item, index) => (
             <InspirationCard item={item} key={index} />
           ))}

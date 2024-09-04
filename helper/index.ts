@@ -1,4 +1,7 @@
+import { api } from "@/convex/_generated/api";
+import { OrdersInpirationType } from "@/utils/types/type";
 import { TNode } from "@udecode/plate-common";
+import { useQuery } from "convex/react";
 import TurndownService from "turndown";
 
 export const genarateSlug = (title: string) => {
@@ -81,3 +84,37 @@ export const parseMarkDown = (html: string | undefined) => {
 
   return markdown;
 };
+
+export const genarateCodeRandom = (length: number) => {
+  const codeRegex = "123456789ABCDEFGHIJKLMNOPQRSUVWXZY";
+  let results = "";
+  const charactersLength = codeRegex.length;
+
+  for (let i = 0; i < length; i++) {
+    results += codeRegex.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return results;
+};
+
+export const convertFileToBlob = (file: File): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (reader.result) {
+        const blob = new Blob([reader.result]);
+        resolve(blob);
+      } else {
+        reject(new Error("Failed to convert file to Blob"));
+      }
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    };
+  });
+};
+
+export default async function useOrdersInspiration() {
+  const data = useQuery(
+    api.documents.getOrdersInspiration
+  ) as OrdersInpirationType[];
+  return data;
+}

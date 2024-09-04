@@ -1,10 +1,10 @@
 "use client";
 
 import { categories } from "@/constants/infoSectionConstants";
-import { filterVariantProducts } from "@/utils/index";
 import { useGetProductsVariant } from "@/lib/react-query/queries";
 import { cn } from "@/lib/utils";
 import { useHovered } from "@/state/hooks/useHovered";
+import { filterVariantProducts } from "@/utils";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";

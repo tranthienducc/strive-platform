@@ -2,12 +2,10 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { reducer } from "@/helper/reducer";
-import { cn } from "@/lib/utils";
 import { useLikeStore } from "@/lib/zustand/store";
-import { useHovered } from "@/state/hooks/useHovered";
 import { ACTION } from "@/utils/types/enum";
 import { useMutation } from "convex/react";
-import { Eye, Heart } from "lucide-react";
+import { ArrowUpRight, Eye, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,14 +18,13 @@ type InspirationCardType = {
   item: any;
 };
 
-const InspirationCard = memo(({ item }: InspirationCardType) => {
+const InspirationCard = ({ item }: InspirationCardType) => {
   const id = item?._id;
   const userId = item?.userId;
   const { liked, likedInspiration, removeLikeFromStore }: any = useLikeStore();
   const isLiked = liked[id];
-  const { ref, isHovered } = useHovered();
-  const router = useRouter();
   const { users } = useUserContext();
+  const router = useRouter();
   const likeInspiration = useMutation(api.documents.likeInspiration);
   const unLikeInspiration = useMutation(api.documents.unikeInspiration);
   const watchInspiration = useMutation(api.documents.watchInspiration);
@@ -90,83 +87,91 @@ const InspirationCard = memo(({ item }: InspirationCardType) => {
 
     dispatch({ type: ACTION.WATCH });
   };
-  console.log("re-render");
 
   return (
-    <div className="max-w-[385px] lg:max-w-[315px] w-full flex flex-col gap-y-3 mb-0 lg:mb-8">
-      <Link
-        href={`/inspiration/inpiration-detail/inspiration?slug=${item?.slug}`}
-        onClick={() => handleWatchInspiration(item?._id)}
-        className="relative group"
-      >
+    <Link
+      href={`/inspiration/inpiration-detail/inspiration?slug=${item?.slug}`}
+      onClick={() => handleWatchInspiration(item?._id)}
+      className="max-w-[430px] w-full flex flex-col gap-3 mb-0 lg:mb-8 rounded-3xl bg-white px-4 pb-3 pt-4"
+    >
+      <div className="flex flex-row items-center justify-between mb-5">
+        <div className="flex flex-col">
+          <h3 className="text-xl font-semibold text-black">
+            {item.title}
+
+            {isNew && (
+              <sup className="text-sm text-blue-400 font-medium pl-3">New</sup>
+            )}
+          </h3>
+
+          <div className="flex flex-row gap-x-2 items-center mt-3">
+            <Image
+              src="/assets/images/clients-avatar-1.webp"
+              alt="avatar"
+              width={300}
+              height={300}
+              loading="lazy"
+              className="w-6 h-6 rounded-full"
+            />
+            <span className="text-sm font-medium text-black">
+              Tran Thien Duc
+            </span>
+          </div>
+        </div>
+
+        <Link
+          href={`/inspiration/inpiration-detail/inspiration?slug=${item?.slug}`}
+          className="rounded-full flex items-center justify-center bg-black size-12 flex-shrink-0"
+        >
+          <ArrowUpRight className="text-white size-6" />
+        </Link>
+      </div>
+      <div className="flex flex-row items-center gap-2 mb-3">
+        <span className="rounded-full bg-[#f1f1f1] text-black font-normal text-sm px-2 py-1">
+          {item.categories}
+        </span>
+      </div>
+
+      <div className="bg-black mask-overlay rounded-2xl">
         <Image
-          src={item?.coverImage || "/assets/images/404-page.webp"}
+          src={item?.coverImage}
           alt="emty"
           width={1300}
           height={300}
-          className="w-full h-[236px] object-cover rounded-xl"
+          className="w-full h-[210px] object-cover rounded-2xl"
           priority={true}
         />
-        <div
-          ref={ref}
-          className={cn(
-            "absolute  h-[50px]  bg-gray-600  rounded-b-lg bottom-0 p-3 -left-0 w-full duration-300",
-            isHovered ? "bg-opacity-20" : "bg-black/0 opacity-0"
-          )}
-        >
-          <span className="text-white font-normal text-base line-clamp-1">
-            {item.title}
-          </span>
-        </div>
-      </Link>
-      <div className="flex flex-row justify-between items-center">
-        <div className="flex flex-row gap-x-2 items-center">
-          <Image
-            src="/assets/images/clients-avatar-1.webp"
-            alt="avatar"
-            width={300}
-            height={300}
-            loading="lazy"
-            className="w-6 h-6 rounded-full"
-          />
-          <span className="text-sm font-medium text-white">Tran Thien Duc</span>
-        </div>
 
-        {isNew && (
-          <span className="bg-blue-300 text-current px-2 py-1 rounded-xl">
-            New
-          </span>
-        )}
-        <div className="flex flex-row gap-x-2">
-          <div className="flex flex-row gap-x-1">
-            {isLiked ? (
-              <Heart
-                className="w-4 h-4 fill-red-500 text-white"
-                onClick={() => handleUnLikeInspiration(item?._id)}
-              />
-            ) : (
-              <Heart
-                className="w-4 h-4 fill-black text-white"
-                onClick={() => handleLikeInspiration(item?._id)}
-              />
-            )}
+        <div className="absolute right-3 top-3">
+          <div className="flex flex-row gap-x-2">
+            <div className="flex flex-row gap-x-1">
+              {isLiked ? (
+                <Heart
+                  className="w-4 h-4 fill-red-500 text-white"
+                  onClick={() => handleUnLikeInspiration(item?._id)}
+                />
+              ) : (
+                <Heart
+                  className="w-4 h-4 fill-transparent text-white"
+                  onClick={() => handleLikeInspiration(item?._id)}
+                />
+              )}
 
-            <span className="text-xs font-medium text-gray9">
-              {item?.likedBy?.length || 0}
-            </span>
-          </div>
-          <div className="flex flex-row gap-x-1">
-            <Eye className="w-4 h-4  text-white" />
-            <span className="text-xs font-medium text-gray9">
-              {item?.watch || "0"}
-            </span>
+              <span className="text-xs font-medium text-white">
+                {item?.likedBy?.length || 0}
+              </span>
+            </div>
+            <div className="flex flex-row gap-x-1">
+              <Eye className="w-4 h-4  text-white" />
+              <span className="text-xs font-medium text-white">
+                {item?.watch || "0"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
-});
+};
 
-InspirationCard.displayName = "InspirationCard";
-
-export default InspirationCard;
+export default memo(InspirationCard);

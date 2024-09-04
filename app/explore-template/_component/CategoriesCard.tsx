@@ -45,7 +45,7 @@ const CategoriesCard = (props: { [x: string]: any }) => {
       </div>
       <div className="flex flex-row h-full relative">
         <Image
-          src="/assets/images/bento-img1.png"
+          src="/assets/images/bento-img1.webp"
           alt="bento-img"
           className="ml-5 max-w-full w-full max-h-[150px] h-full object-cover rounded-[.375rem] border border-blackFF"
           width={600}

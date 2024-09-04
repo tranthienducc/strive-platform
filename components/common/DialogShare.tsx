@@ -11,7 +11,7 @@ import { Download } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-const DialogShare = () => {
+const DialogShare = ({ coverImage }: { coverImage: string | undefined }) => {
   const link = `${window.location.href}`;
   const handleCopyLink = () => {
     navigator.clipboard.writeText(link);
@@ -28,7 +28,7 @@ const DialogShare = () => {
         <DialogHeader>
           <DialogTitle className="flex flex-col gap-11 items-center justify-center gap mb-8">
             <Image
-              src="/assets/images/bento-img2.png"
+              src={coverImage || ""}
               alt="avatar-user"
               width={500}
               height={500}

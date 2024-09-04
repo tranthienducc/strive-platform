@@ -14,3 +14,9 @@ export enum FILTERS_CATEGORIES {
   PAID = "Paid",
   FREE = "Free",
 }
+
+export enum EOrderStatus {
+  PENDING = "PENDING",
+  PAID = "PAID",
+  REJECTED = "REJECTED",
+}

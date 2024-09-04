@@ -1,5 +1,6 @@
 import { useEdgeStore } from "@/lib/edgestore";
 import { FILTERS_CATEGORIES } from "./types/enum";
+import queryString from "query-string";
 import { ProductVariantProps } from "./types/type";
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
@@ -55,16 +56,36 @@ export const multiFormatDateString = (timestamp = "") => {
   }
 };
 
-export const multiPrice = (value: number) => {
-  return value.toLocaleString("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  });
+export const multiPrice = (value: number): string => {
+  if (!value) return "0";
+  return value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 // Kiểm tra để chắc chắn value là một trong các giá trị của enum FILTERS_CATEGORIES
 export const isFilterCategory = (value: any): value is FILTERS_CATEGORIES => {
   return Object.values(FILTERS_CATEGORIES).includes(value);
+};
+
+export const formUrlQuery = ({
+  params,
+  key,
+  value,
+}: {
+  params: string;
+  key: string;
+  value: string | null;
+}) => {
+  const currentUrl = queryString.parse(params);
+
+  currentUrl[key] = value;
+
+  return queryString?.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  );
 };
 
 export const filterVariantProducts = (

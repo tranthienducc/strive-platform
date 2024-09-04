@@ -20,7 +20,9 @@ const NavigationItem = () => {
           )}
         >
           {link.icon}
-          <span className="lg:block hidden">{link.title}</span>
+          <span className="lg:block hidden whitespace-nowrap">
+            {link.title}
+          </span>
         </Link>
       ))}
     </>

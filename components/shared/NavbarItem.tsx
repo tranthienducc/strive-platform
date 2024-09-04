@@ -48,7 +48,7 @@ const NavbarItem = ({
 
           {isAdmin && (
             <Link
-              href="/dashboard/manage"
+              href="/manage"
               className="text-sm font-medium hover:bg-white/5 duration-300 pl-3 py-2 rounded-lg"
             >
               Dashboard

@@ -8,10 +8,15 @@ import { usePathname } from "next/navigation";
 const Wrapper = ({ children }: ChildrenType) => {
   const pathname = usePathname();
 
-  const renderHeader = !pathname.startsWith("/dashboard");
+  const isDashboardRoute = [
+    "/discount-manage",
+    "/inspiration-manage",
+    "/manage",
+    "/order-template-management",
+  ].some((route) => pathname.startsWith(route));
   return (
     <main className="relative wrapper">
-      {renderHeader && (
+      {!isDashboardRoute && (
         <>
           <Header />
         </>

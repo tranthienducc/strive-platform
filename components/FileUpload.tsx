@@ -17,6 +17,7 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
       const file = acceptedFiles[0];
+
       const url = convertFileToUrl(file);
       setFile(file);
       setFileUrl(url);
@@ -34,30 +35,28 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
   return (
     <div
       {...getRootProps()}
-      className="bg-black max-w-full  cursor-pointer   border-white/20 border rounded-2xl py-4"
+      className="bg-black max-w-full  cursor-pointer max-h-[200px] h-full border-white/20 border rounded-2xl py-4"
     >
       <input {...getInputProps()} className="cursor-pointer" />
 
       {fileUrl ? (
-        <>
-          <Image
-            src={fileUrl}
-            alt="image"
-            className="max-w-full w-full max-h-[200px] h-full object-cover rounded-2xl flex-1"
-            loading="lazy"
-            width={1300}
-            height={1300}
-          />
-        </>
+        <Image
+          src={fileUrl}
+          alt="image"
+          className="max-w-full w-full max-h-[200px] h-full object-cover rounded-2xl"
+          loading="lazy"
+          width={1300}
+          height={1300}
+        />
       ) : (
-        <div className="flex flex-col items-center gap-y-3 text-center py-4 justify-center">
+        <div className="flex flex-col items-center gap-y-3 text-center  justify-center flex-shrink-0">
           <IconsUpload />
           <div className="flex flex-col gap-y-2">
-            <p className="text-base font-medium text-white">
+            <span className="text-base font-medium text-white">
               Choose a file or drag & drop it here
-            </p>
+            </span>
             <span className="text-sm font-normal text-gray9">
-              JPEG, PNG, PDG, and MP4 formats, up to 50MB
+              JPEG, PNG, FIG formats, up to 50MB
             </span>
           </div>
 

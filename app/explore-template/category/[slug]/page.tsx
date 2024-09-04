@@ -3,28 +3,29 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import BreadcrumbCategory from "../../_component/BreadcrumbCategory";
-import { isFilterCategory, multiPrice } from "@/utils";
+import {
+  filterCategoryNames,
+  filterImageUrl,
+  filterProductNames,
+  filterVariantProducts,
+  findProductUrlMatch,
+  isFilterCategory,
+  multiPrice,
+} from "@/utils";
 import Link from "next/link";
 import {
   useGetProducts,
   useGetProductsVariant,
 } from "@/lib/react-query/queries";
-import {
-  filterCategoryNames,
-  filterVariantProducts,
-  filterImageUrl,
-  filterProductNames,
-  findProductUrlMatch,
-} from "@/utils/index";
 import { memo, useEffect, useState } from "react";
 
 import { FILTERS_CATEGORIES } from "@/utils/types/enum";
-import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 import { PRICING_OPTIONS } from "@/constants/data";
 import { DropdownFilters } from "@/components/common/index";
 import { DialogPeekTemplate } from "@/components/common/index";
+import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 
-const TemplateGallery = memo(() => {
+const TemplateGallery = () => {
   const { productsVariant } = useGetProductsVariant();
   const { products } = useGetProducts();
   const { slug: categoryParams } = useParams();
@@ -32,6 +33,7 @@ const TemplateGallery = memo(() => {
   const [filterType, setFilterType] = useState<FILTERS_CATEGORIES>(
     FILTERS_CATEGORIES.PAID
   );
+
   const slugProducts = products?.map((item) => item.attributes.slug) ?? [];
 
   const dataVariantProducts = filterVariantProducts(
@@ -112,7 +114,7 @@ const TemplateGallery = memo(() => {
           >
             <Link href={`/detail-template/${productsUrlMatch}`}>
               <Image
-                src={listImageUrl || "/assets/images/bento-img1.png"}
+                src={listImageUrl || "/assets/images/bento-img1.webp"}
                 alt="imageUrl"
                 width={1300}
                 height={1300}
@@ -145,8 +147,8 @@ const TemplateGallery = memo(() => {
       )}
     </div>
   );
-});
+};
 
 TemplateGallery.displayName = "TemplateGallery";
 
-export default TemplateGallery;
+export default memo(TemplateGallery);

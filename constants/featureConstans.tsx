@@ -1,3 +1,7 @@
+import IconsPen from "@/components/icons/IconsPen";
+import IconsRocket from "@/components/icons/IconsRocket";
+import IconsScalling from "@/components/icons/IconsScalling";
+import IconsService from "@/components/icons/IconsService";
 import {
   Construction,
   InspectIcon,
@@ -8,34 +12,24 @@ import Image from "next/image";
 
 export const planned = [
   {
-    icon: "/assets/icons/message-icon.webp",
+    icon: <IconsRocket />,
     title: "Keyboard shortcuts",
-    desc: "Streamline your workflow with customizable keyboard shortcuts. Navigate and manage tasks faster, boosting your productivity.",
+    desc: "Streamline your workflow with customizable keyboard.",
   },
   {
-    icon: "/assets/icons/noti-icon.webp",
+    icon: <IconsScalling />,
     title: "Break time",
-    desc: "Enhance your focus with scheduled breaks. Stay productive by incorporating regular breaks to refresh your mind.",
+    desc: "Enhance your focus with scheduled breaks.",
   },
   {
-    icon: "/assets/icons/blue-icon.webp",
+    icon: <IconsPen />,
     title: "AI task creation",
-    desc: "Leverage AI to automatically generate and organize tasks. Save time and improve efficiency with intelligent task management.",
+    desc: "Leverage AI to automatically generate and organize tasks.",
   },
   {
-    icon: "/assets/icons/t-icon.webp",
+    icon: <IconsService />,
     title: "Integration",
-    desc: "Seamlessly connect with Notion, Google, and other tools. Integrate your favorite apps for a unified productivity experience.",
-  },
-  {
-    icon: "/assets/icons/lightning-icon.webp",
-    title: "Live Collabration",
-    desc: "Collaborate in real-time with your team. Share tasks, track progress, and achieve goals together effortlessly.",
-  },
-  {
-    icon: "/assets/icons/square.webp",
-    title: "Dark & Light mode",
-    desc: "Switch between dark and light modes to suit your preference. Enjoy a comfortable viewing experience day or night.",
+    desc: "Seamlessly connect with Notion, Google.",
   },
 ];
 
@@ -54,7 +48,7 @@ export const features = [
         alt="bg"
         width={1300}
         height={1300}
-        loading="lazy"
+        priority={true}
       />
     ),
   },
@@ -73,7 +67,7 @@ export const features = [
         alt="bg"
         width={1300}
         height={1300}
-        loading="lazy"
+        priority={true}
       />
     ),
   },
@@ -91,7 +85,7 @@ export const features = [
         alt="bg"
         width={1300}
         height={1300}
-        loading="lazy"
+        priority={true}
       />
     ),
   },
@@ -110,7 +104,7 @@ export const features = [
         alt="bg"
         width={1300}
         height={1300}
-        loading="lazy"
+        priority={true}
       />
     ),
   },

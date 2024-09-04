@@ -4,8 +4,8 @@ import Heading from "../Heading";
 import { aboutInfo, innovative } from "@/constants/infoSectionConstants";
 import { ArrowRight, Sparkle } from "lucide-react";
 import Image from "next/image";
-import { useHovered } from "@/state/hooks/useHovered";
 import { cn } from "@/lib/utils";
+import { useHovered } from "@/state/hooks/useHovered";
 
 const About = () => {
   const { isHovered, ref } = useHovered();
@@ -39,7 +39,7 @@ const About = () => {
       <div
         ref={ref}
         className={cn(
-          "flex flex-row items-center gap-2 mb-5 lg:max-w-full w-full max-w-[360px]",
+          "flex flex-row items-center gap-2 mb-5  lg:max-w-full w-full max-w-[360px] justify-center",
           isHovered ? "overflow-y-auto" : "overflow-y-hidden"
         )}
       >

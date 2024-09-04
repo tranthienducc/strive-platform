@@ -100,6 +100,13 @@
       var(--gray1, rgb(245, 246, 250)) 100%
     );
   }
+  .text-gradients {
+    color: transparent;
+    background-image: linear-gradient(142deg, #6973db, #fe9ca1);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+  }
   .bg-gradient-text {
     color: transparent;
     background-image: linear-gradient(
@@ -134,9 +141,9 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 50%; /* Adjust the height of the mask */
+    height: 50%;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-    pointer-events: none; /* Ensure the mask does not interfere with content interaction */
+    pointer-events: none;
   }
   .border-grid {
     --tw-shadow: 0 0 0 1px #212121;
@@ -152,6 +159,29 @@
 }
 
 @layer utilities {
+  .swal2-container {
+    .swal2-popup {
+      @apply rounded-xl p-8 w-full;
+      max-width: 500px;
+    }
+    .swal2-popup .swal2-title {
+      @apply text-xl font-bold text-grayDarkest;
+    }
+    .swal2-popup .swal2-styled.swal2-confirm {
+      all: unset;
+      box-sizing: border-box;
+      @apply text-white bg-primary font-semibold rounded-lg px-4 py-2 h-12 w-28 flex items-center justify-center text-center text-sm cursor-pointer hover:bg-opacity-90;
+    }
+    .swal2-popup .swal2-styled.swal2-cancel {
+      all: unset;
+      box-sizing: border-box;
+      @apply bg-transparent text-grayDarkest hover:bg-none hover:bg-transparent h-10 w-28 text-sm font-semibold px-4 py-2 cursor-pointer text-center hover:text-opacity-55;
+    }
+    .swal2-popup .swal2-actions:not(.swal2-loading) .swal2-styled:hover {
+      @apply bg-none;
+    }
+  }
+
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

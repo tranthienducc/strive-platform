@@ -2,8 +2,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { ReactNode } from "react";
 import { FILTERS_CATEGORIES, FORM } from "./enum";
 
-// nữa thay đổi từ export => declear
-
 export type ChildrenType = {
   children: ReactNode;
 };
@@ -61,33 +59,53 @@ export interface DetailSidebarProps {
 
 export type InspirationType = {
   [x: string]: any;
-  id: Id<"documents">;
-  title: string;
-  description: string;
-  categories: string;
-  coverImage: string;
-  slug: string;
+  _id: Id<"documents">;
+  title?: string;
+  description?: string;
+  categories?: string;
+  coverImage?: string;
+  slug?: string;
+  price: number;
+  salePrice: number;
+  _creationTime: string;
 };
 
 export type InspirationProps = {
-  id: Id<"documents">;
+  _id: Id<"documents">;
   _creationTime: number;
-  title?: string | undefined;
-  categories?: string | undefined;
-  coverImage?: string | undefined;
-  slug?: string | undefined;
-  description?: string | undefined;
-  heart?: number | undefined;
-  watch?: number | undefined;
-  userId?: string | undefined;
-  parentDocument?: Id<"documents"> | undefined;
-}[];
+  title?: string;
+  coverImage?: string;
+  slug?: string;
+  price?: number;
+  url?: string;
+  salePrice?: number;
+  description?: string;
+  categories?: string;
+  heart?: number;
+  watch?: number;
+  userId?: string;
+  parentDocument?: Id<"documents">;
+};
+[];
 export interface FormValues {
-  title: string;
-  categories: string;
-  coverImage: string;
-  slug: string;
-  description: string;
+  _id: Id<"documents">;
+  title?: string;
+  categories?: string;
+  coverImage?: string;
+  slug?: string;
+  url?: string;
+  price?: number;
+  salePrice?: number;
+  description?: string;
+}
+export interface FormValuesDiscount {
+  name_code?: string;
+  code?: string;
+  amount?: number;
+  limit?: number;
+  inspirations?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 export type InspirationFilters = {
@@ -150,4 +168,17 @@ export type DropdownFiltersType = {
 export type FilterOptions = {
   value: FILTERS_CATEGORIES;
   label: string;
+};
+
+export type OrdersInpirationType = {
+  _id: Id<"orders">;
+  _creationTime: number;
+  code: string;
+  userId: string;
+  parentDocument: Id<"orders">;
+  order_code: string;
+  status: string;
+  product_name: string;
+  revenue: number;
+  amount: number;
 };

@@ -1,4 +1,4 @@
-import { Atom, PanelLeft, Plus, ShoppingBag, Undo2 } from "lucide-react";
+import { Atom, Code, PanelLeft, Undo2 } from "lucide-react";
 
 export const links = [
   {
@@ -21,24 +21,24 @@ export const links = [
 
 export const sidebarLinks = [
   {
-    url: "/dashboard/manage",
+    url: "/manage",
     icon: <PanelLeft className="w-[18px] h-[18px] " />,
     title: "Dashboard",
   },
   {
-    url: "/dashboard/inspiration-manage",
+    url: "/discount-manage",
+    icon: <Code className="w-[18px] h-[18px] " />,
+    title: "Discount Manage",
+  },
+  {
+    url: "/inspiration-manage",
     icon: <Atom className="w-[18px] h-[18px]" />,
     title: "Inspiration",
   },
   {
-    url: "/dashboard/create",
-    icon: <Plus className="w-[18px] h-[18px]" />,
-    title: "New inspiration",
-  },
-  {
-    url: "/dashboard/order-template-management",
-    icon: <ShoppingBag className="w-[18px] h-[18px]" />,
-    title: "Order Management",
+    url: "/orders-manage",
+    icon: <Atom className="w-[18px] h-[18px]" />,
+    title: "Order Inspiration Manage",
   },
 
   {

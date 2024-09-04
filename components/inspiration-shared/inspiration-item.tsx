@@ -2,12 +2,14 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { Eraser, Trash } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { Key } from "react";
+import { InspirationProps } from "@/utils/types/type";
+import PopoverOptions from "../common/PopoverOptions";
+import { multiPrice } from "@/utils";
 
 const InspirationItem = (props: any) => {
   const { inspiration } = props;
@@ -51,15 +53,15 @@ const InspirationItem = (props: any) => {
 
   return (
     <>
-      <div className="grid grid-cols-1  lg:grid-cols-3 lg:col-span-2 gap-8 pb-5 relative col-span-1">
+      <div className="grid grid-cols-1  lg:grid-cols-3 gap-8 pb-5 relative">
         {inspiration.lenght === 0 ? (
           <p className="text-base font-normal text-gray9 absolute top-[50%] left-[30%]">
             No inspiration available. Please create a new one.
           </p>
         ) : null}
-        {inspiration?.map((item: any, index: Key) => (
+        {inspiration?.map((item: InspirationProps, index: Key) => (
           <div
-            className="max-w-[500px] border border-white/10 w-full rounded-2xl p-[15px] h-[400px]"
+            className="min-w-[402px] border border-white/10 w-full rounded-2xl p-[15px] min-h-[400px]"
             key={index}
           >
             <Link
@@ -70,33 +72,29 @@ const InspirationItem = (props: any) => {
                 alt="avatar"
                 width={1500}
                 height={1500}
-                loading="lazy"
+                priority={true}
                 className="max-w-[400px] w-full h-[316px] object-cover mb-3 rounded-[12px]"
               />
             </Link>
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row justify-between items-start">
               <div className="flex flex-col gap-y-[2px]">
-                <h3 className="text-white font-medium text-base">
+                <h3 className="text-white font-medium text-base whitespace-nowrap">
                   {item.title}
                 </h3>
-                <span className="text-sm font-normal text-gray9">
-                  {item.categories}
-                </span>
+                <div className="flex flex-row items-end justify-between">
+                  <span className="text-sm font-normal text-gray9">
+                    {item.categories}
+                  </span>
+
+                  <span className="text-sm font-normal text-gray9">
+                    {multiPrice(item.price as number)} VND
+                  </span>
+                  <span className="text-sm font-normal text-gray9">
+                    {multiPrice(item.salePrice as number)} VND
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-row items-center gap-x-2">
-                <Link
-                  href={`/dashboard/update/${item._id}`}
-                  className="bg-blue-500 hover:bg-blue-600 rounded-md px-1 py-1"
-                >
-                  <Eraser className="text-white w-4 h-4" />
-                </Link>
-                <button
-                  className="bg-red-500 hover:bg-red-600 rounded-md px-1 py-1"
-                  onClick={() => handleDelete(item._id)}
-                >
-                  <Trash className="text-white w-4 h-4" />
-                </button>
-              </div>
+              <PopoverOptions handleDelete={handleDelete} item={item} />
             </div>
           </div>
         ))}

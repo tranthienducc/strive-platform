@@ -5,7 +5,6 @@ import Image from "next/image";
 import BreadcrumbCategory from "@/app/explore-template/_component/BreadcrumbCategory";
 import RelatedTemplate from "@/components/RelatedTemplate";
 import React, { useMemo } from "react";
-import { Earth } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useMutation } from "convex/react";
@@ -15,15 +14,14 @@ import {
   useGetProducts,
   useGetProductsVariant,
 } from "@/lib/react-query/queries";
+import { parseMarkDown } from "@/helper";
+import { API_CHECKOUTS } from "@/config";
+import TemplateInfo from "@/components/TemplateInfo";
 import {
   filterCategoryNames,
   filterProductNames,
   findProductUrlMatch,
-} from "@/utils/index";
-import { pages, supports } from "@/constants/data";
-import { ChildrenType } from "@/utils/types/type";
-import { multiFormatDateString } from "@/utils";
-import { parseMarkDown } from "@/helper";
+} from "@/utils";
 
 const DetailTemplate = () => {
   const { products } = useGetProducts();
@@ -56,6 +54,7 @@ const DetailTemplate = () => {
 
   const dataId = filterProductVariant?.map((data) => data.id);
   const listCategoryName = filterCategoryNames(filterProductVariant);
+  console.log("filterCategoryNames", listCategoryName);
 
   const handleBuyProduct = async () => {
     if (!users?.id) {
@@ -63,7 +62,7 @@ const DetailTemplate = () => {
       return;
     }
     try {
-      const response = await axios.post("/api/purchaseProduct", {
+      const response = await axios.post(API_CHECKOUTS, {
         productId: dataId,
       });
       window.open(response.data.checkoutUrl, "_blank");
@@ -109,7 +108,7 @@ const DetailTemplate = () => {
               className="flex flex-row items-center gap-x-2"
             >
               <Image
-                src="/assets/images/clients-avatar-1.png"
+                src="/assets/images/clients-avatar-1.webp"
                 alt="avatar"
                 width={300}
                 height={300}
@@ -164,58 +163,16 @@ const DetailTemplate = () => {
               {parseMarkDown(description ?? "")}
             </div>
           </div>
-          <div className="max-w-[300px] w-full space-y-10">
-            <div className="space-y-5">
-              <HeadingTemplate>Pages</HeadingTemplate>
 
-              <div className="flex flex-wrap gap-[.625rem]">
-                {pages.map((data, index) => (
-                  <div
-                    key={index}
-                    className="py-1 px-2 bg-black22 rounded-md flex flex-row items-center gap-x-2"
-                  >
-                    <Earth className="size-3 text-gray9" />
-                    <p className="text-xs lg:text-sm whitespace-nowrap font-semibold text-gray9">
-                      {data.name}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-5">
-              <HeadingTemplate>Categories</HeadingTemplate>
-              <div className="flex flex-wrap gap-[.625rem]">
-                <div className="py-1 px-2 bg-black22 rounded-md">
-                  <p className="text-xs lg:text-sm whitespace-nowrap font-semibold text-gray9">
-                    {listCategoryName}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-5">
-              <HeadingTemplate>Support</HeadingTemplate>
-
-              <div className="flex flex-col gap-y-3">
-                {supports.map((data, index) => (
-                  <div
-                    className="flex flex-row items-center gap-x-2"
-                    key={index}
-                  >
-                    {data.icon}
-                    <p className="text-xs lg:text-sm font-medium text-white">
-                      {data.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <p className="text-sm font-normal text-gray9">
-              Published {multiFormatDateString(created_at)}
-            </p>
-          </div>
+          <TemplateInfo
+            catgoriesName={listCategoryName}
+            createAt={created_at}
+          />
         </div>
 
-        <HeadingTemplate>Related templates</HeadingTemplate>
+        <h6 className="text-[22px] font-semibold text-white">
+          Related templates
+        </h6>
 
         <div className="grid-cols-2 lg:grid-cols-5 grid gap-2 mt-5">
           {releatedTemplates?.map((item) => (
@@ -233,7 +190,3 @@ const DetailTemplate = () => {
 };
 
 export default DetailTemplate;
-
-const HeadingTemplate = ({ children }: ChildrenType) => {
-  return <h6 className="text-[22px] font-semibold text-white">{children}</h6>;
-};

@@ -72,11 +72,11 @@ const PaymentPage = ({ params }: Props) => {
     try {
       await buyInspirations({
         userId: users?.id,
-        product_name: title,
-        amount: salePrice,
+        product_name: title || "",
+        amount: salePrice || 0,
         revenue: price || 0 - amount,
         status: "Paid",
-        code: code,
+        code: code || "",
         order_code: orderCode,
       });
     } catch (error) {

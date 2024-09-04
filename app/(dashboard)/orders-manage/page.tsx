@@ -21,21 +21,22 @@ import {
 import getColumns from "@/components/users-table-column";
 import useOrdersInspiration from "@/helper";
 import { useDataTable } from "@/state/hooks/use-data-table";
+import { OrdersInpirationType } from "@/utils/types/type";
 
 const OrdersMagPage = () => {
-  const data = useOrdersInspiration();
+  const data = useOrdersInspiration() as any as OrdersInpirationType[];
 
   const pageCount = Array.isArray(data) ? data.length : 0;
 
   const columns = useMemo(() => getColumns({ data }), [data]);
 
-  const filterFields = [
-    {
-      label: "Product name",
-      value: "product_name" as keyof typeof data,
-      placeholder: "Filter product_name...",
-    },
-  ];
+  // const filterFields = [
+  //   {
+  //     label: "Product name",
+  //     value: "product_name" as keyof typeof data,
+  //     placeholder: "Filter product_name...",
+  //   },
+  // ];
 
   const { table } = useDataTable({
     data,
@@ -43,11 +44,6 @@ const OrdersMagPage = () => {
     pageCount,
     // filterFields,
   });
-
-  console.log(
-    "Data trong useDataTable:",
-    data.then((data) => data)
-  );
 
   return (
     <div className="h-full">

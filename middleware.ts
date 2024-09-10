@@ -21,9 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     currentHost = hostname?.replace(`.${baseDomain}`, "");
   } else {
     // Updated development logic
-    currentHost =
-      url.searchParams.get("subdomain") ||
-      hostname?.split(":")[0].replace(".localhost", "");
+    currentHost = hostname?.split(":")[0].replace(".localhost", "");
   }
   // If there's no currentHost, likely accessing the root domain, handle accordingly
   if (!currentHost) {
@@ -55,16 +53,8 @@ export default clerkMiddleware(async (auth, req) => {
   console.log("Rewrite Domain:", rewriteDomain);
 
   if (rewriteDomain) {
-    if (process.env.NODE_ENV === "production") {
-      // Production: Rewrite the URL to the tenant-specific path, using the site_id
-      return NextResponse.rewrite(new URL(`/${site_id}${pathname}`, req.url));
-    } else {
-      // Development: Redirect to include the subdomain as a query parameter
-      const newUrl = new URL(req.url);
-      newUrl.searchParams.set("subdomain", currentHost);
-      newUrl.pathname = `/${site_id}${pathname}`;
-      return NextResponse.redirect(newUrl);
-    }
+    // Rewrite the URL to the tenant-specific path, using the site_id
+    return NextResponse.rewrite(new URL(`/${site_id}${pathname}`, req.url));
   }
 
   // If no rewrite domain is found, continue to the next middleware

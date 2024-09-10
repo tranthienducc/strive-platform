@@ -17,7 +17,7 @@ export default clerkMiddleware(async (auth, req) => {
   let currentHost;
   if (process.env.NODE_ENV === "production") {
     // Production logic remains the same
-    const baseDomain = process.env.NEXT_PUBLIC_FRONTEND_URL;
+    const baseDomain = process.env.BASE_DOMAIN;
     currentHost = hostname?.replace(`.${baseDomain}`, "");
   } else {
     // Updated development logic

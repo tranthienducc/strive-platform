@@ -50,7 +50,7 @@ export default function Sites() {
                 </div>
                 <div className="flex justify-between mt-2 items-center w-full">
                   <p className="text-xs px-2 py-1 rounded-full border bg-zinc-900 text-gray9">
-                    {site.site_subdomain}.{process.env.NEXT_PUBLIC_FRONTEND_URL}
+                    {site.site_subdomain}.{process.env.BASE_DOMAIN}
                   </p>
                   <p className="text-xs text-gray9 font-normal">
                     {new Date(site._creationTime).toLocaleDateString()}

@@ -87,7 +87,7 @@ const InspirationPage = () => {
   }
 
   return (
-    <div className="h-full">
+    <div className="h-screen">
       <div className="max-w-full w-full mt-16 px-5 lg:px-[72px]">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-44 items-start  lg:items-center mb-8 mt-24">
           <DropdownFilters

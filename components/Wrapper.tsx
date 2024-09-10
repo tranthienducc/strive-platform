@@ -12,8 +12,9 @@ const Wrapper = ({ children }: ChildrenType) => {
     "/discount-manage",
     "/inspiration-manage",
     "/manage",
-    "/order-template-management",
+    "/orders-manage",
   ].some((route) => pathname.startsWith(route));
+
   return (
     <main className="relative wrapper">
       {!isDashboardRoute && (

@@ -7,8 +7,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import { multiFormatDateString } from "@/utils";
+import { multiFormatDateString, multiPrice } from "@/utils";
 import DataTableColumnHeader from "../app/(dashboard)/orders-manage/_component/data-table/data-table-column-header";
+import DialogDeleteOrder from "@/app/(dashboard)/orders-manage/_component/DialogDeleteOrder";
+import { useState } from "react";
 
 export default function getColumns({ data }: any) {
   return [
@@ -37,6 +39,19 @@ export default function getColumns({ data }: any) {
       enableHiding: false,
     },
     {
+      accessorKey: "#",
+      header: ({ column }: any) => (
+        <DataTableColumnHeader column={column} title="#" />
+      ),
+      cell: ({ row }: any) => {
+        return (
+          <div className="flex space-x-2">
+            <span className="max-w-5 text-white font-medium">{row.index}</span>
+          </div>
+        );
+      },
+    },
+    {
       accessorKey: "order_code",
       header: ({ column }: any) => (
         <DataTableColumnHeader column={column} title="Order Code" />
@@ -48,29 +63,27 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("order_code")}
+              {label}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "userId",
+      accessorKey: "users",
       header: ({ column }: any) => (
-        <DataTableColumnHeader column={column} title="UserId" />
+        <DataTableColumnHeader column={column} title="User name" />
       ),
       cell: ({ row }: any) => {
         const label = data
-          .map((data: any) => data.userId)
-          .find((label: any) => label === row.original.userId);
+          .map((data: any) => data.users)
+          .find((label: any) => label === row.original.users);
 
         return (
           <div className="flex space-x-2">
-            {label}
-            <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("userId")}
+            <span className="max-w-10 whitespace-nowrap font-medium">
+              {label.name}
             </span>
           </div>
         );
@@ -88,9 +101,8 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("product_name")}
+              {label}
             </span>
           </div>
         );
@@ -108,9 +120,8 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("revenue")}
+              {multiPrice(label)} VND
             </span>
           </div>
         );
@@ -119,7 +130,7 @@ export default function getColumns({ data }: any) {
     {
       accessorKey: "amount",
       header: ({ column }: any) => (
-        <DataTableColumnHeader column={column} title="Revenue" />
+        <DataTableColumnHeader column={column} title="Amount" />
       ),
       cell: ({ row }: any) => {
         const label = data
@@ -128,9 +139,8 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("amount")}
+              {multiPrice(label)} VND
             </span>
           </div>
         );
@@ -148,9 +158,8 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("status")}
+              {label}
             </span>
           </div>
         );
@@ -168,9 +177,8 @@ export default function getColumns({ data }: any) {
 
         return (
           <div className="flex space-x-2">
-            {label}
             <span className="max-w-[31.25rem] truncate font-medium">
-              {row.getValue("code")}
+              {label}
             </span>
           </div>
         );
@@ -193,7 +201,10 @@ export default function getColumns({ data }: any) {
     },
     {
       id: "actions",
-      cell: function Cell({}) {
+      cell: function Cell({ row }: any) {
+        const [showDeleteOrderDialog, setShowDeleteOrderDialog] =
+          useState(false);
+
         return (
           <>
             <DropdownMenu>
@@ -208,9 +219,14 @@ export default function getColumns({ data }: any) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-40 p-0 text-white bg-black border border-white/15"
+                className="w-40 p-4 text-white bg-black border border-white/15"
               >
-                Bill
+                <DialogDeleteOrder
+                  data={row.original}
+                  open={showDeleteOrderDialog}
+                  onOpenChange={setShowDeleteOrderDialog}
+                  onSuccess={() => row.toggleSelected(false)}
+                />
                 <DropdownMenuSeparator className="bg-white/15" />
                 Generate Vocice
               </DropdownMenuContent>

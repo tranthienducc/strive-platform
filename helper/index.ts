@@ -1,8 +1,4 @@
-import { api } from "@/convex/_generated/api";
-import { OrdersInpirationType } from "@/utils/types/type";
 import { TNode } from "@udecode/plate-common";
-import { useQuery } from "convex/react";
-import TurndownService from "turndown";
 
 export const genarateSlug = (title: string) => {
   return title
@@ -73,17 +69,6 @@ export const serializeToHtml = (nodes: TNode[]): string => {
     })
     .join(""); // Gộp các chuỗi HTML lại với nhau
 };
-export const parseMarkDown = (html: string | undefined) => {
-  if (!html || typeof html !== "string") {
-    return "";
-  }
-
-  const result = new TurndownService();
-
-  const markdown = result?.turndown(html);
-
-  return markdown;
-};
 
 export const genarateCodeRandom = (length: number) => {
   const codeRegex = "123456789ABCDEFGHIJKLMNOPQRSUVWXZY";
@@ -96,25 +81,12 @@ export const genarateCodeRandom = (length: number) => {
   return results;
 };
 
-export const convertFileToBlob = (file: File): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (reader.result) {
-        const blob = new Blob([reader.result]);
-        resolve(blob);
-      } else {
-        reject(new Error("Failed to convert file to Blob"));
-      }
-      reader.onerror = reject;
-      reader.readAsArrayBuffer(file);
-    };
-  });
+export const generateOrderCode = () => {
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters[randomIndex];
+  }
+  return code;
 };
-
-export default async function useOrdersInspiration() {
-  const data = useQuery(
-    api.documents.getOrdersInspiration
-  ) as OrdersInpirationType[];
-  return data;
-}

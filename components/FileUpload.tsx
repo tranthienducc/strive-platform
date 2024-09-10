@@ -8,7 +8,7 @@ import IconsUpload from "./icons/IconsUpload";
 type FileUploadProps = {
   setFile: (files: File) => void;
   fieldChange: (files: string) => void;
-  mediaUrl: string | undefined;
+  mediaUrl?: string | undefined;
 };
 
 const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {

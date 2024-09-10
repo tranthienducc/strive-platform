@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
-const loading = () => {
+export default function Loading() {
   return (
     <div className="mt-20 px-5 lg:px-[180px] pb-10">
       <Skeleton className="w-full max-w-full mb-6" />
@@ -12,6 +12,4 @@ const loading = () => {
       </div>
     </div>
   );
-};
-
-export default loading;
+}

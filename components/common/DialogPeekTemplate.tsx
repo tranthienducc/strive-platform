@@ -10,14 +10,15 @@ import {
 import Link from "next/link";
 
 import { Url } from "next/dist/shared/lib/router/router";
+import { Button } from "../ui/button";
 
 const DialogPeekTemplate = ({ url }: { url: string | undefined }) => {
   return (
     <Dialog>
-      <DialogTrigger>
-        <div className="rounded-full bg-black size-8 absolute top-[.875rem] right-[.625rem] flex items-center justify-center cursor-pointer duration-300 group-hover/sidebar:opacity-100 opacity-0">
-          <Eye className="size-5 text-white" />
-        </div>
+      <DialogTrigger asChild>
+        <Button className="rounded-full bg-black size-8 absolute top-[2%] left-[57%] flex items-center justify-center cursor-pointer group-hover/peek:opacity-100 opacity-0">
+          <Eye className="size-5" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[393px] lg:max-w-[1360px] w-full h-[700px] lg:h-[616px] rounded-[.75rem] bg-black11">
         <DialogHeader>

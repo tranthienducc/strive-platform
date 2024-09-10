@@ -217,6 +217,7 @@ const UpdateInspirationForm = ({
                 </FormLabel>
                 <FormControl>
                   <PlateEditor
+                    placeholder="Update description.."
                     values={field.value}
                     fieldChange={field.onChange}
                   />

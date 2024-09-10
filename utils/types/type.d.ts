@@ -12,54 +12,13 @@ export type DashboardType = {
   };
 };
 
-export type FormUpdateType = {
-  data: {
-    title?: string;
-    price?: string;
-    categories?: string;
-    coverImage?: string;
-    desc1?: string;
-    desc2?: string;
-    desc3?: string;
-    desc4?: string;
-  };
-};
-export interface ProductProps {
-  id: string;
-  attributes: {
-    name: string;
-    slug: string;
-    large_thumb_url: string;
-    description: string;
-    price: number;
-    store_id: string;
-    created_at: string;
-    buy_now_url: string;
-  };
-}
-export interface ProductVariantProps {
-  id: string;
-  attributes: {
-    name: string;
-    slug?: string;
-    large_thumb_url?: string;
-    description: string;
-    price: number;
-    links: {
-      map(arg0: (link: { title: string; url: string }) => string): any;
-      title: string;
-      url: string;
-    };
-  };
-}
-
 export interface DetailSidebarProps {
   data: ProductProps;
 }
 
 export type InspirationType = {
   [x: string]: any;
-  _id: Id<"documents">;
+  _id: Id<"inspirations">;
   title?: string;
   description?: string;
   categories?: string;
@@ -67,11 +26,12 @@ export type InspirationType = {
   slug?: string;
   price: number;
   salePrice: number;
+  url: string;
   _creationTime: string;
 };
 
 export type InspirationProps = {
-  _id: Id<"documents">;
+  _id: Id<"inspirations">;
   _creationTime: number;
   title?: string;
   coverImage?: string;
@@ -84,11 +44,11 @@ export type InspirationProps = {
   heart?: number;
   watch?: number;
   userId?: string;
-  parentDocument?: Id<"documents">;
+  parentDocument?: Id<"inspirations">;
 };
 [];
 export interface FormValues {
-  _id: Id<"documents">;
+  _id: Id<"inspirations">;
   title?: string;
   categories?: string;
   coverImage?: string;
@@ -97,6 +57,12 @@ export interface FormValues {
   price?: number;
   salePrice?: number;
   description?: string;
+}
+export interface FormCommentValues {
+  _id: Id<"comments">;
+  comment?: string;
+  reply?: string;
+  userId?: string;
 }
 export interface FormValuesDiscount {
   name_code?: string;
@@ -181,4 +147,16 @@ export type OrdersInpirationType = {
   product_name: string;
   revenue: number;
   amount: number;
+};
+
+export type Sites = {
+  _id: Id<"sites">;
+  _creationTime: number;
+  userId?: string | undefined;
+  parentDocument?: Id<"sites"> | undefined;
+  site_custom_domain: string;
+  site_name: string;
+  site_description: string;
+  site_subdomain: string;
+  site_coverImage: string;
 };

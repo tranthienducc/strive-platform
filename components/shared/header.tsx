@@ -15,7 +15,7 @@ const Header = () => {
   );
 
   return (
-    <header className="py-3 rounded-3xl mt-3 px-2 lg:px-6 lg:border-white/15 fixed top-0 lg:border z-20 lg:backdrop-blur-[10px] lg:bg-black0d flex lg:items-center items-start lg:justify-center lg:left-[30%] lg:max-w-fit w-full max-w-full justify-between">
+    <header className="py-3 px-[100px] fixed top-0 z-20 lg:backdrop-blur-[10px] w-full max-w-full flex items-center justify-between h-[80px]">
       {isMobile ? (
         <NavbarItemMobile
           isAdmin={isAdmin}

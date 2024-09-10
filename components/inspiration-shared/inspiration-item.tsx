@@ -36,7 +36,7 @@ const InspirationItem = (props: any) => {
     );
   }
 
-  const handleDelete = (id: Id<"documents">) => {
+  const handleDelete = (id: Id<"inspirations">) => {
     if (idDoc && idDoc.length > 0) {
       const promise = deleted({
         id: id,

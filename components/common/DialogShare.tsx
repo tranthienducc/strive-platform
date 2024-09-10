@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,12 @@ import {
 import { Download } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const DialogShare = ({ coverImage }: { coverImage: string | undefined }) => {
-  const link = `${window.location.href}`;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const link = `https://strive-platform.vercel.app${pathname}${searchParams}`;
   const handleCopyLink = () => {
     navigator.clipboard.writeText(link);
     toast.success("Copied");

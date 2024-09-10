@@ -10,7 +10,7 @@ const PopoverOptions = ({
   handleDelete,
 }: {
   item: InspirationProps;
-  handleDelete: (_id: Id<"documents">) => void;
+  handleDelete: (_id: Id<"inspirations">) => void;
 }) => {
   return (
     <Popover>

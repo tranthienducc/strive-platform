@@ -2,8 +2,8 @@ import { Atom, Code, PanelLeft, Undo2 } from "lucide-react";
 
 export const links = [
   {
-    href: "/explore-template",
-    title: "Marketplace",
+    href: "/cms",
+    title: "CMS",
   },
   {
     href: "/inspiration",

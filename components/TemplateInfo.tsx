@@ -4,13 +4,7 @@ import { ChildrenType } from "@/utils/types/type";
 import { Earth } from "lucide-react";
 import React from "react";
 
-const TemplateInfo = ({
-  catgoriesName,
-  createAt,
-}: {
-  catgoriesName?: string;
-  createAt?: string;
-}) => {
+const TemplateInfo = ({ createAt }: { createAt?: string }) => {
   return (
     <div className="max-w-[400px] w-full space-y-10">
       <div className="space-y-5">
@@ -30,16 +24,7 @@ const TemplateInfo = ({
           ))}
         </div>
       </div>
-      <div className="space-y-5">
-        <HeadingTemplate>Categories</HeadingTemplate>
-        <div className="flex flex-wrap gap-[.625rem]">
-          <div className="py-1 px-2 bg-black22 rounded-md">
-            <p className="text-xs lg:text-sm whitespace-nowrap font-semibold text-gray9">
-              {catgoriesName}
-            </p>
-          </div>
-        </div>
-      </div>
+
       <div className="space-y-5">
         <HeadingTemplate>Support</HeadingTemplate>
 

@@ -11,7 +11,7 @@ import IconsComponents from "../icons/IconsComponents";
 
 const Hero = () => {
   return (
-    <section className="flex flex-col mb-44 mt-14 items-center">
+    <section className="flex flex-col mb-44 mt-16 items-center">
       <Spotlight />
       <div className="z-10 flex mb-5 items-center justify-center">
         <div

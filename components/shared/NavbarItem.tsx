@@ -21,7 +21,7 @@ const NavbarItem = ({
 }: NavbarItemType) => {
   return (
     <>
-      <Link className="flex flex-row items-center gap-x-2 pr-[33px]" href="/">
+      <Link className="flex flex-row items-center gap-x-2" href="/">
         <Image
           src="/assets/icons/logo.webp"
           alt="logo"
@@ -34,12 +34,12 @@ const NavbarItem = ({
       </Link>
 
       <div className="hidden lg:flex">
-        <nav className="flex flex-col lg:flex-row items-center gap-3 text-black lg:text-white">
+        <nav className="flex flex-col lg:flex-row items-center gap-6 text-black lg:text-white">
           {links.map((link, i) => (
             <div key={i}>
               <Link
                 href={link.href}
-                className="text-sm font-medium hover:bg-white/5 duration-300 py-2 rounded-lg"
+                className="text-base font-medium hover:bg-white/5 duration-300 py-2 rounded-lg"
               >
                 {link.title}
               </Link>
@@ -49,7 +49,7 @@ const NavbarItem = ({
           {isAdmin && (
             <Link
               href="/manage"
-              className="text-sm font-medium hover:bg-white/5 duration-300 pl-3 py-2 rounded-lg"
+              className="text-sm font-medium hover:bg-white/5 duration-300  py-2 rounded-lg"
             >
               Dashboard
             </Link>

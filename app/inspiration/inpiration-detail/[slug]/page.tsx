@@ -1,9 +1,13 @@
 import DetailInspirationCard from "@/components/inspiration-shared/DetailInspirationCard";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 const DetailInspiration = () => {
   return (
     <>
-      <DetailInspirationCard />
+      <Suspense fallback={<Loading />}>
+        <DetailInspirationCard />
+      </Suspense>
     </>
   );
 };

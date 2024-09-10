@@ -2,8 +2,7 @@
 import { api } from "@/convex/_generated/api";
 import { useEdgeStore } from "@/lib/edgestore";
 import { FormValues } from "@/utils/types/type";
-import { useMutation, useQuery } from "convex/react";
-import { useParams } from "next/navigation";
+import { useMutation } from "convex/react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,8 +26,6 @@ const InspirationForm = ({
   setCloseDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const create = useMutation(api.documents.createDocument);
-  const { slug: InspirationId } = useParams();
-  const inspirations = useQuery(api.documents.getById);
 
   const [status, setStatus] = useState<
     "success" | "error" | "loading" | "pending" | null
@@ -50,18 +47,6 @@ const InspirationForm = ({
       url: "",
     },
   });
-
-  // lấy ra params và bỏ khoảng trẳng đầu cuối
-  const inspirationsParamTrim = String(InspirationId).trim();
-
-  //So sánh để param và id của inspiration để lây ra dữ liệu tương ứng
-  const inspirationsList = inspirations?.find((item) => {
-    const productSlug = item._id;
-    return inspirationsParamTrim === productSlug;
-  });
-
-  //destructuring inspirations data
-  const { coverImage } = inspirationsList || {};
 
   const handleSubmit: SubmitHandler<FormValues> = async (data) => {
     setStatus("loading");
@@ -215,11 +200,7 @@ const InspirationForm = ({
                   Image{" "}
                 </FormLabel>
                 <FormControl>
-                  <FileUpload
-                    setFile={setFile}
-                    fieldChange={field.onChange}
-                    mediaUrl={coverImage}
-                  />
+                  <FileUpload setFile={setFile} fieldChange={field.onChange} />
                 </FormControl>
               </FormItem>
             )}
@@ -235,6 +216,7 @@ const InspirationForm = ({
                 </FormLabel>
                 <FormControl>
                   <PlateEditor
+                    placeholder="Description..."
                     values={field.value}
                     fieldChange={field.onChange}
                   />

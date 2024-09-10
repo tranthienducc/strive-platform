@@ -75,6 +75,7 @@ import { initialValue } from "@/constants/data";
 import { useCallback, useMemo } from "react";
 import { allowedSchemes } from "@/config";
 import { serializeToHtml } from "@/helper";
+import { cn } from "@/lib/utils";
 
 const plugins = createPlugins(
   [
@@ -228,8 +229,12 @@ const plugins = createPlugins(
 export default function PlateEditor({
   values = "",
   fieldChange,
+  placeholder = "",
+  className,
 }: {
   values: any;
+  placeholder?: string;
+  className?: string;
   fieldChange: (value: string) => void;
 }) {
   const SafeLink = ({ attributes, children, href }: any) => {
@@ -339,9 +344,13 @@ export default function PlateEditor({
         </FloatingToolbar>
 
         <Editor
+          placeholder={placeholder}
           autoFocus
           spellCheck={false}
-          className="bg-black rounded-2xl border border-white/15 text-white max-w-full w-full h-[200px]"
+          className={cn(
+            "bg-black rounded-2xl border border-white/15 text-white max-w-full w-full h-[200px]",
+            className
+          )}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
         />

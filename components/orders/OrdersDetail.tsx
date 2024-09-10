@@ -7,7 +7,7 @@ import { Badge } from "../ui/badge";
 import { Verified } from "lucide-react";
 import GrandTotal from "../GrandTotal";
 import { Button } from "../ui/button";
-import { multiPrice } from "@/utils";
+import { multiFormatDateString, multiPrice } from "@/utils";
 import React from "react";
 
 const OrdersDetail = ({
@@ -26,7 +26,7 @@ const OrdersDetail = ({
       data.product_name?.includes(decodedUrl)
     ) ?? [];
 
-  const filterDiscounts = discounts?.filter((item) =>
+  const filterDiscounts = discounts?.find((item) =>
     item.inspirations?.includes(decodedUrl)
   );
 
@@ -76,7 +76,9 @@ const OrdersDetail = ({
               <div className="flex flex-row gap-2 items-center">
                 <span className="text-sm font-semibold text-black">Date:</span>
                 <span className="text-sm text-black font-normal">
-                  {data._creationTime}
+                  {multiFormatDateString(
+                    data._creationTime as unknown as string
+                  )}
                 </span>
               </div>
             </div>
@@ -103,15 +105,12 @@ const OrdersDetail = ({
         <span className="text-sm text-black font-normal">
           {multiPrice(data.price)} VND
         </span>
-        {filterDiscounts?.map((item) => (
-          <GrandTotal
-            className="text-black mb-4"
-            price={data.price}
-            salePrice={data.salePrice}
-            key={item._id}
-            amount={item.amount}
-          />
-        ))}
+        <GrandTotal
+          className="text-black mb-4"
+          price={data.price}
+          salePrice={data.salePrice}
+          amount={filterDiscounts?.amount}
+        />
 
         <h3 className="text-base font-medium text-black mb-5 bg-gray-300 rounded-md max-w-full w-full  pl-4 py-2">
           Files or Links

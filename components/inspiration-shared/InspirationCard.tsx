@@ -35,7 +35,7 @@ const InspirationCard = ({ item }: InspirationCardType) => {
     watch: 0,
   });
 
-  const handleLikeInspiration = (id: Id<"documents">) => {
+  const handleLikeInspiration = (id: Id<"inspirations">) => {
     if (!users?.id) {
       router.push("/sign-in");
       return;
@@ -57,7 +57,7 @@ const InspirationCard = ({ item }: InspirationCardType) => {
     }
   };
 
-  const handleUnLikeInspiration = (id: Id<"documents">) => {
+  const handleUnLikeInspiration = (id: Id<"inspirations">) => {
     if (!users?.id) {
       router.push("/sign-in");
       return;
@@ -79,7 +79,7 @@ const InspirationCard = ({ item }: InspirationCardType) => {
     }
   };
 
-  const handleWatchInspiration = (id: Id<"documents">) => {
+  const handleWatchInspiration = (id: Id<"inspirations">) => {
     watchInspiration({
       id: id,
       watch: state.watch + 1,

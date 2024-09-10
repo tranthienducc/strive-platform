@@ -4,3 +4,4 @@ export { default as DataTablePagination } from "./data-table-pagination";
 export { default as DataTableSkeleton } from "./data-table-skeleton";
 export { default as DataTableToolbar } from "./data-table-toolbar";
 export { default as DataTableViewOptions } from "./data-table-view-options";
+export { default as DataTable } from "./data-table";

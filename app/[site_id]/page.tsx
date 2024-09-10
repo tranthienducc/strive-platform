@@ -18,11 +18,11 @@ export default async function page({
         <div className="flex flex-col justify-start items-center gap-2 w-full">
           <div className="flex gap-3 justify-start items-center w-full">
             <h1 className="scroll-m-20 text-3xl md:text-4xl tracking-tight font-bold text-center text-white">
-              {result?.site_name[0]}
+              {result?.site_name}
             </h1>
           </div>
           <div className="flex gap-3 justify-start items-center w-full border-b border-b-white/15 pb-4">
-            <p className="text-gray9">{result?.site_description[0]}</p>
+            <p className="text-gray9">{result?.site_description}</p>
           </div>
         </div>
       </div>

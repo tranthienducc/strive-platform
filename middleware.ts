@@ -40,9 +40,9 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
 
-  const site_id = data._id[0];
-  const tenantSubdomain = data.site_subdomain[0];
-  const mainDomain = data?.site_custom_domain[0];
+  const site_id = data._id;
+  const tenantSubdomain = data.site_subdomain;
+  const mainDomain = data?.site_custom_domain;
 
   console.log("site_id", data._id);
 

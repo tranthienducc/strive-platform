@@ -24,7 +24,7 @@ const CMS = ({ params }: { params: { site_id: Id<"sites"> } }) => {
           </h1>
 
           <Link
-            href={`https://${sites?.site_subdomain[0]}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`}
+            href={`https://${sites?.site_subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`}
             target="_blank"
             className="flex items-center justify-center"
           >

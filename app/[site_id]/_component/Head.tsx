@@ -10,10 +10,10 @@ const Head = ({ params }: { params: { site_id: Id<"sites"> } }) => {
     id: params.site_id,
   });
 
-  const siteName = result?.site_name[0];
-  const siteDescription = result?.site_description[0];
-  const siteCover = result?.site_coverImage[0];
-  const mainDomain = result?.site_custom_domain[0];
+  const siteName = result?.site_name;
+  const siteDescription = result?.site_description;
+  const siteCover = result?.site_coverImage;
+  const mainDomain = result?.site_custom_domain;
 
   if (!result) {
     notFound();

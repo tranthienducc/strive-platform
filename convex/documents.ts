@@ -1,6 +1,7 @@
 import { addDomainToVercel } from "../lib/actions/vercel/add-domain";
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { revalidatePath } from "next/cache";
 
 export const getById = query({
   handler: async (ctx) => {
@@ -550,13 +551,14 @@ export const changeSiteDomain = mutation({
     const domainAdding = await addDomainToVercel(
       site_custom_domain.toLowerCase()
     );
+    revalidatePath("/cms/sites");
 
     // Fetch verification records from Vercel for the non-www domain
     const vercelDomainResponse = await fetch(
       `https://api.vercel.com/v9/projects/${process.env.PROJECT_ID_VERCEL}/domains/${site_custom_domain.toLowerCase()}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+          Authorization: `Bearer ${process.env.PROJECT_ID_VERCEL}`,
         },
       }
     );

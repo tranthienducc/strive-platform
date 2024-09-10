@@ -1,14 +1,15 @@
+"use client";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { convex } from "@/services/providers/convex-provider";
 import ArticleCard from "../cms/sites/_component/ArticleCard";
+import { useQuery } from "convex/react";
 
-export default async function page({
+export default function SitePage({
   params,
 }: {
   params: { site_id: Id<"sites"> };
 }) {
-  const result = await convex.query(api.documents.getSitesById, {
+  const result = useQuery(api.documents.getSitesById, {
     id: params.site_id,
   });
 

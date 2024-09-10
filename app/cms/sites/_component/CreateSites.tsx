@@ -55,7 +55,7 @@ const CreateSites = () => {
       site_coverImage: "",
     },
   });
-  const { openDialog, closeDialog } = useDialogActions();
+  const { openDialog, closeDialog, isOpen } = useDialogActions();
   const [file, setFile] = useState<File>();
   const createSites = useMutation(api.documents.createSites);
   const { edgestore } = useEdgeStore();
@@ -84,7 +84,7 @@ const CreateSites = () => {
   };
 
   return (
-    <Dialog onOpenChange={openDialog}>
+    <Dialog open={isOpen} onOpenChange={openDialog}>
       <DialogTrigger asChild>
         <Button size="sm" className="text-white">
           Create

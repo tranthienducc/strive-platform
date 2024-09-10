@@ -40,14 +40,19 @@ const CreateDocument = ({ site_id }: { site_id: string }) => {
   return (
     <Dialog onOpenChange={openDialog}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button
+          size="sm"
+          className="border border-white/15 bg-black hover:bg-opacity-40"
+        >
           Create
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-black border border-white/15">
         <DialogHeader>
           <DialogTitle>Create Document</DialogTitle>
-          <DialogDescription>Name your document</DialogDescription>
+          <DialogDescription className="text-gray9">
+            Name your document
+          </DialogDescription>
         </DialogHeader>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -56,12 +61,16 @@ const CreateDocument = ({ site_id }: { site_id: string }) => {
           <div className="flex flex-col justify-center items-center w-full gap-3">
             <Label className="w-full">Name</Label>
             <Input
-              className="w-full"
+              className="w-full bg-black border border-white/15"
               {...register("name", { required: true })}
             />
           </div>
           <div className="flex justify-end">
-            <Button type="submit" size="sm">
+            <Button
+              type="submit"
+              size="sm"
+              className="border border-white/15 bg-white text-black"
+            >
               Save changes
             </Button>
           </div>

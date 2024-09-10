@@ -28,14 +28,13 @@ export default clerkMiddleware(async (auth, req) => {
     // Continue to the next middleware or serve the root content
     return NextResponse.next();
   }
-
   //Fetch tenant-specific data based on the hostname
   const response = await fetch(
     `${req.nextUrl.origin}/api/read-site-domain?site_subdomain=${currentHost}`
   );
 
   const data = await response.json();
-  if (!data || data.length) {
+  if (!data || !data.length) {
     // Continue to the next middleware or serve the root content
     return NextResponse.next();
   }
@@ -44,12 +43,10 @@ export default clerkMiddleware(async (auth, req) => {
   const tenantSubdomain = data.site_subdomain;
   const mainDomain = data?.site_custom_domain;
 
-  console.log("site_id", data._id);
-
   const rewriteDomain = tenantSubdomain || mainDomain;
 
-  console.log("Hostname:", hostname);
-  console.log("Current Host:", currentHost);
+  console.log(response);
+  console.log(site_id);
   console.log("Rewrite Domain:", rewriteDomain);
 
   if (rewriteDomain) {

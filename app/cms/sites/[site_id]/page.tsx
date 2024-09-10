@@ -4,14 +4,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+// import { useQuery } from "convex/react";
+// import { api } from "@/convex/_generated/api";
 import ArticleCard from "../_component/ArticleCard";
 
 const CMS = ({ params }: { params: { site_id: Id<"sites"> } }) => {
-  const sites = useQuery(api.documents.getSitesById, {
-    id: params.site_id,
-  });
+  // const sites = useQuery(api.documents.getSitesById, {
+  //   id: params.site_id,
+  // });
 
   return (
     <SiteDashWrapper site_id={params.site_id}>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import React from "react";
 import parse from "html-react-parser";
 
-const BlogPostPage = ({ params }: { params: { slug: string } }) => {
+const BlogPostPage = () => {
   return (
     <article className="container relative max-w-3xl py-6 lg:py-10">
       <Link

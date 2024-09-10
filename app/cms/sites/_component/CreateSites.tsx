@@ -72,6 +72,7 @@ const CreateSites = () => {
       await createSites({
         ...value,
         site_coverImage: coverImageRes.url,
+        site_custom_domain: "",
       });
       toast.success("Site is publish");
       form.reset();

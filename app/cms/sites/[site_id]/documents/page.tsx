@@ -1,8 +1,9 @@
 import CreateDocument from "@/app/cms/_component/CreateDocument";
 import SiteDashWrapper from "../_component/SidebarWrapper";
 import Documents from "./_component/Documents";
+import { Id } from "@/convex/_generated/dataModel";
 
-const DocumentsPage = ({ params }: { params: { site_id: string } }) => {
+const DocumentsPage = ({ params }: { params: { site_id: Id<"sites"> } }) => {
   return (
     <SiteDashWrapper site_id={params.site_id}>
       <div className="flex flex-col gap-3">

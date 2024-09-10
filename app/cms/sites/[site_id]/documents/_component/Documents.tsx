@@ -1,7 +1,7 @@
-import { FileText, Timer } from "lucide-react";
+import { FileText } from "lucide-react";
 import Link from "next/link";
 
-const Documents = ({ info, site_id }: { info?: any; site_id: string }) => {
+const Documents = ({ site_id }: { info?: any; site_id: string }) => {
   return (
     <Link href={`/cms/sites/${site_id}/documents/`}>
       <article className="flex flex-col space-y-4 p-4 rounded-md border border-zinc-900 min-w-[300px] hover:shadow-2xl hover:shadow-purple-500/50 transition-shadow duration-300">

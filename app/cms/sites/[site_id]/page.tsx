@@ -8,7 +8,6 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { ExternalLinkIcon } from "lucide-react";
 
-const LOCAL_DOMAIN = "localhost:3000";
 const CMS = ({ params }: { params: { site_id: Id<"sites"> } }) => {
   const sites = useQuery(api.documents.getSitesById, {
     id: params.site_id,
@@ -25,7 +24,7 @@ const CMS = ({ params }: { params: { site_id: Id<"sites"> } }) => {
           </h1>
 
           <Link
-            href={`${sites?.site_subdomain}.${LOCAL_DOMAIN}`}
+            href={`https://${sites?.site_subdomain[0]}.${process.env.BASE_DOMAIN}`}
             target="_blank"
             className="flex items-center justify-center"
           >

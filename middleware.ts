@@ -38,8 +38,10 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
   //Fetch tenant-specific data based on the hostname
+
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
   const response = await fetch(
-    `${req.nextUrl.origin}/api/read-site-domain?site_subdomain=${currentHost}`
+    `${protocol}://${hostname}/api/read-site-domain?site_subdomain=${currentHost}`
   );
 
   const data = await response.json();
@@ -51,7 +53,7 @@ export default clerkMiddleware(async (auth, req) => {
   const tenantSubdomain = data[0].site_subdomain;
 
   return NextResponse.rewrite(
-    new URL(`/domain/${tenantSubdomain}${pathname}`, req.url)
+    new URL(`/${tenantSubdomain}${pathname}`, req.url)
   );
 });
 

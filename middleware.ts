@@ -43,12 +43,8 @@ export default clerkMiddleware(async (auth, req) => {
   );
 
   const data = await response.json();
-  if (!data || !data.length) {
-    // Continue to the next middleware or serve the root content
-    return NextResponse.next();
-  }
 
-  const tenantSubdomain = data[0].site_subdomain;
+  const tenantSubdomain = data.site_subdomain;
 
   return NextResponse.rewrite(
     new URL(`/domain/${tenantSubdomain}${pathname}`, req.url)

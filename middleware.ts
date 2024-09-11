@@ -19,10 +19,7 @@ export default clerkMiddleware(async (auth, req) => {
     hostname = `${hostname.split("---")[0]}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`;
   }
 
-  const searchParams = req.nextUrl.searchParams.toString();
-  const pathname = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ""
-  }`;
+  const pathname = url.pathname;
 
   // Get hostname (e.g., 'strive.vercel.app', 'test.strive.vercel.app')
 
@@ -40,9 +37,28 @@ export default clerkMiddleware(async (auth, req) => {
     // Continue to the next middleware or serve the root content
     return NextResponse.next();
   }
+  //Fetch tenant-specific data based on the hostname
+  const response = await fetch(
+    `${req.nextUrl.origin}/api/read-site-domain?site_subdomain=${currentHost}`
+  );
+
+  const data = await response.json();
+  if (!data || !data.length) {
+    // Continue to the next middleware or serve the root content
+    return NextResponse.next();
+  }
+
+  const tenantSubdomain = data.site_subdomain;
+
+  if (hostname === "strive-platform.xyz") {
+    // Rewrite the URL to the tenant-specific path, using the site_id
+    return NextResponse.rewrite(
+      new URL(`/${tenantSubdomain}${pathname}`, req.url)
+    );
+  }
 
   // If no rewrite domain is found, continue to the next middleware
-  return NextResponse.rewrite(new URL(`/${hostname}${pathname}`, req.url));
+  return NextResponse.next();
 });
 
 export const config = {

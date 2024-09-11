@@ -48,10 +48,10 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
 
-  const tenantSubdomain = data.site_subdomain;
+  const tenantSubdomain = data[0].site_subdomain;
 
   return NextResponse.rewrite(
-    new URL(`/${tenantSubdomain}${pathname}`, req.url)
+    new URL(`/domain/${tenantSubdomain}${pathname}`, req.url)
   );
 });
 

@@ -6,13 +6,25 @@ const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Check if the route is protected and enforce authentication if it is
-  if (isProtectedRoute(req)) auth().protect();
-
   const url = req.nextUrl;
-  const pathname = url.pathname;
+  if (isProtectedRoute(req)) auth().protect();
+  let hostname = req.headers
+    .get("host")!
+    .replace(".localhost:3000", `${process.env.NEXT_PUBLIC_BASE_DOMAIN}`);
+
+  if (
+    hostname.includes("---") &&
+    hostname.endsWith(`.${process.env.NEXT_PUBLIC_VERCEL_DEPLOYMENT_SUFFIX}`)
+  ) {
+    hostname = `${hostname.split("---")[0]}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`;
+  }
+
+  const searchParams = req.nextUrl.searchParams.toString();
+  const pathname = `${url.pathname}${
+    searchParams.length > 0 ? `?${searchParams}` : ""
+  }`;
 
   // Get hostname (e.g., 'strive.vercel.app', 'test.strive.vercel.app')
-  const hostname = req.headers.get("host");
 
   let currentHost;
   if (process.env.NODE_ENV === "production") {
@@ -28,34 +40,9 @@ export default clerkMiddleware(async (auth, req) => {
     // Continue to the next middleware or serve the root content
     return NextResponse.next();
   }
-  //Fetch tenant-specific data based on the hostname
-  const response = await fetch(
-    `${req.nextUrl.origin}/api/read-site-domain?site_subdomain=${currentHost}`
-  );
-
-  const data = await response.json();
-  if (!data || !data.length) {
-    // Continue to the next middleware or serve the root content
-    return NextResponse.next();
-  }
-
-  const site_id = data._id;
-  const tenantSubdomain = data.site_subdomain;
-  const mainDomain = data?.site_custom_domain;
-
-  const rewriteDomain = tenantSubdomain || mainDomain;
-
-  console.log(response);
-  console.log(site_id);
-  console.log("Rewrite Domain:", rewriteDomain);
-
-  if (rewriteDomain) {
-    // Rewrite the URL to the tenant-specific path, using the site_id
-    return NextResponse.rewrite(new URL(`/${site_id}${pathname}`, req.url));
-  }
 
   // If no rewrite domain is found, continue to the next middleware
-  return NextResponse.next();
+  return NextResponse.rewrite(new URL(`/${hostname}${pathname}`, req.url));
 });
 
 export const config = {

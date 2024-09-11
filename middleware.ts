@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 // Define the routes that require authentication
+const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
 
-export default async function middleware(req: NextRequest) {
+export default clerkMiddleware(async (auth, req) => {
+  // Check if the route is protected and enforce authentication if it is
   const url = req.nextUrl;
-
+  if (isProtectedRoute(req)) auth().protect();
   let hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `${process.env.NEXT_PUBLIC_BASE_DOMAIN}`);
@@ -50,9 +53,9 @@ export default async function middleware(req: NextRequest) {
   const tenantSubdomain = data[0].site_subdomain;
 
   return NextResponse.rewrite(
-    new URL(`/${tenantSubdomain}${pathname}`, req.url)
+    new URL(`/domain/${tenantSubdomain}${pathname}`, req.url)
   );
-}
+});
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/dashboard", "/(api|trpc)(.*)"],

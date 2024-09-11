@@ -39,7 +39,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
   //Fetch tenant-specific data based on the hostname
   const response = await fetch(
-    `/api/read-site-domain?site_subdomain=${currentHost}`
+    `${req.nextUrl.origin}/api/read-site-domain?site_subdomain=${currentHost}`
   );
 
   const data = await response.json();

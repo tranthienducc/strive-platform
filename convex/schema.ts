@@ -84,11 +84,11 @@ export default defineSchema({
     .index("by_user", ["users.id"])
     .index("by_user_parent", ["users.id", "parentDocument"]),
   sites: defineTable({
-    site_name: v.string(),
-    site_description: v.string(),
-    site_subdomain: v.string(),
-    site_custom_domain: v.string(),
-    site_coverImage: v.string(),
+    site_name: v.optional(v.string()),
+    site_description: v.optional(v.string()),
+    site_subdomain: v.optional(v.string()),
+    site_custom_domain: v.optional(v.string()),
+    site_coverImage: v.optional(v.string()),
     userId: v.optional(v.string()),
     parentDocument: v.optional(v.id("sites")),
   })

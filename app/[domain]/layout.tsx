@@ -1,15 +1,12 @@
-import { Id } from "@/convex/_generated/dataModel";
-
 import { ReactNode } from "react";
-import NavbarSite from "./_component/NavbarSite";
-
 import Head from "./_component/Head";
+import NavbarSite from "./_component/NavbarSite";
 
 export default async function SiteLayout({
   params,
   children,
 }: {
-  params: { site_id: Id<"sites"> };
+  params: { subdomain: string };
   children: ReactNode;
 }) {
   return (

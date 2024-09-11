@@ -34,11 +34,18 @@ export const getAllSites = query({
     return sites;
   },
 });
-export const getSitesById = query({
-  args: { id: v.id("sites") },
+export const getSitesBySub = query({
+  args: {
+    site_subdomain: v.string(),
+  },
   handler: async (ctx, args) => {
-    const site = await ctx.db.get(args.id);
-    return site;
+    const sites = await ctx.db
+      .query("sites")
+      .filter((q) => q.eq(q.field("site_subdomain"), args.site_subdomain))
+      .collect();
+
+    // Trả về site đầu tiên nếu có, hoặc null nếu không tìm thấy
+    return sites.length > 0 ? sites[0] : null;
   },
 });
 

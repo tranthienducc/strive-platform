@@ -1,13 +1,12 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { notFound } from "next/navigation";
 
-const Head = ({ params }: { params: { site_id: Id<"sites"> } }) => {
-  const result = useQuery(api.documents.getSitesById, {
-    id: params.site_id,
+const Head = ({ params }: { params: { subdomain: string } }) => {
+  const result = useQuery(api.documents.getSitesBySub, {
+    site_subdomain: params.subdomain,
   });
 
   if (!result) {

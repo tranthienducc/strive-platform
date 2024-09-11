@@ -50,15 +50,9 @@ export default clerkMiddleware(async (auth, req) => {
 
   const tenantSubdomain = data.site_subdomain;
 
-  if (hostname === "strive-platform.xyz") {
-    // Rewrite the URL to the tenant-specific path, using the site_id
-    return NextResponse.rewrite(
-      new URL(`/${tenantSubdomain}${pathname}`, req.url)
-    );
-  }
-
-  // If no rewrite domain is found, continue to the next middleware
-  return NextResponse.next();
+  return NextResponse.rewrite(
+    new URL(`/${tenantSubdomain}${pathname}`, req.url)
+  );
 });
 
 export const config = {

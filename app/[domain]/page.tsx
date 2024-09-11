@@ -1,16 +1,16 @@
 "use client";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+
 import ArticleCard from "../cms/sites/_component/ArticleCard";
 import { useQuery } from "convex/react";
 
 export default function SitePage({
   params,
 }: {
-  params: { site_id: Id<"sites"> };
+  params: { subdomain: string };
 }) {
-  const result = useQuery(api.documents.getSitesById, {
-    id: params.site_id,
+  const result = useQuery(api.documents.getSitesBySub, {
+    site_subdomain: params.subdomain,
   });
 
   return (

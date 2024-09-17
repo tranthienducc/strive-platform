@@ -1,6 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
 
 // Define the routes that require authentication
 const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
@@ -18,12 +17,7 @@ export default clerkMiddleware(async (auth, req) => {
     hostname === "localhost:3000"
   ) {
     // Chỉ kiểm tra session cho các route cần bảo vệ
-    if (isProtectedRoute(req)) {
-      const session = getAuth(req);
-      if (!session) {
-        return NextResponse.redirect(new URL("/sign-in", req.url));
-      }
-    }
+
     return NextResponse.rewrite(new URL(path, req.url));
   }
 
@@ -32,5 +26,5 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/cms", "/(api|trpc)(.*)"],
 };

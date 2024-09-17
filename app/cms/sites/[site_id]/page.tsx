@@ -28,11 +28,11 @@ const CMS = ({ params }: { params: { site_id: Id<"sites"> } }) => {
 
             <Link
               target="_blank"
-              href={`https://${sites?.site_subdomain}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`}
+              href={`https://${sites?.site_subdomain}.${process.env.NEXT_PUBLIC_FRONTEND_URL}`}
               className="border border-white/20 text-white-ec rounded-md flex items-center gap-2 px-4 py-1"
             >
               <span className="text-sm font-medium">
-                {sites?.site_subdomain}.{process.env.NEXT_PUBLIC_BASE_DOMAIN}
+                {sites?.site_subdomain}.{process.env.NEXT_PUBLIC_FRONTEND_URL}
               </span>
               <ExternalLinkIcon className="w-4 h-4" />
             </Link>

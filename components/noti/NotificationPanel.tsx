@@ -7,7 +7,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 const NotificationPanel = () => {
-  const notifications = useQuery(api.documents.getNotifiById);
+  const notifications = useQuery(api.notification.getAllNotification);
   return (
     <Popover>
       <PopoverTrigger>

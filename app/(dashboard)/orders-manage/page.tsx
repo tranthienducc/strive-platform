@@ -12,7 +12,7 @@ const OrdersMagPage = () => {
     let isMounted = true;
     const fetchData = async () => {
       try {
-        const result = await convex.query(api.documents.getOrdersInspiration);
+        const result = await convex.query(api.order.getOrdersInspiration);
         setData(result);
       } catch (error) {
         console.error("Error fetching orders:", error);

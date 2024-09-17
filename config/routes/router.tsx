@@ -3,7 +3,7 @@ import { Atom, Code, PanelLeft, Undo2 } from "lucide-react";
 export const links = [
   {
     href: "/cms",
-    title: "CMS",
+    title: "Feature",
   },
   {
     href: "/inspiration",

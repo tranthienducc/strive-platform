@@ -19,7 +19,7 @@ const CommentItem = ({
   isChild?: boolean;
 }) => {
   const [showReply, setShowReply] = useState("");
-  const deleteComment = useMutation(api.documents.deleteComment);
+  const deleteComment = useMutation(api.comment.deleteComment);
   const { users } = useUserContext();
 
   const handleDeleteComment = async (_id: Id<"comment">) => {

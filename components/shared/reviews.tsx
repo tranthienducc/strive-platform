@@ -36,8 +36,8 @@ const Reviews = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="left-[17rem] lg:left-[43rem] top-[12%]" />
-        <CarouselNext className="right-8 top-[12%]" />
+        <CarouselPrevious className="left-[17rem] lg:left-[43rem] top-[12%] text-black" />
+        <CarouselNext className="right-8 top-[12%]  text-black" />
       </Carousel>
     </section>
   );

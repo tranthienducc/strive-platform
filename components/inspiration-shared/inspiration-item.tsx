@@ -14,7 +14,7 @@ import { multiPrice } from "@/utils";
 const InspirationItem = (props: any) => {
   const { inspiration } = props;
 
-  const deleted = useMutation(api.documents.deleted);
+  const deleteInspiration = useMutation(api.inspiration.deletedInspiration);
   const idDoc = inspiration?.map((item: { _id: any }) => item._id);
 
   if (!inspiration) {
@@ -38,7 +38,7 @@ const InspirationItem = (props: any) => {
 
   const handleDelete = (id: Id<"inspirations">) => {
     if (idDoc && idDoc.length > 0) {
-      const promise = deleted({
+      const promise = deleteInspiration({
         id: id,
       });
       toast.promise(promise, {
@@ -77,7 +77,7 @@ const InspirationItem = (props: any) => {
               />
             </Link>
             <div className="flex flex-row justify-between items-start">
-              <div className="flex flex-col gap-y-[2px]">
+              <div className="flex flex-col gap-y-[2px] w-full">
                 <h3 className="text-white font-medium text-base whitespace-nowrap">
                   {item.title}
                 </h3>

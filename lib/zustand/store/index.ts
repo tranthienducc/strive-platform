@@ -1,6 +1,11 @@
-import { create } from "zustand";
+import { create, StateCreator } from "zustand";
 
 import { persist } from "zustand/middleware";
+
+interface PublishState {
+  publishedArticles: Record<string, boolean>;
+  setPublishStatus: (articleId: string, isPublished: boolean) => void;
+}
 
 export const useLikeStore = create(
   persist(
@@ -21,4 +26,20 @@ export const useLikeStore = create(
       name: "liked-storage",
     }
   )
+);
+const useTogglePublishStore: StateCreator<PublishState> = (set) => ({
+  publishedArticles: {},
+  setPublishStatus: (articleId: string, isPublished: boolean) =>
+    set((state) => ({
+      publishedArticles: {
+        ...state.publishedArticles,
+        [articleId]: isPublished,
+      },
+    })),
+});
+
+export const useTogglePublish = create<PublishState>()(
+  persist(useTogglePublishStore, {
+    name: "publish-storage",
+  })
 );

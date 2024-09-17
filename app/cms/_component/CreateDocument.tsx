@@ -11,18 +11,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/convex/_generated/api";
-import useDialogActions from "@/state/hooks/useDialogActions";
-import { useMutation } from "convex/react";
-import React from "react";
+import { useMutation, useQuery } from "convex/react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const CreateDocument = ({ site_id }: { site_id: string }) => {
-  const { openDialog, closeDialog } = useDialogActions();
+  const [open, setOpen] = useState(false);
   const { register, handleSubmit } = useForm();
   const createDocuments = useMutation(api.documents.createDocuments);
+  const documents = useQuery(api.documents.getAllDocuments);
+  const maxDocuments = 3;
 
   const onSubmit = async (data: any) => {
+    if (documents && documents.length >= maxDocuments) {
+      toast.error(
+        "You've reached the document limit. Please upgrade to Premium."
+      );
+      return;
+    }
     try {
       await createDocuments({
         name: data.name,
@@ -30,7 +37,7 @@ const CreateDocument = ({ site_id }: { site_id: string }) => {
           id: site_id,
         },
       });
-      closeDialog();
+      setOpen(false);
       toast.success("Create documents successfully.");
     } catch (error) {
       console.log(error);
@@ -38,7 +45,7 @@ const CreateDocument = ({ site_id }: { site_id: string }) => {
   };
 
   return (
-    <Dialog onOpenChange={openDialog}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           size="sm"
@@ -69,7 +76,7 @@ const CreateDocument = ({ site_id }: { site_id: string }) => {
             <Button
               type="submit"
               size="sm"
-              className="border border-white/15 bg-white text-black"
+              className="border border-white/15 bg-white text-black hover:bg-white/20"
             >
               Save changes
             </Button>

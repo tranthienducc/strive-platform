@@ -25,8 +25,10 @@ interface Props {
 const PaymentPage = ({ params }: Props) => {
   const { users } = useUserContext();
 
-  const discounts = useQuery(api.documents.getDiscounts);
-  const inspirations = useQuery(api.documents.getById);
+  const discounts = useQuery(api.discount.getDiscounts);
+  const inspirations = useQuery(api.inspiration.getAllInspiration);
+
+  console.log(params.slug);
 
   return (
     <section className="mx-auto max-w-full w-full mt-44 mb-20 flex flex-row items-start h-screen">
@@ -63,7 +65,9 @@ const PaymentPage = ({ params }: Props) => {
                 Pay by Card
               </span>
               {discounts
-                ?.filter((data) => data.inspirations === item.slug)
+                ?.filter((data) =>
+                  data.inspirations?.toLowerCase().includes(item.slug as string)
+                )
                 .map((discount) => (
                   <CheckoutForm
                     key={discount._id}
@@ -99,7 +103,8 @@ function CheckoutForm({
   amount?: number;
   title?: string;
 }) {
-  const buyInspirations = useMutation(api.documents.buyInspiration);
+  const buyInspirations = useMutation(api.order.buyInspiration);
+  const createNotifications = useMutation(api.notification.createNotifi);
 
   const router = useRouter();
   const handleBuyInspiration = async () => {
@@ -109,7 +114,7 @@ function CheckoutForm({
     }
     const orderCode = generateOrderCode();
     try {
-      await buyInspirations({
+      const response = await buyInspirations({
         users: {
           id: users?.id,
           name: `${users.firstName} ${users.lastName}`,
@@ -121,6 +126,11 @@ function CheckoutForm({
         code: code || "",
         order_code: orderCode,
       });
+      await createNotifications({
+        userName: `${users.firstName} ${users.lastName}`,
+        templateName: title,
+      });
+      return response;
     } catch (error) {
       console.log(error);
     }

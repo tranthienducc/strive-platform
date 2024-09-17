@@ -5,12 +5,11 @@ import type { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
 import { UserProvider } from "@/context/UserContext";
 import "./globals.css";
-import { QueryProvider } from "@/lib/react-query/QueryProvider";
 import { ClerkProvider } from "@clerk/nextjs";
 import Wrapper from "@/components/Wrapper";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://strive-platform.vercel.app/"),
+  metadataBase: new URL("https://strive-platform.xyz/"),
   title: "Strive - Template Platform",
   description:
     "The platform provides free and paid templates with beautiful designs, updated every day for everyone from beginners to experienced people. Developed and built by Tran Thien Duc.",
@@ -20,7 +19,7 @@ export const metadata: Metadata = {
     title: "Strive - Template Platform",
     description:
       "The platform provides free and paid templates with beautiful design",
-    images: ["/assets/images/bg-dashboard.png"],
+    images: ["/assets/images/bg-dashboard.webp"],
   },
 };
 
@@ -34,13 +33,11 @@ export default function RootLayout({
       <ConvexClientProvider>
         <html lang="en" className="h-full scroll-smooth">
           <body className={inter.className}>
-            <QueryProvider>
-              <EdgeStoreProvider>
-                <UserProvider>
-                  <Wrapper>{children}</Wrapper>
-                </UserProvider>
-              </EdgeStoreProvider>
-            </QueryProvider>
+            <EdgeStoreProvider>
+              <UserProvider>
+                <Wrapper>{children}</Wrapper>
+              </UserProvider>
+            </EdgeStoreProvider>
           </body>
         </html>
       </ConvexClientProvider>

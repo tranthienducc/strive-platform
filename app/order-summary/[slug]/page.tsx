@@ -11,7 +11,7 @@ interface Props {
 }
 
 const OrderSummary = ({ params }: Props) => {
-  const inspiration = useQuery(api.documents.getById);
+  const inspiration = useQuery(api.inspiration.getAllInspiration);
   const decodedUrl = decodeURIComponent(params.slug);
 
   const filterInspiration = inspiration?.filter((data) =>

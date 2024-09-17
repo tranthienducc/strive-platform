@@ -29,7 +29,7 @@ import { toast } from "sonner";
 const DiscountManagePage = () => {
   const { search } = useFilterQueryManager();
   const [page, setPage] = useState(1);
-  const discounts = useQuery(api.documents.getDiscounts, { search } as {});
+  const discounts = useQuery(api.discount.getDiscounts, { search } as {});
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -37,7 +37,7 @@ const DiscountManagePage = () => {
     data?.name_code?.toLowerCase().includes((search ?? "").toLowerCase())
   );
 
-  const deleteDiscountCode = useMutation(api.documents.deleteDiscoutnCode);
+  const deleteDiscountCode = useMutation(api.discount.deleteDiscountCode);
 
   const handleChangePage = (action: "prev" | "next") => {
     if (page === 1 && action === "prev") return;

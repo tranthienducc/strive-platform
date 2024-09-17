@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { getAuth } from "@clerk/nextjs/server";
 
 // Define the routes that require authentication
 const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
@@ -10,7 +11,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) auth().protect();
   let hostname = req.headers
     .get("host")!
-    .replace(".localhost:3000", `${process.env.NEXT_PUBLIC_BASE_DOMAIN}`);
+    .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`);
 
   if (
     hostname.includes("---") &&
@@ -19,42 +20,36 @@ export default clerkMiddleware(async (auth, req) => {
     hostname = `${hostname.split("---")[0]}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`;
   }
 
-  const pathname = url.pathname;
+  const searchParams = req.nextUrl.searchParams.toString();
+  // Get the pathname of the request (e.g. /, /about, /blog/first-post)
+  const path = `${url.pathname}${
+    searchParams.length > 0 ? `?${searchParams}` : ""
+  }`;
 
   // Get hostname (e.g., 'strive.vercel.app', 'test.strive.vercel.app')
-
-  let currentHost;
-  if (process.env.NODE_ENV === "production") {
-    // Production logic remains the same
-    const baseDomain = process.env.BASE_DOMAIN;
-    currentHost = hostname?.replace(`.${baseDomain}`, "");
-  } else {
-    // Updated development logic
-    currentHost = hostname?.split(":")[0].replace(".localhost", "");
-  }
-  // If there's no currentHost, likely accessing the root domain, handle accordingly
-  if (!currentHost) {
-    // Continue to the next middleware or serve the root content
-    return NextResponse.next();
-  }
-  //Fetch tenant-specific data based on the hostname
-
-  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-  const response = await fetch(
-    `${protocol}://${hostname}/api/read-site-domain?site_subdomain=${currentHost}`
-  );
-
-  const data = await response.json();
-  if (!data || !data.length) {
-    // Continue to the next middleware or serve the root content
-    return NextResponse.next();
+  if (hostname == `${process.env.NEXT_PUBLIC_BASE_DOMAIN}`) {
+    const session = getAuth(req);
+    if (!session && path !== "/sign-in") {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    } else if (session && path == "/sign-in") {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.rewrite(
+      new URL(`${path === "/" ? "" : path}`, req.url)
+    );
   }
 
-  const tenantSubdomain = data[0].site_subdomain;
+  if (
+    hostname === "localhost:3000" ||
+    hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN
+  ) {
+    return NextResponse.rewrite(
+      new URL(`${path === "/" ? "" : path}`, req.url)
+    );
+  }
 
-  return NextResponse.rewrite(
-    new URL(`/domain/${tenantSubdomain}${pathname}`, req.url)
-  );
+  // rewrite everything else to `/[domain]/[slug] dynamic route
+  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 
 export const config = {

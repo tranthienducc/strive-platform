@@ -1,66 +1,102 @@
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ChevronLeft } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import parse from "html-react-parser";
+"use client";
 
-const BlogPostPage = () => {
+import Image from "next/image";
+import React, { memo } from "react";
+import parse from "html-react-parser";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
+import { transformNode } from "@/utils/transform-node";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+
+const BlogPostPage = ({ params }: { params: { slug: string } }) => {
+  const articles = useQuery(api.article.getArticleBySlug, {
+    slug: params.slug,
+  });
+
+  const allArticle = useQuery(api.article.getAllArticle);
   return (
-    <article className="container relative max-w-3xl py-6 lg:py-10">
-      <Link
-        href="/"
-        className={cn(
-          buttonVariants({ variant: "ghost" }),
-          "absolute left-[-200px] top-14 hidden xl:inline-flex text-black"
-        )}
-      >
-        <ChevronLeft className="mr-2 size-4" />
-        See all posts
-      </Link>
-      <div>
-        <p className="block text-sm text-gray9">Published on</p>
-        <h1 className="scroll-m-20 text-3xl font-bold pt-4 tracking-tight lg:text-3xl">
-          title
-        </h1>
-        <div className="mt-4 flex items-center space-x-3">
-          <Image
-            src="/assets/images/bento-img1.webp"
-            alt="bento"
-            width={32}
-            height={42}
-            className="rounded-full bg-white"
-          />
-          <div className="flex flex-col text-left leading-tight">
-            <p className="font-medium text-white">name</p>
-            {/* Facebook author */}
-            <Link href={`https://www.facebook.com/`} target="_blank">
-              <p className="text-xs text-gray9 font-semibold hover:underline cursor-pointer">
-                Tranthienduc
-              </p>
-            </Link>
+    <article className="container relative max-w-full w-full py-6 lg:py-10">
+      {articles?.map((article) => (
+        <div className="mb-10 px-[253px]" key={article._id}>
+          <div className="text-center items-center">
+            <p className="block text-sm text-gray9">
+              Publish on {new Date(article._creationTime).toLocaleDateString()}
+            </p>
+            <h1 className="scroll-m-20 lg:text-6xl font-bold pt-4 tracking-tight text-3xl">
+              {article.title}
+            </h1>
+            <p className="text-lg font-normal text-gray9 pt-10">
+              {article.sub_title}
+            </p>
+            <div className="mt-8 flex items-center justify-center space-x-3 mb-8">
+              <Image
+                src="/assets/images/clients-avatar-1.webp"
+                alt="author-avatar"
+                width={42}
+                height={42}
+                className="rounded-full size-12"
+              />
+              <div className="text-lg font-normal">
+                by <span className="font-semibold">James</span>
+              </div>
+            </div>
+
+            <Image
+              src={article.image}
+              alt="blog-img"
+              width={1013}
+              height={600}
+              priority={true}
+              className="w-full h-full rounded-2xl object-cover"
+            />
+          </div>
+          <div className="mt-20 max-w-full w-full text-gray9">
+            {parse(article.blog_html, {
+              replace: transformNode,
+            })}
           </div>
         </div>
+      ))}
+      <div className="w-full items-center justify-center gap-2 mb-6 flex flex-row">
+        <Separator className="bg-white/15 max-w-[450px]" />
+        <span className="text-sm font-normal text-gray9 whitespace-normal">
+          Continue Reading
+        </span>
+        <Separator className="bg-white/15 max-w-[450px]" />
       </div>
-      <Image
-        src="/assets/image/bento-img3.webp"
-        alt="bento"
-        priority={true}
-        width={720}
-        height={405}
-        className="my-8 rounded-md border bg-muted transition-colors"
-      />
-      {parse("description")}
-      <hr className="mt-12" />
-      <div className="flex justify-center py-6 lg:py-10">
-        <Link href="/" className={cn(buttonVariants({ variant: "ghost" }))}>
-          <ChevronLeft className="mr-2 h-4 w-4 text-black" />
-          See all posts
-        </Link>
+
+      <div className="grid grid-cols-3 gap-2 px-[253px]">
+        {allArticle?.map((data) => (
+          <Link
+            href={`${data.slug}`}
+            key={data._id}
+            className="max-w-[413px]  w-full min-h-[144px] h-full rounded-2xl border border-white/20"
+          >
+            <Image
+              src={data.image}
+              alt="blog-img"
+              width={413}
+              height={256}
+              className="rounded-t-2xl border-b-white/20"
+              priority={true}
+            />
+            <div className="px-5 pt-[33px] pb-[23px] flex flex-col gap-2">
+              <h3 className="text-xl font-bold text-white tracking-wide">
+                {data.title}
+              </h3>
+              <p className="line-clamp-1 italic text-sm text-gray9">
+                {data.sub_title}
+              </p>
+              <span className="text-sm font-normal text-gray9">
+                Published {new Date(data._creationTime).toLocaleDateString()}
+              </span>
+            </div>
+          </Link>
+        ))}
       </div>
     </article>
   );
 };
 
-export default BlogPostPage;
+export default memo(BlogPostPage);

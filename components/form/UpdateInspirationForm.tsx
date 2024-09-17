@@ -8,15 +8,20 @@ import { api } from "@/convex/_generated/api";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { InspirationProps } from "@/utils/types/type";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileUpload from "../FileUpload";
 import { DropdownCategories } from "../common";
-import dynamic from "next/dynamic";
 import { useEdgeStore } from "@/lib/edgestore";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import StarterKit from "@tiptap/starter-kit";
+import { useEditor } from "@tiptap/react";
+import dynamic from "next/dynamic";
+import { Label } from "../ui/label";
 
-const PlateEditor = dynamic(() => import("@/components/editor/PlateEditor"), {
+const TiptabEditor = dynamic(() => import("@/components/editor/TiptabEditor"), {
   ssr: false,
-  loading: () => <p>Loading editor..</p>,
+  loading: () => <p>Loading...</p>,
 });
 
 const UpdateInspirationForm = ({
@@ -26,17 +31,56 @@ const UpdateInspirationForm = ({
   data: InspirationProps;
   setCloseDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const updateInspiration = useMutation(api.documents.update);
-  const [status, setStatus] = useState<
-    "success" | "error" | "loading" | "pending" | null
-  >(null);
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-
   const [figFile, setFigFile] = useState<File | null>(null);
-
-  const isLoading = status === "loading";
-
   const { edgestore } = useEdgeStore();
+  const updateInspiration = useMutation(api.inspiration.updatedInspiration);
+
+  const extensions: any = [
+    StarterKit.configure({
+      bulletList: {
+        keepMarks: true,
+        keepAttributes: false,
+      },
+      orderedList: {
+        keepMarks: true,
+        keepAttributes: false,
+      },
+      paragraph: {},
+    }),
+    Link.configure({
+      HTMLAttributes: {
+        // Define attributes for the <a> tag
+        target: "_blank",
+        rel: "noopener noreferrer nofollow",
+      },
+    }),
+    Image.configure({
+      inline: true,
+    }),
+  ];
+
+  const editor = useEditor({
+    extensions,
+    content: "",
+    editorProps: {
+      handleDOMEvents: {
+        focus: () => true,
+      },
+    },
+    // Ensure this is set to false to prevent SSR issues
+    immediatelyRender: false,
+  }) as any;
+
+  useEffect(() => {
+    if (editor && data.description) {
+      editor.commands.setContent(data.description);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, data.description]);
+
+  const html = editor?.getHTML();
 
   const form = useForm<InspirationProps>({
     defaultValues: {
@@ -45,50 +89,50 @@ const UpdateInspirationForm = ({
       salePrice: data.salePrice,
       url: data.url,
       categories: data.categories,
-      description: data.description,
     },
   });
 
   const handleSubmit: SubmitHandler<InspirationProps> = async (values) => {
-    setStatus("loading");
+    setIsSubmiting(true);
     try {
-      if (!file) {
-        toast.error("File is not defined");
-        return;
-      }
-
       if (!figFile) {
         toast.error(".fig file is required");
         return;
       }
       if (!figFile.name.toLowerCase().endsWith(".fig")) {
-        toast.error("File must have .fig extension");
+        toast.error("");
         return;
       }
 
-      const [coverImageRes, figUrlRes] = await Promise.all([
-        edgestore.publicFiles.upload({ file }),
-        edgestore.publicFiles.upload({
-          file: figFile,
-          options: {
-            temporary: false,
-          },
-        }),
-      ]);
+      let coverImageUrl = data.coverImage;
+      if (file) {
+        const coverImageRes = await edgestore.publicFiles.upload({ file });
+        coverImageUrl = coverImageRes.url;
+      }
 
-      await updateInspiration({
+      const figUrlRes = await edgestore.publicFiles.upload({
+        file: figFile,
+        options: {
+          temporary: false,
+        },
+      });
+
+      const response = await updateInspiration({
         id: data._id,
-        coverImage: coverImageRes.url,
+        coverImage: coverImageUrl,
+        description: html,
         url: figUrlRes.url,
         ...values,
       });
+
       toast.success("Update inspiration successfully");
       setCloseDialog(false);
+      return response;
     } catch (error) {
       console.log(error);
       toast.error("Failed to update inspiration!");
     } finally {
-      setStatus("success");
+      setIsSubmiting(false);
     }
   };
 
@@ -207,32 +251,21 @@ const UpdateInspirationForm = ({
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="flex flex-col max-w-full w-full">
-                <FormLabel className="text-white font-medium text-base">
-                  Description
-                </FormLabel>
-                <FormControl>
-                  <PlateEditor
-                    placeholder="Update description.."
-                    values={field.value}
-                    fieldChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+          <Label className="mb-2 text-base font-medium text-white">
+            Description
+          </Label>
+          <TiptabEditor
+            editor={editor}
+            className="min-h-[200px] h-full border border-white/15 w-full min-w-[702px] rounded-md"
           />
         </div>
         <div className="flex items-end justify-end">
           <Button
             type="submit"
-            disabled={!form}
+            disabled={isSubmiting}
             className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
           >
-            {isLoading ? <Spinner /> : "Publish now"}
+            {isSubmiting ? <Spinner /> : "Publish now"}
           </Button>
         </div>
       </form>

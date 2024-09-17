@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { useEdgeStore } from "@/lib/edgestore";
-import useDialogActions from "@/state/hooks/useDialogActions";
 import { useMutation } from "convex/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -55,9 +54,9 @@ const CreateSites = () => {
       site_coverImage: "",
     },
   });
-  const { openDialog, closeDialog, isOpen } = useDialogActions();
+  const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File>();
-  const createSites = useMutation(api.documents.createSites);
+  const createSites = useMutation(api.sites.createSites);
   const { edgestore } = useEdgeStore();
 
   const onSubmit = async (value: z.infer<typeof FormSchema>) => {
@@ -69,14 +68,15 @@ const CreateSites = () => {
       const [coverImageRes] = await Promise.all([
         edgestore.publicFiles.upload({ file }),
       ]);
-      await createSites({
+      const response = await createSites({
         ...value,
         site_coverImage: coverImageRes.url,
         site_custom_domain: "",
       });
       toast.success("Site is publish");
       form.reset();
-      closeDialog();
+      setOpen(false);
+      return response;
     } catch (error) {
       console.log(error);
       toast.error("Error occured");
@@ -84,9 +84,9 @@ const CreateSites = () => {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={openDialog}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="text-white">
+        <Button size="sm" className="text-black bg-white hover:bg-white/50">
           Create
         </Button>
       </DialogTrigger>
@@ -158,7 +158,7 @@ const CreateSites = () => {
               render={({ field }) => (
                 <FormItem className="mb-4">
                   <FormLabel className="text-white font-medium text-base">
-                    Image{" "}
+                    Logo{" "}
                   </FormLabel>
                   <FormControl>
                     <FileUpload

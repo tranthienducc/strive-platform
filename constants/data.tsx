@@ -83,14 +83,16 @@ export const supports = [
 ];
 
 export const categoriesInspiration = [
-  "Discover",
+  "Agency",
   "Animation",
-  "Branding",
-  "Mobile",
-  "Illustration",
-  "Product Design",
-  "Typography",
-  "Web Design",
+  "Blog",
+  "Mobile App",
+  "Portfolio",
+  "Landing Page",
+  "Web3",
+  "3D",
+  "Entertaiment",
+  "Business",
 ];
 
 export const PRICING_OPTIONS: FilterOptions[] = [

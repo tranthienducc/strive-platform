@@ -19,7 +19,7 @@ import { toast } from "sonner";
 
 const DeleteSite = ({ site_id }: { site_id: Id<"sites"> }) => {
   const router = useRouter();
-  const deleteSite = useMutation(api.documents.deleteSite);
+  const deleteSite = useMutation(api.sites.deleteSite);
 
   const onDeleteSite = async (site_id: Id<"sites">) => {
     try {
@@ -37,7 +37,7 @@ const DeleteSite = ({ site_id }: { site_id: Id<"sites"> }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" className="bg-white text-black">
           <Trash className="mr-2 size-4" />
           Delete Site
         </Button>

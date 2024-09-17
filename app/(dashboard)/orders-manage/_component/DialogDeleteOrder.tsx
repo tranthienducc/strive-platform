@@ -28,7 +28,7 @@ const DialogDeleteOrder = ({
   onSuccess,
   ...props
 }: DialogDeleteOrderProps) => {
-  const deleteOrder = useMutation(api.documents.deleteOrders);
+  const deleteOrder = useMutation(api.order.deleteOrders);
   const [isSubmiting, setIsSubmiting] = React.useState(false);
 
   const onDelete = async () => {

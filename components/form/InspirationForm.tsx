@@ -13,11 +13,16 @@ import FileUpload from "../FileUpload";
 import { Button } from "../ui/button";
 import { Spinner } from "../spinner";
 import { DropdownCategories } from "@/components/common/index";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import { useEditor } from "@tiptap/react";
+import { Label } from "../ui/label";
 import dynamic from "next/dynamic";
 
-const PlateEditor = dynamic(() => import("@/components/editor/PlateEditor"), {
+const TiptabEditor = dynamic(() => import("@/components/editor/TiptabEditor"), {
   ssr: false,
-  loading: () => <p>Loading editor..</p>,
+  loading: () => <p>Loading...</p>,
 });
 
 const InspirationForm = ({
@@ -25,16 +30,52 @@ const InspirationForm = ({
 }: {
   setCloseDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const create = useMutation(api.documents.createDocument);
+  const create = useMutation(api.inspiration.createInspiration);
 
-  const [status, setStatus] = useState<
-    "success" | "error" | "loading" | "pending" | null
-  >(null);
-
-  const isLoading = status === "loading";
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const [file, setFile] = useState<File>();
   const [figFile, setFigFile] = useState<File | null>(null);
+
+  const extensions: any = [
+    StarterKit.configure({
+      bulletList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      orderedList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      paragraph: {},
+    }),
+    Link.configure({
+      HTMLAttributes: {
+        // Define attributes for the <a> tag
+        target: "_blank",
+        rel: "noopener noreferrer nofollow",
+      },
+    }),
+    Image.configure({
+      inline: true,
+    }),
+    // Color.configure({ types: [TextStyle.name, ListItem.name] }),
+    // TextStyle,
+  ];
+
+  const editor = useEditor({
+    extensions,
+    content: "",
+    editorProps: {
+      handleDOMEvents: {
+        focus: () => true,
+      },
+    },
+    // Ensure this is set to false to prevent SSR issues
+    immediatelyRender: false,
+  }) as any;
+
+  const html = editor?.getHTML();
 
   const { edgestore } = useEdgeStore();
   const form = useForm<FormValues>({
@@ -49,7 +90,7 @@ const InspirationForm = ({
   });
 
   const handleSubmit: SubmitHandler<FormValues> = async (data) => {
-    setStatus("loading");
+    setIsSubmiting(true);
     try {
       if (!file) {
         toast.error("File is not defined");
@@ -79,20 +120,22 @@ const InspirationForm = ({
       const price =
         typeof data.price === "string" ? parseFloat(data.price) : data.price;
 
-      await create({
+      const response = await create({
         ...data,
         price,
+        description: html,
         slug: newSlug,
         coverImage: coverImageRes.url,
         url: figUrlRes.url,
       });
-      toast.success("New inspiration created!");
       setCloseDialog(false);
+      toast.success("New inspiration created!");
+      return response;
     } catch (error) {
       console.log(error);
       toast.error("Failed to create a new inspiration...");
     } finally {
-      setStatus("success");
+      setIsSubmiting(true);
     }
   };
   return (
@@ -205,33 +248,20 @@ const InspirationForm = ({
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem className="flex flex-col max-w-full w-full">
-                <FormLabel className="text-white font-medium text-base">
-                  Description
-                </FormLabel>
-                <FormControl>
-                  <PlateEditor
-                    placeholder="Description..."
-                    values={field.value}
-                    fieldChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
+          <Label className="mb-2 text-base font-medium text-white">
+            Description
+          </Label>
+          <TiptabEditor
+            editor={editor}
+            className="min-h-[200px] h-full border border-white/15 w-full min-w-[702px] rounded-md"
           />
         </div>
         <div className="flex items-end justify-end">
           <Button
             type="submit"
-            disabled={!form}
             className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
           >
-            {isLoading ? <Spinner /> : "Publish now"}
+            {isSubmiting ? <Spinner /> : "Publish now"}
           </Button>
         </div>
       </form>

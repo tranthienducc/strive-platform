@@ -2,16 +2,11 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { notFound } from "next/navigation";
-
-const Head = ({ params }: { params: { subdomain: string } }) => {
-  const result = useQuery(api.documents.getSitesBySub, {
+import Head from "next/head";
+const CustomHeader = ({ params }: { params: { subdomain: string } }) => {
+  const result = useQuery(api.sites.getSitesBySub, {
     site_subdomain: params.subdomain,
   });
-
-  if (!result) {
-    notFound();
-  }
 
   const siteName = result?.site_name;
   const siteDescription = result?.site_description;
@@ -19,7 +14,7 @@ const Head = ({ params }: { params: { subdomain: string } }) => {
   const mainDomain = result?.site_custom_domain;
 
   return (
-    <head>
+    <Head>
       <title>{siteName}</title>
       <meta name="site_name" content={siteName} />
       <meta name="description" content={siteDescription} />
@@ -29,8 +24,8 @@ const Head = ({ params }: { params: { subdomain: string } }) => {
         content={mainDomain + "." + process.env.NEXT_PUBLIC_FRONTEND_URL}
       ></meta>
       <link rel="icon" href="/assets/icons/favicon.ico" />
-    </head>
+    </Head>
   );
 };
 
-export default Head;
+export default CustomHeader;

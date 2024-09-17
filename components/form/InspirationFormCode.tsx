@@ -34,15 +34,11 @@ const InspirationFormCode = ({
 }: {
   setCloseDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const inspirations = useQuery(api.documents.getById);
-
-  const [status, setStatus] = useState<"success" | "error" | "loading" | null>(
-    null
-  );
+  const inspirations = useQuery(api.inspiration.getAllInspiration);
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const router = useRouter();
-  const isLoading = status === "loading";
 
-  const createDiscountCode = useMutation(api.documents.createDiscoutnCode);
+  const createDiscountCode = useMutation(api.discount.createDiscountCode);
   const form = useForm<FormValuesDiscount>({
     defaultValues: {
       name_code: "",
@@ -61,7 +57,7 @@ const InspirationFormCode = ({
   };
 
   const handleSubmit: SubmitHandler<FormValuesDiscount> = async (data) => {
-    setStatus("loading");
+    setIsSubmiting(true);
     try {
       const amount =
         typeof data.amount === "string" ? parseFloat(data.amount) : data.amount;
@@ -72,7 +68,7 @@ const InspirationFormCode = ({
         ? format(new Date(data.end_date), "yyyy-MM-dd")
         : "";
 
-      await createDiscountCode({
+      const response = await createDiscountCode({
         ...data,
         amount,
         start_date,
@@ -81,12 +77,12 @@ const InspirationFormCode = ({
       toast.success("New code discounts created!");
       setCloseDialog(false);
       router.push("/discount-manage");
+      return response;
     } catch (error) {
-      setStatus("error");
       toast.error("Failed to create a new code discounts...");
       console.log("Failed to create disocunt code", error);
     } finally {
-      setStatus("success");
+      setIsSubmiting(false);
     }
   };
 
@@ -257,10 +253,10 @@ const InspirationFormCode = ({
         <div className="flex items-end justify-end">
           <Button
             type="submit"
-            disabled={isLoading}
+            disabled={isSubmiting}
             className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
           >
-            {isLoading ? <Spinner /> : "Publish now"}
+            {isSubmiting ? <Spinner /> : "Publish now"}
           </Button>
         </div>
       </form>

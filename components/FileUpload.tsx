@@ -4,14 +4,21 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { convertFileToUrl } from "@/utils";
 import IconsUpload from "./icons/IconsUpload";
+import { cn } from "@/lib/utils";
 
 type FileUploadProps = {
   setFile: (files: File) => void;
   fieldChange: (files: string) => void;
   mediaUrl?: string | undefined;
+  className?: string;
 };
 
-const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
+const FileUpload = ({
+  fieldChange,
+  mediaUrl,
+  setFile,
+  className,
+}: FileUploadProps) => {
   const [fileUrl, setFileUrl] = useState<string | undefined>(mediaUrl);
 
   const onDrop = useCallback(
@@ -35,7 +42,10 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
   return (
     <div
       {...getRootProps()}
-      className="bg-black max-w-full  cursor-pointer max-h-[200px] h-full border-white/20 border rounded-2xl py-4"
+      className={cn(
+        "bg-inherit max-w-full  cursor-pointer max-h-[200px] h-full rounded-2xl py-4",
+        className
+      )}
     >
       <input {...getInputProps()} className="cursor-pointer" />
 
@@ -62,7 +72,7 @@ const FileUpload = ({ fieldChange, mediaUrl, setFile }: FileUploadProps) => {
 
           <Button
             variant="ghost"
-            className="w-[231px] h-[40px] rounded-2xl bg-white flex items-center justify-center py-2"
+            className="w-[231px] h-[40px] rounded-2xl bg-white text-black flex items-center justify-center py-2"
           >
             Browse File
           </Button>

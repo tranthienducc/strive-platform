@@ -9,23 +9,23 @@ import {
 } from "../ui/dialog";
 import UpdateInspirationForm from "../form/UpdateInspirationForm";
 import { InspirationProps } from "@/utils/types/type";
-import useDialogActions from "@/state/hooks/useDialogActions";
+import { useState } from "react";
 
 type DialogUpdateInspirationProps = {
   data: InspirationProps;
 };
 
 const DialogUpdateInspiration = ({ data }: DialogUpdateInspirationProps) => {
-  const { closeDialog, openDialog } = useDialogActions();
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dialog onOpenChange={openDialog}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
         <div className="flex flex-row items-center gap-2 hover:bg-gray-600">
           <Eraser className="text-white w-4 h-4" />
           <span className="text-white text-sm font-medium">Update</span>
         </div>
       </DialogTrigger>
-      <DialogContent className="max-w-[393px] lg:max-w-[660px] w-full rounded-[.75rem] bg-black border border-white/15 min-h-[630px] h-full">
+      <DialogContent className="min-w-[393px] lg:min-w-[750px] w-full rounded-[.75rem] bg-black border border-white/15 min-h-[660px] h-full overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex flex-col gap-1 mb-3">
             <span className="text-base font-bold text-white">
@@ -36,7 +36,7 @@ const DialogUpdateInspiration = ({ data }: DialogUpdateInspirationProps) => {
             </span>
           </DialogTitle>
           <DialogDescription>
-            <UpdateInspirationForm data={data} setCloseDialog={closeDialog} />
+            <UpdateInspirationForm data={data} setCloseDialog={setIsOpen} />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

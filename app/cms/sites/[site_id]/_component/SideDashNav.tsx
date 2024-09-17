@@ -8,7 +8,6 @@ import {
   BookCheck,
   Home,
   MoveLeft,
-  Pen,
   Settings,
   Table,
 } from "lucide-react";
@@ -26,15 +25,14 @@ export default function SitesDashNav({ site_id }: { site_id: string }) {
       icon: BookCheck,
     },
     {
-      href: `/cms/sites/${site_id}/publish`,
-      label: "Publish Article",
-      icon: BookA,
-    },
-    { href: `/cms/sites/${site_id}/author`, label: "Create Author", icon: Pen },
-    {
       href: `/cms/sites/${site_id}/category`,
       label: "Create Category",
       icon: Table,
+    },
+    {
+      href: `/cms/sites/${site_id}/publish`,
+      label: "Publish Article",
+      icon: BookA,
     },
     {
       href: `/cms/sites/${site_id}/settings`,
@@ -74,7 +72,7 @@ export default function SitesDashNav({ site_id }: { site_id: string }) {
                   )}
                   href={href}
                 >
-                  <div className="border rounded-lg bg-black hover:border-gray-800 p-1">
+                  <div className="border border-white/25 rounded-lg bg-black hover:border-gray-800 p-1">
                     <Icon className="size-3" />
                   </div>
                   {label}

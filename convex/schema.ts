@@ -95,26 +95,43 @@ export default defineSchema({
     .index("by_user", ["userId"])
     .index("by_user_parent", ["userId", "parentDocument"]),
   documents: defineTable({
-    name: v.string(),
-    sites: v.object({
-      id: v.string(),
-    }),
+    name: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    status: v.optional(v.string()),
+    sites: v.optional(
+      v.object({
+        id: v.string(),
+      })
+    ),
+    description: v.optional(v.string()),
     parentDocument: v.optional(v.id("documents")),
-  })
-    .index("by_user", ["sites.id"])
-    .index("by_user_parent", ["sites.id", "parentDocument"]),
-  article: defineTable({
-    userId: v.string(),
-    blog_html: v.string(),
-    image: v.string(),
-    title: v.string(),
-    slug: v.string(),
-    keywords: v.array(v.string()),
-    site_id: v.string(),
-    shareable: v.boolean(),
-    published: v.boolean(),
-    parentDocument: v.optional(v.id("article")),
   })
     .index("by_user", ["userId"])
     .index("by_user_parent", ["userId", "parentDocument"]),
+  article: defineTable({
+    userId: v.optional(v.string()),
+    document_title: v.string(),
+    image: v.string(),
+    title: v.string(),
+    slug: v.string(),
+    sub_title: v.string(),
+    blog_html: v.string(),
+    keywords: v.array(v.string()),
+    site_id: v.string(),
+    site_subdomain: v.optional(v.string()),
+    category: v.string(),
+    shareable: v.optional(v.boolean()),
+    published: v.optional(v.boolean()),
+    parentDocument: v.optional(v.id("article")),
+  })
+    .index("by_user", ["site_id"])
+    .index("by_user_parent", ["site_id", "parentDocument"]),
+  category: defineTable({
+    userId: v.optional(v.string()),
+    category: v.string(),
+    site_id: v.string(),
+    parentDocument: v.optional(v.id("category")),
+  })
+    .index("by_user", ["site_id"])
+    .index("by_user_parent", ["site_id", "parentDocument"]),
 });

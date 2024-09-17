@@ -26,7 +26,7 @@ const SetupCustomDomain = ({
     data.site_custom_domain || ""
   );
   const [verificationRecords, setVerificationRecords] = useState<any>(null);
-  const changeSiteDomain = useMutation(api.documents.changeSiteDomain);
+  const changeSiteDomain = useMutation(api.sites.changeSiteDomain);
 
   const handleChangeSiteDomain = async (
     e: React.FormEvent<HTMLFormElement>

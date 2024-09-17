@@ -1,20 +1,21 @@
 "use client";
 
 import { useUserContext } from "@/context/UserContext";
-import { FormCommentValues } from "@/utils/types/type";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { FormControl, FormField, FormItem } from "../ui/form";
 import { Button } from "../ui/button";
 import { Spinner } from "../spinner";
-import dynamic from "next/dynamic";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import { useEditor } from "@tiptap/react";
+import dynamic from "next/dynamic";
 
-const PlateEditor = dynamic(() => import("@/components/editor/PlateEditor"), {
+const TiptabEditor = dynamic(() => import("@/components/editor/TiptabEditor"), {
   ssr: false,
-  loading: () => <p>Loading editor..</p>,
+  loading: () => <p>Loading...</p>,
 });
 
 const CommentRepyForm = ({
@@ -25,18 +26,51 @@ const CommentRepyForm = ({
   closeForm: () => void;
 }) => {
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const replyComment = useMutation(api.documents.replyComment);
+  const replyComment = useMutation(api.comment.replyComment);
   const { users } = useUserContext();
   const router = useRouter();
-  const form = useForm<FormCommentValues>({
-    defaultValues: {
-      comment: "",
+
+  const extensions: any = [
+    StarterKit.configure({
+      bulletList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      orderedList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      paragraph: {},
+    }),
+    Link.configure({
+      HTMLAttributes: {
+        // Define attributes for the <a> tag
+        target: "_blank",
+        rel: "noopener noreferrer nofollow",
+      },
+    }),
+    Image.configure({
+      inline: true,
+    }),
+    // Color.configure({ types: [TextStyle.name, ListItem.name] }),
+    // TextStyle,
+  ];
+
+  const editor = useEditor({
+    extensions,
+    content: "",
+    editorProps: {
+      handleDOMEvents: {
+        focus: () => true,
+      },
     },
-  });
+    // Ensure this is set to false to prevent SSR issues
+    immediatelyRender: false,
+  }) as any;
 
-  const commentValue = form.watch("comment");
+  const html = editor?.getHTML();
 
-  const onSubmit: SubmitHandler<FormCommentValues> = async (values) => {
+  const onSubmit = async () => {
     setIsSubmiting(true);
     if (!users?.id) {
       router.push("/sign-in");
@@ -44,7 +78,7 @@ const CommentRepyForm = ({
     }
     try {
       await replyComment({
-        content: values.comment as string,
+        content: html,
         users: {
           id: users.id,
           name: `${users.firstName} ${users.lastName}`,
@@ -52,7 +86,6 @@ const CommentRepyForm = ({
         },
         parentDocument: comment._id,
       });
-      form.reset();
     } catch (error) {
       console.log(error);
     } finally {
@@ -64,36 +97,20 @@ const CommentRepyForm = ({
   return (
     <div>
       <>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-              control={form.control}
-              name="comment"
-              render={({ field }) => (
-                <FormItem className="flex flex-col max-w-full w-full">
-                  <FormControl>
-                    <PlateEditor
-                      placeholder="Reply..."
-                      values={field.value}
-                      className="h-11"
-                      fieldChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+        <TiptabEditor
+          editor={editor}
+          className="text-white min-h-[100px] h-full border border-white/20 w-full p-4 rounded-xl"
+        />
 
-            <div className="flex items-end justify-end mt-3">
-              <Button
-                type="submit"
-                disabled={!commentValue || isSubmiting}
-                className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
-              >
-                {isSubmiting ? <Spinner /> : "Reply"}
-              </Button>
-            </div>
-          </form>
-        </FormProvider>
+        <div className="flex items-end justify-end mt-3">
+          <Button
+            type="submit"
+            onClick={onSubmit}
+            className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
+          >
+            {isSubmiting ? <Spinner /> : "Reply"}
+          </Button>
+        </div>
       </>
     </div>
   );

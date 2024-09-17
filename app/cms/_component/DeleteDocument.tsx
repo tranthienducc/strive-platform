@@ -13,20 +13,23 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import useDialogActions from "@/state/hooks/useDialogActions";
 import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const DeleteDocument = ({ id }: { id: Id<"documents"> }) => {
   const { openDialog, closeDialog } = useDialogActions();
-
+  const router = useRouter();
   const deleteDocuments = useMutation(api.documents.deleteDocuments);
 
   const handleDeleteDocument = async (id: Id<"documents">) => {
     try {
-      await deleteDocuments({
+      const response = await deleteDocuments({
         id: id,
       });
       closeDialog();
+      router.push(`/cms/sites/${id}/documents`);
       toast.success("Delete documents successfully.");
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -35,7 +38,12 @@ const DeleteDocument = ({ id }: { id: Id<"documents"> }) => {
   return (
     <Dialog onOpenChange={openDialog}>
       <DialogTrigger asChild>
-        <Button>Delete</Button>
+        <Button
+          type="button"
+          className="bg-white text-black mb-3 hover:bg-white/50"
+        >
+          Delete
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

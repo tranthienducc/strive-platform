@@ -17,7 +17,9 @@ import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 
 const InspirationMangePage = () => {
   const { search, category, setFilters } = useFilterQueryManager();
-  const inspirations = useQuery(api.documents.getById, { search } as {});
+  const inspirations = useQuery(api.inspiration.getAllInspiration, {
+    search,
+  } as {});
 
   const [filterType, setFilterType] = useState<FILTERS_CATEGORIES>(
     FILTERS_CATEGORIES.RECENT

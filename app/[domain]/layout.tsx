@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import Head from "./_component/Head";
+import CustomHeader from "./_component/Head";
 import NavbarSite from "./_component/NavbarSite";
 
 export default async function SiteLayout({
@@ -11,17 +11,16 @@ export default async function SiteLayout({
 }) {
   return (
     <>
-      <Head params={params} />
-      <body>
-        <NavbarSite
-          title="Demo"
-          description="demo description"
-          logoPath="/assets/icons/logo.webp"
-        />
-        <main className="flex min-w-screen flex-col items-center justify-between mt-[1rem]">
-          {children}
-        </main>
-      </body>
+      <CustomHeader params={params} />
+      <NavbarSite
+        title="Demo"
+        description="demo description"
+        logoPath="/assets/icons/logo.webp"
+      />
+
+      <main className="flex min-w-screen flex-col items-center justify-between mt-[1rem]">
+        {children}
+      </main>
     </>
   );
 }

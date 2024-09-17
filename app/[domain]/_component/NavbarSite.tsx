@@ -22,13 +22,13 @@ const NavbarSite = ({
   description,
 }: {
   title?: string;
-  logoPath: string;
+  logoPath?: string;
   description?: string;
 }) => {
   return (
-    <div className="flex min-h-full justify-between p-2 border-b z-10">
+    <div className="flex min-h-full justify-between p-5 border-b border-white/15 z-10">
       <Dialog>
-        <SheetTrigger className="min-[825px]:hidden p-2 transition">
+        <SheetTrigger className="min-[825px]:hidden p-2 transition bg-white">
           <HamburgerMenuIcon />
         </SheetTrigger>
         <SheetContent side="left">
@@ -54,7 +54,7 @@ const NavbarSite = ({
             {logoPath ? (
               <Image src={logoPath} width={40} height={40} alt="logo" />
             ) : (
-              <p className="font-semibold text-white">{title}</p>
+              <p className="font-semibold text-white">{title || "demo"}</p>
             )}
           </Link>
         </NavigationMenuList>

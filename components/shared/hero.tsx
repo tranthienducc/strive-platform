@@ -6,8 +6,6 @@ import AnimatedShinyText from "../animations/AnimatedShinyText";
 import { cn } from "@/lib/utils";
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 import { features } from "@/constants/featureConstans";
-import IconsStar from "../icons/IconsStar";
-import IconsComponents from "../icons/IconsComponents";
 
 const Hero = () => {
   return (
@@ -29,23 +27,22 @@ const Hero = () => {
       </div>
       <div className="text-center flex flex-col items-center max-w-[368px] lg:max-w-[950px] w-full mb-[62px]">
         <h1 className="lg:text-[3.75rem] lg:leading-[1.25] font-semibold text-4xl mb-6 bg-gradient-text">
-          Unlock{" "}
-          <span className="inline-block px-4 py-2 rounded-xl border border-white/20">
-            project
-          </span>{" "}
-          potential for greater productivity
+          Effortless Blog Management Premium Templates & CMS Support
         </h1>
         <DescriptionHero />
         <div className="flex flex-col lg:flex-row gap-y-4 lg:gap-x-6">
           <Link
-            href="/explore-template"
+            href="/inspiration"
             className="bg-white px-4 py-2 rounded-3xl text-black text-base font-medium"
           >
             Started buy template
           </Link>
-          <button className="border border-white/10 text-base font-medium text-white rounded-3xl px-4 py-2">
+          <Link
+            href="/pricing"
+            className="border border-white/10 text-base font-medium text-white rounded-3xl px-4 py-2"
+          >
             All-Access Pass
-          </button>
+          </Link>
         </div>
       </div>
       <BentoGrid className="lg:grid-cols-3 grid gap-2 grid-cols-1">
@@ -63,24 +60,8 @@ function DescriptionHero() {
   return (
     <div className="mb-6 max-w-3xl w-full">
       <p className="lg:text-base text-sm text-center font-normal text-gray9">
-        Deliver quality {"  "}
-        <Link
-          href="/templates"
-          className="text-white text-xl font-semibold whitespace-nowrap inline-flex gap-x-2"
-        >
-          <IconsStar />
-          <span className="text-gradients">Templates</span>{" "}
-        </Link>
-        , source. Suitable for customers such as designers or developers,
-        fostering{" "}
-        <Link
-          href="/templates"
-          className="text-white text-xl font-semibold whitespace-nowrap inline-flex gap-x-2"
-        >
-          <IconsComponents />
-          <span className="text-gradients">Inspiration</span>{" "}
-        </Link>{" "}
-        and accelerating growth. Final.
+        Unlock your website’s potential with stunning templates and an
+        easy-to-use Blog CMS for seamless content creation.
       </p>
     </div>
   );

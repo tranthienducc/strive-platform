@@ -16,8 +16,8 @@ const DialogPeekTemplate = ({ url }: { url: string | undefined }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-full bg-black size-8 absolute top-[2%] left-[57%] flex items-center justify-center cursor-pointer group-hover/peek:opacity-100 opacity-0">
-          <Eye className="size-5" />
+        <Button className="rounded-full bg-black absolute top-[2%] left-[57%] flex items-center justify-center cursor-pointer group-hover/peek:opacity-100 opacity-0">
+          <Eye className="size-4 text-white" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[393px] lg:max-w-[1360px] w-full h-[700px] lg:h-[616px] rounded-[.75rem] bg-black11">

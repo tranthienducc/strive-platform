@@ -10,8 +10,8 @@ const PageNotFound = () => {
           <span className="text-white">Not found page</span>
         </h1>
         <p className="text-center text-lg max-w-[600px] mx-auto mb-10 text-gray9">
-          Dường như trang bạn đang tìm kiếm không tồn tại hoặc đã bị xóa. Hãy
-          kiểm tra lại đường dẫn hoặc quay về trang chủ.
+          It looks like the page you are looking for does not exist or has been
+          removed. Please check the link again or return to the home page.
         </p>
 
         <Link href="/" className="text-white">

@@ -5,5 +5,6 @@ export { default as Pricing } from "./pricing";
 export { default as Reviews } from "./reviews";
 export { default as Product } from "./product";
 export { default as About } from "./about";
+export { default as CTA } from "./cta";
 export { default as SidebarAdmin } from "./SidebarAdmin";
 export { default as SidebarAdminMobile } from "./SidebarAdminMobile";

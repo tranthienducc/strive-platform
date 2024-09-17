@@ -1,14 +1,5 @@
 "use client";
-import dynamic from "next/dynamic";
-import React, { useCallback, useState } from "react";
-import { FormControl, FormItem, FormMessage } from "../ui/form";
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
-import { FormCommentValues } from "@/utils/types/type";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Spinner } from "../spinner";
 import { useMutation, useQuery } from "convex/react";
@@ -17,11 +8,15 @@ import { useUserContext } from "@/context/UserContext";
 import { Id } from "@/convex/_generated/dataModel";
 import { useRouter } from "next/navigation";
 import CommentItem from "./CommentItem";
-import { Skeleton } from "../ui/skeleton";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import StarterKit from "@tiptap/starter-kit";
+import { useEditor } from "@tiptap/react";
+import dynamic from "next/dynamic";
 
-const PlateEditor = dynamic(() => import("@/components/editor/PlateEditor"), {
+const TiptabEditor = dynamic(() => import("@/components/editor/TiptabEditor"), {
   ssr: false,
-  loading: () => <Skeleton className="w-full h-[150px]" />,
+  loading: () => <p>Loading...</p>,
 });
 
 const CommentForm = ({
@@ -31,43 +26,61 @@ const CommentForm = ({
   _id?: Id<"inspirations">;
   title?: string;
 }) => {
-  const comments = useQuery(api.documents.getCommentInspiration);
-  const createComment = useMutation(api.documents.createComment);
+  const comments = useQuery(api.comment.getCommentInspiration);
+  const createComment = useMutation(api.comment.createComment);
   const { users } = useUserContext();
   const router = useRouter();
   const [isSubmiting, setIsSubmiting] = useState(false);
-  const [isCommentEmty, setIsCommentEmty] = useState(true);
 
-  const form = useForm<FormCommentValues>({
-    defaultValues: {
-      comment: "",
+  const extensions: any = [
+    StarterKit.configure({
+      bulletList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      orderedList: {
+        keepMarks: true,
+        keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      },
+      paragraph: {},
+    }),
+    Link.configure({
+      HTMLAttributes: {
+        // Define attributes for the <a> tag
+        target: "_blank",
+        rel: "noopener noreferrer nofollow",
+      },
+    }),
+    Image.configure({
+      inline: true,
+    }),
+    // Color.configure({ types: [TextStyle.name, ListItem.name] }),
+    // TextStyle,
+  ];
+
+  const editor = useEditor({
+    extensions,
+    content: "",
+    editorProps: {
+      handleDOMEvents: {
+        focus: () => true,
+      },
     },
-  });
+    // Ensure this is set to false to prevent SSR issues
+    immediatelyRender: false,
+  }) as any;
 
-  const checkIfEmty = useCallback((content: string) => {
-    const strippedContent = content.replace(/<[^>]*>/g, "").trim();
-    return strippedContent === "";
-  }, []);
+  const html = editor?.getHTML();
 
-  const handleEditorChange = useCallback(
-    (value: string, fieldOnChange: (value: string) => void) => {
-      fieldOnChange(value);
-      setIsCommentEmty(checkIfEmty(value));
-    },
-    [checkIfEmty]
-  );
-
-  const handleSubmitComments: SubmitHandler<FormCommentValues> = async (
-    values
-  ) => {
+  const handleSubmitComments = async () => {
     setIsSubmiting(true);
     if (!users?.id) {
       router.push("/sign-in");
       return;
     }
     try {
-      await createComment({
-        content: values.comment as string,
+      const response = await createComment({
+        content: html,
         users: {
           id: users?.id as string,
           name: `${users?.firstName} ${users?.lastName}`,
@@ -78,8 +91,8 @@ const CommentForm = ({
           title: title as string,
         },
       });
-      form.reset();
-      setIsCommentEmty(true);
+      editor?.commands.clearContent();
+      return response;
     } catch (error) {
       console.log(error);
     } finally {
@@ -89,39 +102,19 @@ const CommentForm = ({
 
   return (
     <>
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmitComments)}>
-          <Controller
-            control={form.control}
-            name="comment"
-            render={({ field }) => (
-              <FormItem className="flex flex-col max-w-full w-full">
-                <FormControl>
-                  <PlateEditor
-                    placeholder="Comment..."
-                    values={field.value}
-                    className="h-[150px]"
-                    fieldChange={(value) =>
-                      handleEditorChange(value, field.onChange)
-                    }
-                  />
-                </FormControl>
-                <FormMessage className="text-red-400" />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex items-end justify-end mt-3">
-            <Button
-              type="submit"
-              disabled={isCommentEmty || isSubmiting}
-              className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
-            >
-              {isSubmiting ? <Spinner /> : "Post"}
-            </Button>
-          </div>
-        </form>
-      </FormProvider>
+      <TiptabEditor
+        editor={editor}
+        className="text-white min-h-[150px] h-full border border-white/20 w-full p-4 rounded-xl"
+      />
+      <div className="flex items-end justify-end mt-5">
+        <Button
+          type="submit"
+          onClick={handleSubmitComments}
+          className="px-4 py-2 bg-white rounded-xl duration-300 hover:bg-white/30 text-sm font-semibold text-black flex items-center justify-center"
+        >
+          {isSubmiting ? <Spinner /> : "Post"}
+        </Button>
+      </div>
       <div className="grid grid-cols-1 gap-3">
         {comments
           ?.filter((c) => !c.parentDocument)

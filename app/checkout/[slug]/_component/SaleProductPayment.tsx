@@ -21,7 +21,7 @@ const SaleProductPayment = ({
   title: string | undefined;
   slug: string | undefined;
 }) => {
-  const appyDiscountCode = useMutation(api.documents.applyDiscountCode);
+  const appyDiscountCode = useMutation(api.discount.applyDiscountCode);
   const [couponCode, setCouponCode] = useState<string>("");
   const [discount, setDiscount] = useState(0);
 

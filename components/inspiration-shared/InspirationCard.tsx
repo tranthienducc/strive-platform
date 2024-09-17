@@ -25,9 +25,9 @@ const InspirationCard = ({ item }: InspirationCardType) => {
   const isLiked = liked[id];
   const { users } = useUserContext();
   const router = useRouter();
-  const likeInspiration = useMutation(api.documents.likeInspiration);
-  const unLikeInspiration = useMutation(api.documents.unikeInspiration);
-  const watchInspiration = useMutation(api.documents.watchInspiration);
+  const likeInspiration = useMutation(api.inspiration.likeInspiration);
+  const unLikeInspiration = useMutation(api.inspiration.unikeInspiration);
+  const watchInspiration = useMutation(api.inspiration.watchInspiration);
 
   const isNew = moment().diff(moment(item._creationTime), "hours") <= 24;
 

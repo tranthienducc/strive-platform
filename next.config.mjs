@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["files.edgestore.dev", "lemonsqueezy.imgix.net", "img.clerk.com"],
+    domains: ["files.edgestore.dev", "img.clerk.com"],
   },
   async rewrites() {
     return [

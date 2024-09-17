@@ -22,11 +22,11 @@ import parse from "html-react-parser";
 
 const DetailInspirationCard = () => {
   const inspirations = useQuery(
-    api.documents.getById
+    api.inspiration.getAllInspiration
   ) as any as InspirationType[];
   const searchParams = useSearchParams();
   const slug = searchParams.get("slug");
-  const comments = useQuery(api.documents.getCommentInspiration);
+  const comments = useQuery(api.comment.getCommentInspiration);
 
   return (
     <div className="mt-20 px-5 lg:px-[180px] pb-10">
@@ -68,7 +68,7 @@ const DetailInspirationCard = () => {
                 width={1500}
                 height={1500}
                 priority={true}
-                className="w-full h-[500px] rounded-lg object-cover mb-14"
+                className="max-w-[714px] w-full h-[500px] rounded-lg object-cover mb-14"
               />
               <DialogPeekTemplate url="" />
 

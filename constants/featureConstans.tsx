@@ -4,7 +4,7 @@ import IconsScalling from "@/components/icons/IconsScalling";
 import IconsService from "@/components/icons/IconsService";
 import {
   Construction,
-  InspectIcon,
+  Database,
   LayoutTemplate,
   MonitorSmartphone,
 } from "lucide-react";
@@ -13,8 +13,8 @@ import Image from "next/image";
 export const planned = [
   {
     icon: <IconsRocket />,
-    title: "Keyboard shortcuts",
-    desc: "Streamline your workflow with customizable keyboard.",
+    title: "CMS",
+    desc: "System CMS create blog and manage them.",
   },
   {
     icon: <IconsScalling />,
@@ -23,13 +23,13 @@ export const planned = [
   },
   {
     icon: <IconsPen />,
-    title: "AI task creation",
+    title: "AI task creation (maybe a future)",
     desc: "Leverage AI to automatically generate and organize tasks.",
   },
   {
     icon: <IconsService />,
     title: "Integration",
-    desc: "Seamlessly connect with Notion, Google.",
+    desc: "Seamlessly connect with",
   },
 ];
 
@@ -54,15 +54,15 @@ export const features = [
   },
 
   {
-    Icon: InspectIcon,
-    name: "Inspiration",
-    description: "Many inspiration for you.",
+    Icon: Database,
+    name: "CMS",
+    description: "Manage and generate blog site.",
     href: "/",
     cta: "See more",
     className: "col-span-2",
     background: (
       <Image
-        src="/assets/images/bento-img2.webp"
+        src="/assets/images/cta-img.png"
         className="absolute -right-20 -top-20 opacity-60"
         alt="bg"
         width={1300}

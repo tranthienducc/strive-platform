@@ -16,7 +16,7 @@ import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
 
 const InspirationPage = () => {
   const { category, setFilters } = useFilterQueryManager();
-  const inspirations = useQuery(api.documents.getById);
+  const inspirations = useQuery(api.inspiration.getAllInspiration);
   const [filterWord, setFilterWord] = useState<string[]>([]);
   const [filterInspiration, setFilterInspiration] = useState<any[]>([]);
   const [filterType, setFilterType] = useState<FILTERS_CATEGORIES>(
@@ -64,32 +64,14 @@ const InspirationPage = () => {
     }
   }, [category, filterType, filterWord, inspirations, setFilters]);
 
-  if (!inspirations) {
-    return (
-      <div className="max-w-[315px] w-full flex flex-col gap-y-3">
-        <Skeleton className="w-[315px] h-[236px] rounded-xl" />
-        <div className="flex flex-row justify-between items-center">
-          <div className="flex flex-row gap-x-2 items-center">
-            <Skeleton className="w-6 h-6 rounded-full" />
-            <Skeleton className="w-[51px] h-5" />
-          </div>
-          <div className="flex flex-row gap-x-2">
-            <div className="flex flex-row gap-x-1">
-              <Skeleton className="w-6 h-4" />
-            </div>
-            <div className="flex flex-row gap-x-1">
-              <Skeleton className="w-6 h-4" />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (!filterInspiration) {
+    return <SkeletonCard />;
   }
 
   return (
     <div className="h-screen">
       <div className="max-w-full w-full mt-16 px-5 lg:px-[72px]">
-        <div className="flex flex-col lg:flex-row gap-5 lg:gap-44 items-start  lg:items-center mb-8 mt-24">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-44 items-start whitespace-nowrap lg:items-center mb-8 mt-24 w-full max-w-full">
           <DropdownFilters
             value={filterType}
             onValueChange={(value) => {
@@ -120,3 +102,13 @@ const InspirationPage = () => {
 };
 
 export default InspirationPage;
+
+function SkeletonCard() {
+  return (
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-[200px] w-full rounded-md" />
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[200px]" />
+    </div>
+  );
+}

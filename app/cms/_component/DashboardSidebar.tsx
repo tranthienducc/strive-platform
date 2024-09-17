@@ -1,5 +1,5 @@
 "use client";
-import { Braces, Brain, Home } from "lucide-react";
+import { Brain, Home } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { href: "/cms", label: "Site(s)", icon: Home },
   { href: "/ai", label: "AI(comming soon)", icon: Brain },
-  { href: "/settings", label: "Settings", icon: Braces },
 ];
 
 const DashboardSidebar = () => {
@@ -25,7 +24,7 @@ const DashboardSidebar = () => {
                   className={cn(
                     "flex items-center gap-2 rounded-lg px-3 py-2 transition-all text-gray-400 hover:text-gray-50",
                     {
-                      "bg-gray-800 text-gray-50":
+                      "bg-white/30 text-gray-50":
                         pathname === href ||
                         (href !== "/cms" && pathname.startsWith(href)),
                     }

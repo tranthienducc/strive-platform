@@ -6,7 +6,7 @@ import Link from "next/link";
 import CreateSites from "./sites/_component/CreateSites";
 
 export default function Sites() {
-  const sites = useQuery(api.documents.getAllSites);
+  const sites = useQuery(api.sites.getAllSites);
   return (
     <DashboardWrapper>
       <main className="flex min-w-screen p-4 flex-col items-center justify-between w-full">
@@ -34,7 +34,7 @@ export default function Sites() {
           ) : null}
           {sites?.map((site) => (
             <Link
-              href={`/cms/sites/${site._id}`}
+              href={`/cms/sites/${site?._id}`}
               key={site._id}
               prefetch={true}
               className="flex flex-col rounded-md w-[350px] hover:cursor-pointer hover:shadow-2xl hover:shadow-purple-500/50 transition-shadow duration-300"

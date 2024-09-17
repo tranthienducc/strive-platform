@@ -17,8 +17,8 @@ const OrdersDetail = ({
   data: any;
   decodedUrl: string;
 }) => {
-  const ordersInspiration = useQuery(api.documents.getOrdersInspiration);
-  const discounts = useQuery(api.documents.getDiscounts);
+  const ordersInspiration = useQuery(api.order.getOrdersInspiration);
+  const discounts = useQuery(api.discount.getDiscounts);
   console.log("ordersInspiration", ordersInspiration);
 
   const filteredOrders =

@@ -160,3 +160,13 @@ export type Sites = {
   site_subdomain: string;
   site_coverImage: string;
 };
+
+export interface OrderSummary {
+  month: string;
+  count: number;
+  revenue: number;
+}
+
+export interface OrdersByMonth {
+  [key: string]: OrderSummary;
+}

@@ -5,6 +5,7 @@ import {
   Footer,
   About,
   Product,
+  CTA,
 } from "@/components/shared";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <Pricing />
         <Reviews />
         <About />
+        <CTA />
         <Footer />
       </div>
     </main>

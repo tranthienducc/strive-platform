@@ -11,7 +11,7 @@ import React from "react";
 const LikesSection = () => {
   const { users } = useUserContext();
   const userId = users?.id;
-  const getLikeInspiration = useQuery(api.documents.getLikeInspirationById);
+  const getLikeInspiration = useQuery(api.inspiration.getAllLikeInspiration);
   const likedInspirations = getLikeInspiration?.filter((item) =>
     item?.likedBy?.includes(userId as string)
   );

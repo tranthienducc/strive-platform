@@ -7,48 +7,35 @@ const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Check if the route is protected and enforce authentication if it is
-  const url = req.nextUrl;
   if (isProtectedRoute(req)) auth().protect();
+  const url = req.nextUrl;
   let hostname = req.headers
     .get("host")!
     .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`);
 
-  if (
-    hostname.includes("---") &&
-    hostname.endsWith(`.${process.env.NEXT_PUBLIC_VERCEL_DEPLOYMENT_SUFFIX}`)
-  ) {
-    hostname = `${hostname.split("---")[0]}.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`;
-  }
+  // Nếu hostname có "www." hoặc các subdomain không cần thiết
+  hostname = hostname.replace(/^www\./, "");
 
   const searchParams = req.nextUrl.searchParams.toString();
-  // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-  const path = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ""
-  }`;
+  const path = `${url.pathname}${searchParams ? `?${searchParams}` : ""}`;
 
-  // Get hostname (e.g., 'strive.vercel.app', 'test.strive.vercel.app')
-  if (hostname == `${process.env.NEXT_PUBLIC_BASE_DOMAIN}`) {
+  // Xử lý rewrite cho domain chính
+  if (hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN) {
     const session = getAuth(req);
     if (!session && path !== "/sign-in") {
       return NextResponse.redirect(new URL("/sign-in", req.url));
-    } else if (session && path == "/sign-in") {
+    } else if (session && path === "/sign-in") {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    return NextResponse.rewrite(
-      new URL(`${path === "/" ? "" : path}`, req.url)
-    );
+    return NextResponse.rewrite(new URL(path, req.url));
   }
 
-  if (
-    hostname === "localhost:3000" ||
-    hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN
-  ) {
-    return NextResponse.rewrite(
-      new URL(`${path === "/" ? "" : path}`, req.url)
-    );
+  // Rewrite cho localhost
+  if (hostname === "localhost:3000") {
+    return NextResponse.rewrite(new URL(path, req.url));
   }
 
-  // rewrite everything else to `/[domain]/[slug] dynamic route
+  // Rewrite mọi thứ còn lại về dynamic route `/[domain]/[slug]`
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 

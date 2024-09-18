@@ -13,10 +13,10 @@ export const metadata: Metadata = {
   title: "Strive - Template Platform",
   description:
     "The platform provides free and paid templates with beautiful designs, updated every day for everyone from beginners to experienced people. Developed and built by Tran Thien Duc.",
-  keywords: "tranthienduc, strive-platform, template-platform",
+  keywords: "tranthienduc, strive-platform, template-platform, strive",
   applicationName: "Strive",
   openGraph: {
-    title: "Strive - Template Platform",
+    title: "strive",
     description:
       "The platform provides free and paid templates with beautiful design",
     images: ["/assets/images/bg-dashboard.webp"],

@@ -13,19 +13,47 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import TemplateInfo from "../TemplateInfo";
-import { InspirationType } from "@/utils/types/type";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useSearchParams } from "next/navigation";
 import { accordianData } from "@/constants/data";
 import parse from "html-react-parser";
+import { convex } from "@/services/providers/convex-provider";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { slug: string };
+}): Promise<Metadata> {
+  const slug = searchParams.slug;
+
+  const inspirations = await convex.query(
+    api.inspiration.getInspirationBySlug,
+    {
+      slug: slug,
+    }
+  );
+
+  return {
+    title: inspirations?.[0].title || "Inspiration Title",
+    description: inspirations?.[0].description || "Inspiration Description",
+    keywords: inspirations?.[0].title,
+    openGraph: {
+      title: inspirations?.[0].title,
+      description: inspirations?.[0].description,
+      images: [inspirations?.[0].coverImage || "/bg-dashboard.webp"],
+    },
+  };
+}
 
 const DetailInspirationCard = () => {
-  const inspirations = useQuery(
-    api.inspiration.getAllInspiration
-  ) as any as InspirationType[];
   const searchParams = useSearchParams();
   const slug = searchParams.get("slug");
+  const inspirations = useQuery(api.inspiration.getInspirationBySlug, {
+    slug: slug as string,
+  });
+
   const comments = useQuery(api.comment.getCommentInspiration);
 
   return (
@@ -39,115 +67,110 @@ const DetailInspirationCard = () => {
           Back to inspiration
         </span>
       </Link>
-      {inspirations
-        ?.filter((data) => data.slug === slug)
-        .map((item) => (
-          <React.Fragment key={item.id}>
-            <h1 className="heading-1">{item.title}</h1>
-            <div className="flex flex-row justify-between items-start mb-6">
-              <div className="flex flex-row gap-x-3 items-center">
-                <Image
-                  src="/assets/images/clients-avatar-1.webp"
-                  alt="avatar"
-                  width={300}
-                  height={300}
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="flex flex-col gap-1 text-start">
-                  <h5 className="text-sm font-semibold text-white">
-                    Tran Thien Duc
-                  </h5>
-                  <p className="text-xs font-medium text-white">Admin</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-row items-start gap-10 relative group/peek">
+
+      {inspirations?.map((item) => (
+        <React.Fragment key={item?._id}>
+          <h1 className="heading-1">{item.title}</h1>
+          <div className="flex flex-row justify-between items-start mb-6">
+            <div className="flex flex-row gap-x-3 items-center">
               <Image
-                src={item.coverImage as string}
-                alt="bg-dashboard"
-                width={1500}
-                height={1500}
-                priority={true}
-                className="max-w-[714px] w-full h-[500px] rounded-lg object-cover mb-14"
+                src="/assets/images/clients-avatar-1.webp"
+                alt="avatar"
+                width={300}
+                height={300}
+                className="w-12 h-12 rounded-full"
               />
-              <DialogPeekTemplate url="" />
-
-              <SaleProductPayment
-                slug={item.slug}
-                price={item.price}
-                salePrice={item.salePrice}
-                title={item.title}
-              />
-            </div>
-
-            <p className="descripion-1 max-w-[300px] w-full">
-              {parse(item.description ?? "")}{" "}
-            </p>
-
-            <div className="flex items-center justify-center gap-x-3 mb-5">
-              <DialogFeedback
-                _id={item._id}
-                title={item.title}
-                data={comments}
-              />
-
-              <DialogShare coverImage={item.coverImage} />
-            </div>
-
-            <div className="flex flex-col lg:flex-row items-start space-y-[60px] lg:space-x-20 mb-20">
-              <div className="flex flex-col-reverse w-full space-y-1 max-w-[800px] h-full">
-                {accordianData.map((data) => (
-                  <Accordion
-                    key={data.title}
-                    type="single"
-                    collapsible
-                    className="text-white bg-[#1f2025] rounded-xl h-full rounded-b-xl mt-1 space-y-1"
-                  >
-                    <AccordionItem
-                      value={data.title}
-                      className="border-b-0 px-5 hover:no-underline"
-                    >
-                      <AccordionTrigger>
-                        <div className="flex flex-row items-center gap-3">
-                          {data.icon}
-                          <span className="text-xl font-medium text-white">
-                            {data.title}
-                          </span>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="bg-[#1f2025] text-sm text-gray9 font-normal w-full mt-5  max-h-[200px] overflow-y-auto">
-                        {data.desc}
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                ))}
+              <div className="flex flex-col gap-1 text-start">
+                <h5 className="text-sm font-semibold text-white">
+                  Tran Thien Duc
+                </h5>
+                <p className="text-xs font-medium text-white">Admin</p>
               </div>
-
-              <TemplateInfo createAt={item._creationTime} />
             </div>
+          </div>
+          <div className="flex flex-row items-start gap-10 relative group/peek">
+            <Image
+              src={item.coverImage as string}
+              alt="bg-dashboard"
+              width={1500}
+              height={1500}
+              priority={true}
+              className="max-w-[714px] w-full h-[500px] rounded-lg object-cover mb-14"
+            />
+            <DialogPeekTemplate url="" />
 
-            <h3 className="pt-10 text-sm font-medium text-white mb-4">
-              You might also like
-            </h3>
-            <div className="grid grid-cols-1 lg:grid-cols-3 col-span-2 gap-9">
-              {inspirations?.length === 0 ? (
-                <p className="text-sm text-gray9 font-normal">
-                  No inspiration data avaiblable heare.
-                </p>
-              ) : null}
-              {inspirations.map((item) => (
-                <MoreInspirations item={item} key={item._id} />
+            <SaleProductPayment
+              slug={item.slug}
+              price={item.price}
+              salePrice={item.salePrice}
+              title={item.title}
+            />
+          </div>
+
+          <p className="descripion-1 max-w-[300px] w-full">
+            {parse(item.description ?? "")}{" "}
+          </p>
+
+          <div className="flex items-center justify-center gap-x-3 mb-5">
+            <DialogFeedback _id={item._id} title={item.title} data={comments} />
+
+            <DialogShare coverImage={item.coverImage} />
+          </div>
+
+          <div className="flex flex-col lg:flex-row items-start space-y-[60px] lg:space-x-20 mb-20">
+            <div className="flex flex-col-reverse w-full space-y-1 max-w-[800px] h-full">
+              {accordianData.map((data) => (
+                <Accordion
+                  key={data.title}
+                  type="single"
+                  collapsible
+                  className="text-white bg-[#1f2025] rounded-xl h-full rounded-b-xl mt-1 space-y-1"
+                >
+                  <AccordionItem
+                    value={data.title}
+                    className="border-b-0 px-5 hover:no-underline"
+                  >
+                    <AccordionTrigger>
+                      <div className="flex flex-row items-center gap-3">
+                        {data.icon}
+                        <span className="text-xl font-medium text-white">
+                          {data.title}
+                        </span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="bg-[#1f2025] text-sm text-gray9 font-normal w-full mt-5  max-h-[200px] overflow-y-auto">
+                      {data.desc}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               ))}
             </div>
-          </React.Fragment>
-        ))}
+
+            <TemplateInfo createAt={item._creationTime} />
+          </div>
+
+          <h3 className="pt-10 text-sm font-medium text-white mb-4">
+            You might also like
+          </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 col-span-2 gap-9">
+            {inspirations?.length === 0 ? (
+              <span className="text-sm text-gray9 font-normal">
+                No inspiration data avaiblable heare.
+              </span>
+            ) : null}
+            {inspirations.map((item) => (
+              <MoreInspirations item={item} key={item._id} />
+            ))}
+          </div>
+        </React.Fragment>
+      ))}
     </div>
   );
 };
 
 export default memo(DetailInspirationCard);
 
-function MoreInspirations({ item }: { item: InspirationType }) {
+function MoreInspirations({ item }: { item: any }) {
   return (
     <div className="max-w-full lg:max-w-[315px] w-full flex flex-col gap-y-3">
       <Link

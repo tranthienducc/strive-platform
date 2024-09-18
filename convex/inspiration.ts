@@ -7,7 +7,20 @@ export const getAllInspiration = query({
     return documents;
   },
 });
+export const getInspirationBySlug = query({
+  args: {
+    slug: v.optional(v.string()),
+  },
 
+  handler: async (ctx, args) => {
+    const inspiration = await ctx.db
+      .query("inspirations")
+      .filter((q) => q.eq(q.field("slug"), args.slug))
+      .collect();
+
+    return inspiration;
+  },
+});
 export const createInspiration = mutation({
   args: {
     title: v.optional(v.string()),

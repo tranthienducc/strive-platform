@@ -1,10 +1,10 @@
 import { pages, supports } from "@/constants/data";
-import { multiFormatDateString } from "@/utils";
+
 import { ChildrenType } from "@/utils/types/type";
 import { Earth } from "lucide-react";
 import React from "react";
 
-const TemplateInfo = ({ createAt }: { createAt?: string }) => {
+const TemplateInfo = ({ createAt }: { createAt: number }) => {
   return (
     <div className="max-w-[400px] w-full space-y-10">
       <div className="space-y-5">
@@ -40,7 +40,7 @@ const TemplateInfo = ({ createAt }: { createAt?: string }) => {
         </div>
       </div>
       <p className="text-sm font-normal text-gray9">
-        Published {multiFormatDateString(createAt)}
+        Published {new Date(createAt).toLocaleDateString()}
       </p>
     </div>
   );

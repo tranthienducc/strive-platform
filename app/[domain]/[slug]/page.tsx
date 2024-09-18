@@ -1,10 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import React, { memo } from "react";
 import parse from "html-react-parser";
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+
 import { transformNode } from "@/utils/transform-node";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
@@ -34,12 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const BlogPostPage = ({ params }: Props) => {
-  const articles = useQuery(api.article.getArticleBySlug, {
+const BlogPostPage = async ({ params }: Props) => {
+  const articles = await convex.query(api.article.getArticleBySlug, {
     slug: params.slug,
   });
+  const allArticle = await convex.query(api.article.getAllArticle);
 
-  const allArticle = useQuery(api.article.getAllArticle);
   return (
     <article className="container relative max-w-full w-full py-6 lg:py-10">
       {articles?.map((article) => (

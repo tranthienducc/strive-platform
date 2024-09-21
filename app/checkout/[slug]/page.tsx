@@ -15,6 +15,7 @@ import Image from "next/image";
 import Swal from "sweetalert2";
 import GrandTotal from "@/components/GrandTotal";
 import React from "react";
+import { Footer } from "@/components/shared";
 
 interface Props {
   params: {
@@ -82,6 +83,7 @@ const PaymentPage = ({ params }: Props) => {
             </div>
           </React.Fragment>
         ))}
+      <Footer />
     </section>
   );
 };

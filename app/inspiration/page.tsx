@@ -13,6 +13,7 @@ import { isFilterCategory } from "@/utils";
 import { DropdownFilters } from "@/components/common/index";
 import { CategoriesFilter } from "@/components/common/index";
 import { useFilterQueryManager } from "@/state/hooks/useFilterQueryManager";
+import { Footer } from "@/components/shared";
 
 const InspirationPage = () => {
   const { category, setFilters } = useFilterQueryManager();
@@ -97,6 +98,7 @@ const InspirationPage = () => {
           ))}
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

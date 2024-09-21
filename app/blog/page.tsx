@@ -1,3 +1,4 @@
+import { Footer } from "@/components/shared";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -39,6 +40,8 @@ const BlogPage = () => {
             <BlogCard key={index} path="/blog/abc" />
           ))}
       </div>
+
+      <Footer />
     </div>
   );
 };

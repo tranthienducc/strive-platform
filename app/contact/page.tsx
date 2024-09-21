@@ -1,3 +1,4 @@
+import { Footer } from "@/components/shared";
 import Image from "next/image";
 
 const ContactPage = () => {
@@ -33,6 +34,8 @@ const ContactPage = () => {
               </>
             ))}
         </div>
+
+        <Footer />
       </div>
     </>
   );

@@ -10,9 +10,6 @@ export default clerkMiddleware(async (auth, req) => {
   const path = `${url.pathname}${url.search}`;
 
   // Nếu là route chính, không cần bảo vệ
-  if (path === "/") {
-    return NextResponse.next(); // Hoặc NextResponse.rewrite(new URL("/home", req.url));
-  }
 
   // Xử lý cho domain chính
   if (
@@ -23,7 +20,7 @@ export default clerkMiddleware(async (auth, req) => {
     if (isProtectedRoute(req)) {
       auth().protect();
     }
-    return NextResponse.rewrite(new URL(path, req.url));
+    return NextResponse.rewrite(new URL("/", req.url));
   }
 
   // Xử lý cho các subdomain
@@ -31,5 +28,5 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/((?!.\\..|_next).)", "/", "/cms", "/(api|trpc)(.)"],
+  matcher: ["/((?!.\\..|_next).)", "/", "/(api|trpc)(.)"],
 };

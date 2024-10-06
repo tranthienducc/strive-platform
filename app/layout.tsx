@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "strive",
     description:
       "The platform provides free and paid templates with beautiful design",
-    images: ["/assets/images/bg-dashboard.webp"],
+    images: ["/assets/images/dashboard-img.webp"],
   },
 };
 

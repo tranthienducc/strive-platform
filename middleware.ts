@@ -9,6 +9,8 @@ export default clerkMiddleware(async (auth, req) => {
   const hostname = req.headers.get("host")!;
   const path = `${url.pathname}${url.search}`;
 
+  // Nếu là route chính, không cần bảo vệ
+
   // Xử lý cho domain chính
   if (
     hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
@@ -18,13 +20,7 @@ export default clerkMiddleware(async (auth, req) => {
     if (isProtectedRoute(req)) {
       auth().protect();
     }
-
-    // Nếu là route gốc "/" thì không cần rewrite
-    if (path === "/" || path === "") {
-      return NextResponse.next();
-    }
-
-    return NextResponse.rewrite(new URL(path, req.url));
+    return NextResponse.rewrite(new URL("/", req.url));
   }
 
   // Xử lý cho các subdomain

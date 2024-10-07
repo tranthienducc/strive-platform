@@ -9,22 +9,26 @@ export default clerkMiddleware(async (auth, req) => {
   const hostname = req.headers.get("host")!;
   const path = `${url.pathname}${url.search}`;
 
-  // Nếu là route chính, không cần bảo vệ
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
 
   // Xử lý cho domain chính
-  if (
-    hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
-    hostname === "localhost:3000"
-  ) {
+  if (hostname === baseDomain || hostname === "localhost:3000") {
     // Kiểm tra các route cần bảo vệ
     if (isProtectedRoute(req)) {
       auth().protect();
     }
-    return NextResponse.rewrite(new URL("/", req.url));
+
+    // Cho phép truy cập trực tiếp vào route của domain chính
+    return NextResponse.next();
   }
 
   // Xử lý cho các subdomain
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
+  const subdomain = hostname.replace(`.${baseDomain}`, "");
+
+  // Rewrite tất cả các request từ subdomain về [domain] folder
+  return NextResponse.rewrite(
+    new URL(`/${subdomain}${path === "/" ? "" : path}`, req.url)
+  );
 });
 
 export const config = {

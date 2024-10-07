@@ -6,30 +6,11 @@ import { api } from "@/convex/_generated/api";
 import { transformNode } from "@/utils/transform-node";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Metadata } from "next";
+
 import { convex } from "@/services/providers/convex-provider";
 
 interface Props {
   params: { slug: string };
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = params.slug;
-
-  const articles = await convex.query(api.article.getArticleBySlug, {
-    slug: slug,
-  });
-
-  return {
-    title: articles?.[0].title || "Article Title",
-    description: articles?.[0].blog_html || "Article Description",
-    keywords: articles?.[0].keywords,
-    openGraph: {
-      title: articles?.[0].title,
-      description: articles?.[0].blog_html,
-      images: [articles?.[0].image || "/bg-dashboard.webp"],
-    },
-  };
 }
 
 const BlogPostPage = async ({ params }: Props) => {

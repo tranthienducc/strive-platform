@@ -1,6 +1,6 @@
 "use client";
 
-import NavbarSite from "@/app/[domain]/_component/NavbarSite";
+import NavbarSite from "@/app/[domain]/_components/NavbarSite";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";

@@ -9,14 +9,14 @@ import { ClerkProvider } from "@clerk/nextjs";
 import Wrapper from "@/components/Wrapper";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://strive-platform.xyz/"),
+  metadataBase: new URL("https://www.strive-platform.xyz/"),
   title: "Strive - Template Platform",
   description:
     "The platform provides free and paid templates with beautiful designs, updated every day for everyone from beginners to experienced people. Developed and built by Tran Thien Duc.",
   keywords: "tranthienduc, strive-platform, template-platform, strive",
   applicationName: "Strive",
   openGraph: {
-    title: "strive",
+    title: "Strive",
     description:
       "The platform provides free and paid templates with beautiful design",
     images: ["/assets/images/dashboard-img.webp"],

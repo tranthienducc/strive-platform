@@ -1,23 +1,22 @@
+"use client";
 import Image from "next/image";
-import React, { memo } from "react";
+import React from "react";
 import parse from "html-react-parser";
 import { api } from "@/convex/_generated/api";
-
 import { transformNode } from "@/utils/transform-node";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-
-import { convex } from "@/services/providers/convex-provider";
+import { useQuery } from "convex/react";
 
 interface Props {
   params: { slug: string };
 }
 
-const BlogPostPage = async ({ params }: Props) => {
-  const articles = await convex.query(api.article.getArticleBySlug, {
+const BlogPostPage = ({ params }: Props) => {
+  const articles = useQuery(api.article.getArticleBySlug, {
     slug: params.slug,
   });
-  const allArticle = await convex.query(api.article.getAllArticle);
+  const allArticle = useQuery(api.article.getAllArticle);
 
   return (
     <article className="container relative max-w-full w-full py-6 lg:py-10">
@@ -103,4 +102,4 @@ const BlogPostPage = async ({ params }: Props) => {
   );
 };
 
-export default memo(BlogPostPage);
+export default BlogPostPage;

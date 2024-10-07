@@ -31,7 +31,7 @@ export default function SitePage({ params }: { params: { domain: string } }) {
   const otherArticles = publishedArticles?.slice(1);
 
   // check if site null
-  if (result === null) {
+  if (!result) {
     notFound();
   }
 

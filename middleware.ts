@@ -5,32 +5,26 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
+
   const url = req.nextUrl;
   const hostname = req.headers.get("host")!;
   const path = `${url.pathname}${url.search}`;
 
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN;
-
   // Xử lý cho domain chính
-  if (hostname === baseDomain || hostname === "localhost:3000") {
-    // Kiểm tra các route cần bảo vệ
-    if (isProtectedRoute(req)) {
-      auth().protect();
-    }
+  if (
+    hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
+    hostname === "localhost:3000"
+  ) {
+    // Chỉ kiểm tra session cho các route cần bảo vệ
 
-    // Cho phép truy cập trực tiếp vào route của domain chính
-    return NextResponse.next();
+    return NextResponse.rewrite(new URL(path, req.url));
   }
 
   // Xử lý cho các subdomain
-  const subdomain = hostname.replace(`.${baseDomain}`, "");
-
-  // Rewrite tất cả các request từ subdomain về [domain] folder
-  return NextResponse.rewrite(
-    new URL(`/${subdomain}${path === "/" ? "" : path}`, req.url)
-  );
+  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 
 export const config = {
-  matcher: ["/((?!.\\..|_next).)", "/", "/(api|trpc)(.)"],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/cms", "/(api|trpc)(.*)"],
 };

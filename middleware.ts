@@ -25,9 +25,7 @@ export default clerkMiddleware(async (auth, req) => {
   // Xử lý subdomain
   try {
     const subdomain = hostname?.split(".")[0];
-    return NextResponse.rewrite(
-      new URL(`/_sites/${subdomain}${path}`, req.url)
-    );
+    return NextResponse.rewrite(new URL(`/${subdomain}${path}`, req.url));
   } catch (error) {
     return NextResponse.redirect(new URL("/", req.url));
   }

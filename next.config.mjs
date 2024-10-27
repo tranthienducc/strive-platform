@@ -12,16 +12,20 @@ const nextConfig = {
     domains: ["files.edgestore.dev", "img.clerk.com"],
   },
   async rewrites() {
-    return [
-      {
-        source: "/",
-        destination: "/",
-      },
-      {
-        source: "/:path*",
-        destination: "/:path*",
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          source: "/",
+          destination: "/",
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/:path*",
+          destination: "/:path*",
+        },
+      ],
+    };
   },
   async headers() {
     return [

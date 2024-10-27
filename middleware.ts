@@ -8,27 +8,33 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) auth().protect();
   const url = req.nextUrl;
   const hostname = req.headers.get("host")!;
-  const isRootPath = url.pathname === "/";
+
+  // Xử lý riêng cho root path
+  if (url.pathname === "/") {
+    if (
+      hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
+      hostname === "localhost:3000"
+    ) {
+      return NextResponse.next();
+    }
+    return NextResponse.rewrite(new URL(`/${hostname}`, req.url));
+  }
+
+  const path = `${url.pathname}${url.search}`;
 
   // Xử lý cho domain chính
   if (
     hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
     hostname === "localhost:3000"
   ) {
-    if (isRootPath) {
-      return NextResponse.rewrite(new URL("/", req.url));
-    }
-    return NextResponse.rewrite(
-      new URL(`${url.pathname}${url.search}`, req.url)
-    );
+    return NextResponse.next();
   }
 
   // Xử lý cho các subdomain
-  const path = isRootPath ? "/" : `${url.pathname}${url.search}`;
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 
-// Cấu hình matcher để khớp với mọi route, bao gồm cả "/"
+// Điều chỉnh matcher để xử lý root path rõ ràng hơn
 export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)", "/"],
+  matcher: ["/", "/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -31,7 +31,7 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   // Xử lý cho các subdomain
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
+  return NextResponse.rewrite(new URL(`${hostname}${path}`, req.url));
 });
 
 // Điều chỉnh matcher để xử lý root path rõ ràng hơn

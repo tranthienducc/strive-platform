@@ -103,13 +103,14 @@ export const changeSiteDomain = mutation({
 });
 
 const subdomainRegex = /^[a-zA-Z0-9-]+$/;
+
 export const createSites = mutation({
   args: {
     site_name: v.string(),
     site_description: v.string(),
     site_subdomain: v.string(),
     site_coverImage: v.string(),
-    site_custom_domain: v.string(),
+    site_custom_domain: v.optional(v.string()),
     userId: v.optional(v.string()),
     parentDocument: v.optional(v.id("sites")),
   },
@@ -186,5 +187,28 @@ export const getSitesById = query({
     const site = await ctx.db.get(id);
 
     return site;
+  },
+});
+export const getSitesByIdAndName = query({
+  args: {
+    userId: v.optional(v.string()),
+    site_name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const sites = await ctx.db
+        .query("sites")
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("userId"), args.userId),
+            q.eq(q.field("site_name"), args.site_name)
+          )
+        )
+        .collect();
+
+      return sites;
+    } catch (error) {
+      return error;
+    }
   },
 });

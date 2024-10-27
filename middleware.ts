@@ -17,7 +17,6 @@ export default clerkMiddleware(async (auth, req) => {
     hostname === "localhost:3000"
   ) {
     // Chỉ kiểm tra session cho các route cần bảo vệ
-
     return NextResponse.rewrite(new URL(path, req.url));
   }
 
@@ -25,6 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 
+// Cấu hình matcher để khớp với mọi route, bao gồm cả "/"
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/cms", "/(api|trpc)(.*)"],
+  matcher: ["/((?!_next|.*\\..*).*)", "/"],
 };

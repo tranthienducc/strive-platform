@@ -1,31 +1,38 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Define the routes that require authentication
-const isProtectedRoute = createRouteMatcher(["/cms(.*)"]);
-
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
-
   const url = req.nextUrl;
-  const hostname = req.headers.get("host")!;
+  const hostname = req.headers.get("host");
   const path = `${url.pathname}${url.search}`;
 
-  // Kiểm tra xem có phải trang gốc hay không
+  // Bảo vệ route /cms
+  if (path.startsWith("/cms")) {
+    const { userId } = auth();
+    if (!userId) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+  }
+
+  // Xử lý domain chính
   if (
     hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
     hostname === "localhost:3000"
   ) {
-    // Nếu là trang gốc, rewrite tới chính trang gốc
-    if (path === "/") {
-      return NextResponse.rewrite(new URL("/", req.url));
-    }
-    return NextResponse.rewrite(new URL(path, req.url));
+    return NextResponse.rewrite(new URL(path || "/", req.url));
   }
 
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
+  // Xử lý subdomain
+  try {
+    const subdomain = hostname?.split(".")[0];
+    return NextResponse.rewrite(
+      new URL(`/_sites/${subdomain}${path}`, req.url)
+    );
+  } catch (error) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next|api|trpc).*)", "/", "/cms"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)", "/"],
 };

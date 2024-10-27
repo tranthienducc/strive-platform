@@ -9,32 +9,23 @@ export default clerkMiddleware(async (auth, req) => {
 
   const url = req.nextUrl;
   const hostname = req.headers.get("host")!;
+  const path = `${url.pathname}${url.search}`;
 
-  // Handle root path specifically for production
-  if (url.pathname === "/") {
-    if (
-      hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
-      hostname === "localhost:3000"
-    ) {
-      return NextResponse.next();
-    }
-    return NextResponse.rewrite(new URL(`/${hostname}/`, req.url));
-  }
-
-  // Handle other paths
+  // Kiểm tra xem có phải trang gốc hay không
   if (
     hostname === process.env.NEXT_PUBLIC_BASE_DOMAIN ||
     hostname === "localhost:3000"
   ) {
-    return NextResponse.next();
+    // Nếu là trang gốc, rewrite tới chính trang gốc
+    if (path === "/") {
+      return NextResponse.rewrite(new URL("/", req.url));
+    }
+    return NextResponse.rewrite(new URL(path, req.url));
   }
 
-  return NextResponse.rewrite(
-    new URL(`/${hostname}${url.pathname}${url.search}`, req.url)
-  );
+  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 });
 
-// Điều chỉnh matcher để xử lý root path rõ ràng hơn
 export const config = {
-  matcher: ["/", "/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!.*\\..*|_next|api|trpc).*)", "/", "/cms"],
 };

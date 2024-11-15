@@ -68,7 +68,7 @@ const DetailInspirationCard = () => {
               priority={true}
               className="max-w-[714px] w-full h-[500px] rounded-lg object-cover mb-14"
             />
-            <DialogPeekTemplate url="" />
+            <DialogPeekTemplate url="https://www.strive-platform.xyz" />
 
             <SaleProductPayment
               slug={item.slug}

@@ -67,6 +67,16 @@ export const applyDiscountCode = mutation({
     if (!coupon) {
       throw new Error("Invalid discounts code");
     }
+
+    if (coupon.end_date) {
+      const currentDate = new Date();
+      const endDate = new Date(coupon.end_date);
+
+      if (endDate < currentDate) {
+        throw new Error("Discount code has expired");
+      }
+    }
+
     const used = coupon.used ?? 0;
     const limit = coupon.limit ?? 0;
 

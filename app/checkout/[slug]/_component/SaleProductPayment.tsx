@@ -31,19 +31,36 @@ const SaleProductPayment = ({
         code: couponCode,
       });
 
-      if (
-        couponDetails.discountPersent &&
-        couponDetails.discoutnInspiration?.toString() === title?.toString() &&
-        couponDetails.discountLimit >= couponDetails.discountUsed
-      ) {
-        setDiscount(couponDetails.discountPersent);
-        setCouponCode("");
-        toast.success("Apply disounts code successfully");
-      } else {
-        toast.error("Discount code no valid");
+      if (!couponDetails) {
+        toast.error("Invalid discount code");
+        return;
       }
-    } catch (error) {
-      console.log(error);
+
+      if (couponDetails.discoutnInspiration?.toString() !== title?.toString()) {
+        toast.error("This discount code is not valid for this product");
+        return;
+      }
+
+      if (couponDetails.discountLimit < couponDetails.discountUsed) {
+        toast.error("Discount code has reached its usage limit");
+        return;
+      }
+
+      setDiscount(couponDetails.discountPersent ?? 0);
+      setCouponCode("");
+      toast.success("Discount code applied successfully");
+    } catch (error: any) {
+      const errorMessages: Record<string, string> = {
+        "Invalid discounts code": "Invalid discount code",
+        "Discount code has expired": "This discount code has expired",
+        "Discount code has reached its usage limit":
+          "This discount code has reached its usage limit",
+      };
+      const message =
+        (error?.message && errorMessages[error.message]) ||
+        "Something went wrong. Please try again.";
+      toast.error(message);
+      console.error("Discount code error:", error);
     }
   };
 

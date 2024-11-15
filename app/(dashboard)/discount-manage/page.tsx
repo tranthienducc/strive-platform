@@ -3,7 +3,6 @@ import AlertDialogDelete from "@/components/common/AlertDialogDelete";
 import { BreadcumsCustom } from "@/components/common/index";
 import SearchFilter from "@/components/inspiration-shared/SearchFilter";
 import { Button } from "@/components/ui/button";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -23,7 +22,6 @@ import { useMutation, useQuery } from "convex/react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { memo, useState } from "react";
-
 import { toast } from "sonner";
 
 const DiscountManagePage = () => {
